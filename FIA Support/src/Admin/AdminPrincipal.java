@@ -9,7 +9,7 @@ public class AdminPrincipal extends javax.swing.JFrame
 {
 
     public AdminPrincipal() {
-        initComponents();
+        initComponents();//Hola mundo
     }
 
     

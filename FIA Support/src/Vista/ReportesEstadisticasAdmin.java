@@ -37,7 +37,6 @@ public class ReportesEstadisticasAdmin extends javax.swing.JFrame {
 
         jMenuBar1.setBackground(new java.awt.Color(194, 39, 23));
         jMenuBar1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        jMenuBar1.setOpaque(true);
         jMenuBar1.setPreferredSize(new java.awt.Dimension(70, 45));
 
         jMenu1.setBackground(new java.awt.Color(194, 39, 23));
@@ -45,7 +44,6 @@ public class ReportesEstadisticasAdmin extends javax.swing.JFrame {
         jMenu1.setText("File");
         jMenu1.setContentAreaFilled(false);
         jMenu1.setFont(new java.awt.Font("Ebrima", 1, 14)); // NOI18N
-        jMenu1.setOpaque(true);
         jMenu1.setPreferredSize(new java.awt.Dimension(100, 22));
         jMenuBar1.add(jMenu1);
 
@@ -53,13 +51,11 @@ public class ReportesEstadisticasAdmin extends javax.swing.JFrame {
         jMenu3.setContentAreaFilled(false);
         jMenu3.setEnabled(false);
         jMenu3.setFocusable(false);
-        jMenu3.setOpaque(true);
         jMenu3.setPreferredSize(new java.awt.Dimension(800, 22));
         jMenuBar1.add(jMenu3);
 
         jMenu2.setBackground(new java.awt.Color(194, 39, 23));
         jMenu2.setText("File");
-        jMenu2.setOpaque(true);
         jMenu2.setPreferredSize(new java.awt.Dimension(100, 22));
         jMenuBar1.add(jMenu2);
 
