@@ -18,7 +18,7 @@ public class AdminPrincipal extends javax.swing.JFrame
     private void initComponents() {
 
         desktopPane = new javax.swing.JDesktopPane();
-        jToolBar1 = new javax.swing.JToolBar();
+        tlbFiaSupport = new javax.swing.JToolBar();
         lblFiaSupport = new javax.swing.JLabel();
         btnReportesYEstadisticas = new javax.swing.JButton();
         btnAsignarSolicitud = new javax.swing.JButton();
@@ -32,16 +32,16 @@ public class AdminPrincipal extends javax.swing.JFrame
         desktopPane.setBackground(new java.awt.Color(204, 204, 204));
         desktopPane.setForeground(new java.awt.Color(0, 0, 0));
 
-        jToolBar1.setBackground(new java.awt.Color(153, 153, 153));
-        jToolBar1.setRollover(true);
+        tlbFiaSupport.setBackground(new java.awt.Color(153, 153, 153));
+        tlbFiaSupport.setRollover(true);
 
         lblFiaSupport.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
         lblFiaSupport.setForeground(new java.awt.Color(0, 0, 0));
         lblFiaSupport.setText("FIA Support");
-        jToolBar1.add(lblFiaSupport);
+        tlbFiaSupport.add(lblFiaSupport);
 
-        desktopPane.add(jToolBar1);
-        jToolBar1.setBounds(0, 0, 270, 110);
+        desktopPane.add(tlbFiaSupport);
+        tlbFiaSupport.setBounds(0, 0, 270, 110);
 
         btnReportesYEstadisticas.setBackground(new java.awt.Color(102, 102, 102));
         btnReportesYEstadisticas.setText("Reportes y estadisticas ");
@@ -88,7 +88,7 @@ public class AdminPrincipal extends javax.swing.JFrame
     }// </editor-fold>//GEN-END:initComponents
 
 
-    public static void main(String args[])
+   /* public static void main(String args[])
     {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -110,7 +110,7 @@ public class AdminPrincipal extends javax.swing.JFrame
         java.awt.EventQueue.invokeLater(() -> {
             new AdminPrincipal().setVisible(true);
         });
-    }
+    }*/
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAsignarSolicitud;
@@ -119,9 +119,9 @@ public class AdminPrincipal extends javax.swing.JFrame
     private javax.swing.JButton btnReportesYEstadisticas;
     private javax.swing.JDesktopPane desktopPane;
     private javax.swing.JButton jButton1;
-    private javax.swing.JToolBar jToolBar1;
     private javax.swing.JLabel lblFiaSupport;
     private javax.swing.JLabel lblLogo;
+    private javax.swing.JToolBar tlbFiaSupport;
     // End of variables declaration//GEN-END:variables
 
 }
