@@ -30,12 +30,11 @@ public class frmGestionarUsuario extends javax.swing.JFrame {
         tlbFiaSupport = new javax.swing.JToolBar();
         lblFiaSupport = new javax.swing.JLabel();
         lblLogo = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
+        btnNuevoUsuario = new javax.swing.JButton();
+        btnActualizarUsuario = new javax.swing.JButton();
+        btnBuscarUsuario = new javax.swing.JButton();
+        btnEliminarUsuario = new javax.swing.JButton();
+        btnVolverInicio = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -57,29 +56,40 @@ public class frmGestionarUsuario extends javax.swing.JFrame {
         desktopPane.add(lblLogo);
         lblLogo.setBounds(450, 10, 100, 100);
 
-        jButton1.setText("jButton1");
-        desktopPane.add(jButton1);
-        jButton1.setBounds(230, 160, 76, 25);
+        btnNuevoUsuario.setBackground(new java.awt.Color(102, 102, 102));
+        btnNuevoUsuario.setForeground(new java.awt.Color(255, 255, 255));
+        btnNuevoUsuario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/agregar usuario.png"))); // NOI18N
+        btnNuevoUsuario.setText("Nuevo usuario");
+        desktopPane.add(btnNuevoUsuario);
+        btnNuevoUsuario.setBounds(200, 160, 170, 40);
 
-        jButton2.setText("jButton2");
-        desktopPane.add(jButton2);
-        jButton2.setBounds(230, 230, 76, 25);
+        btnActualizarUsuario.setBackground(new java.awt.Color(102, 102, 102));
+        btnActualizarUsuario.setForeground(new java.awt.Color(255, 255, 255));
+        btnActualizarUsuario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/actualizar usuario.png"))); // NOI18N
+        btnActualizarUsuario.setText("Actualizar usuario");
+        desktopPane.add(btnActualizarUsuario);
+        btnActualizarUsuario.setBounds(200, 230, 170, 42);
 
-        jButton3.setText("jButton3");
-        desktopPane.add(jButton3);
-        jButton3.setBounds(230, 310, 76, 25);
+        btnBuscarUsuario.setBackground(new java.awt.Color(102, 102, 102));
+        btnBuscarUsuario.setForeground(new java.awt.Color(255, 255, 255));
+        btnBuscarUsuario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/buscar usuario.png"))); // NOI18N
+        btnBuscarUsuario.setText("Buscar usuario");
+        desktopPane.add(btnBuscarUsuario);
+        btnBuscarUsuario.setBounds(200, 310, 170, 42);
 
-        jButton4.setText("jButton4");
-        desktopPane.add(jButton4);
-        jButton4.setBounds(230, 400, 76, 25);
+        btnEliminarUsuario.setBackground(new java.awt.Color(102, 102, 102));
+        btnEliminarUsuario.setForeground(new java.awt.Color(255, 255, 255));
+        btnEliminarUsuario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/eliminar usuario.png"))); // NOI18N
+        btnEliminarUsuario.setText("Eliminar usuario");
+        desktopPane.add(btnEliminarUsuario);
+        btnEliminarUsuario.setBounds(200, 390, 170, 42);
 
-        jButton5.setText("jButton5");
-        desktopPane.add(jButton5);
-        jButton5.setBounds(40, 460, 76, 25);
-
-        jButton6.setText("jButton6");
-        desktopPane.add(jButton6);
-        jButton6.setBounds(420, 460, 76, 25);
+        btnVolverInicio.setBackground(new java.awt.Color(102, 102, 102));
+        btnVolverInicio.setForeground(new java.awt.Color(255, 255, 255));
+        btnVolverInicio.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/volver inicio.png"))); // NOI18N
+        btnVolverInicio.setText("Volver a inicio");
+        desktopPane.add(btnVolverInicio);
+        btnVolverInicio.setBounds(200, 470, 170, 40);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -89,7 +99,7 @@ public class frmGestionarUsuario extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(desktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 515, Short.MAX_VALUE)
+            .addComponent(desktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 541, Short.MAX_VALUE)
         );
 
         pack();
@@ -131,13 +141,12 @@ public class frmGestionarUsuario extends javax.swing.JFrame {
     //}*/
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnActualizarUsuario;
+    private javax.swing.JButton btnBuscarUsuario;
+    private javax.swing.JButton btnEliminarUsuario;
+    private javax.swing.JButton btnNuevoUsuario;
+    private javax.swing.JButton btnVolverInicio;
     private javax.swing.JDesktopPane desktopPane;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
     private javax.swing.JLabel lblFiaSupport;
     private javax.swing.JLabel lblLogo;
     private javax.swing.JToolBar tlbFiaSupport;

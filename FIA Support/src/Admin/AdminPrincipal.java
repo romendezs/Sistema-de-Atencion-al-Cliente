@@ -44,26 +44,31 @@ public class AdminPrincipal extends javax.swing.JFrame
         tlbFiaSupport.setBounds(0, 0, 270, 110);
 
         btnReportesYEstadisticas.setBackground(new java.awt.Color(102, 102, 102));
+        btnReportesYEstadisticas.setForeground(new java.awt.Color(255, 255, 255));
         btnReportesYEstadisticas.setText("Reportes y estadisticas ");
         desktopPane.add(btnReportesYEstadisticas);
         btnReportesYEstadisticas.setBounds(90, 140, 160, 25);
 
         btnAsignarSolicitud.setBackground(new java.awt.Color(102, 102, 102));
+        btnAsignarSolicitud.setForeground(new java.awt.Color(255, 255, 255));
         btnAsignarSolicitud.setText("Asignar solicitud");
         desktopPane.add(btnAsignarSolicitud);
         btnAsignarSolicitud.setBounds(90, 210, 160, 25);
 
         btnGestionarTicket.setBackground(new java.awt.Color(102, 102, 102));
+        btnGestionarTicket.setForeground(new java.awt.Color(255, 255, 255));
         btnGestionarTicket.setText("Gestionar ticket");
         desktopPane.add(btnGestionarTicket);
         btnGestionarTicket.setBounds(90, 280, 160, 25);
 
         btnGestionarUsuario.setBackground(new java.awt.Color(102, 102, 102));
+        btnGestionarUsuario.setForeground(new java.awt.Color(255, 255, 255));
         btnGestionarUsuario.setText("Gestionar usuario");
         desktopPane.add(btnGestionarUsuario);
         btnGestionarUsuario.setBounds(90, 350, 160, 25);
 
         jButton1.setBackground(new java.awt.Color(102, 102, 102));
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("Cerrar sesión");
         desktopPane.add(jButton1);
         jButton1.setBounds(90, 420, 160, 25);
