@@ -27,114 +27,94 @@ public class frmGestionarUsuario extends javax.swing.JFrame {
     private void initComponents() {
 
         desktopPane = new javax.swing.JDesktopPane();
-        menuBar = new javax.swing.JMenuBar();
-        fileMenu = new javax.swing.JMenu();
-        openMenuItem = new javax.swing.JMenuItem();
-        saveMenuItem = new javax.swing.JMenuItem();
-        saveAsMenuItem = new javax.swing.JMenuItem();
-        exitMenuItem = new javax.swing.JMenuItem();
-        editMenu = new javax.swing.JMenu();
-        cutMenuItem = new javax.swing.JMenuItem();
-        copyMenuItem = new javax.swing.JMenuItem();
-        pasteMenuItem = new javax.swing.JMenuItem();
-        deleteMenuItem = new javax.swing.JMenuItem();
-        helpMenu = new javax.swing.JMenu();
-        contentMenuItem = new javax.swing.JMenuItem();
-        aboutMenuItem = new javax.swing.JMenuItem();
+        tlbFiaSupport = new javax.swing.JToolBar();
+        lblFiaSupport = new javax.swing.JLabel();
+        lblLogo = new javax.swing.JLabel();
+        btnNuevoUsuario = new javax.swing.JButton();
+        btnActualizarUsuario = new javax.swing.JButton();
+        btnBuscarUsuario = new javax.swing.JButton();
+        btnEliminarUsuario = new javax.swing.JButton();
+        btnVolverInicio = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        fileMenu.setMnemonic('f');
-        fileMenu.setText("File");
+        desktopPane.setBackground(new java.awt.Color(204, 204, 204));
+        desktopPane.setForeground(new java.awt.Color(153, 153, 153));
 
-        openMenuItem.setMnemonic('o');
-        openMenuItem.setText("Open");
-        fileMenu.add(openMenuItem);
+        tlbFiaSupport.setBackground(new java.awt.Color(153, 153, 153));
+        tlbFiaSupport.setRollover(true);
 
-        saveMenuItem.setMnemonic('s');
-        saveMenuItem.setText("Save");
-        fileMenu.add(saveMenuItem);
+        lblFiaSupport.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        lblFiaSupport.setForeground(new java.awt.Color(0, 0, 0));
+        lblFiaSupport.setText("FIA Support");
+        tlbFiaSupport.add(lblFiaSupport);
 
-        saveAsMenuItem.setMnemonic('a');
-        saveAsMenuItem.setText("Save As ...");
-        saveAsMenuItem.setDisplayedMnemonicIndex(5);
-        fileMenu.add(saveAsMenuItem);
+        desktopPane.add(tlbFiaSupport);
+        tlbFiaSupport.setBounds(0, 0, 440, 110);
 
-        exitMenuItem.setMnemonic('x');
-        exitMenuItem.setText("Exit");
-        exitMenuItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                exitMenuItemActionPerformed(evt);
-            }
-        });
-        fileMenu.add(exitMenuItem);
+        lblLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/Fia_Support_Logo-convertido-a-100x100 (2).png"))); // NOI18N
+        desktopPane.add(lblLogo);
+        lblLogo.setBounds(450, 10, 100, 100);
 
-        menuBar.add(fileMenu);
+        btnNuevoUsuario.setBackground(new java.awt.Color(102, 102, 102));
+        btnNuevoUsuario.setForeground(new java.awt.Color(255, 255, 255));
+        btnNuevoUsuario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/agregar usuario.png"))); // NOI18N
+        btnNuevoUsuario.setText("Nuevo usuario");
+        desktopPane.add(btnNuevoUsuario);
+        btnNuevoUsuario.setBounds(200, 160, 170, 40);
 
-        editMenu.setMnemonic('e');
-        editMenu.setText("Edit");
+        btnActualizarUsuario.setBackground(new java.awt.Color(102, 102, 102));
+        btnActualizarUsuario.setForeground(new java.awt.Color(255, 255, 255));
+        btnActualizarUsuario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/actualizar usuario.png"))); // NOI18N
+        btnActualizarUsuario.setText("Actualizar usuario");
+        desktopPane.add(btnActualizarUsuario);
+        btnActualizarUsuario.setBounds(200, 230, 170, 42);
 
-        cutMenuItem.setMnemonic('t');
-        cutMenuItem.setText("Cut");
-        editMenu.add(cutMenuItem);
+        btnBuscarUsuario.setBackground(new java.awt.Color(102, 102, 102));
+        btnBuscarUsuario.setForeground(new java.awt.Color(255, 255, 255));
+        btnBuscarUsuario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/buscar usuario.png"))); // NOI18N
+        btnBuscarUsuario.setText("Buscar usuario");
+        desktopPane.add(btnBuscarUsuario);
+        btnBuscarUsuario.setBounds(200, 310, 170, 42);
 
-        copyMenuItem.setMnemonic('y');
-        copyMenuItem.setText("Copy");
-        editMenu.add(copyMenuItem);
+        btnEliminarUsuario.setBackground(new java.awt.Color(102, 102, 102));
+        btnEliminarUsuario.setForeground(new java.awt.Color(255, 255, 255));
+        btnEliminarUsuario.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/eliminar usuario.png"))); // NOI18N
+        btnEliminarUsuario.setText("Eliminar usuario");
+        desktopPane.add(btnEliminarUsuario);
+        btnEliminarUsuario.setBounds(200, 390, 170, 42);
 
-        pasteMenuItem.setMnemonic('p');
-        pasteMenuItem.setText("Paste");
-        editMenu.add(pasteMenuItem);
-
-        deleteMenuItem.setMnemonic('d');
-        deleteMenuItem.setText("Delete");
-        editMenu.add(deleteMenuItem);
-
-        menuBar.add(editMenu);
-
-        helpMenu.setMnemonic('h');
-        helpMenu.setText("Help");
-
-        contentMenuItem.setMnemonic('c');
-        contentMenuItem.setText("Contents");
-        helpMenu.add(contentMenuItem);
-
-        aboutMenuItem.setMnemonic('a');
-        aboutMenuItem.setText("About");
-        helpMenu.add(aboutMenuItem);
-
-        menuBar.add(helpMenu);
-
-        setJMenuBar(menuBar);
+        btnVolverInicio.setBackground(new java.awt.Color(102, 102, 102));
+        btnVolverInicio.setForeground(new java.awt.Color(255, 255, 255));
+        btnVolverInicio.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/volver inicio.png"))); // NOI18N
+        btnVolverInicio.setText("Volver a inicio");
+        desktopPane.add(btnVolverInicio);
+        btnVolverInicio.setBounds(200, 470, 170, 40);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(desktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+            .addComponent(desktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 564, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(desktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
+            .addComponent(desktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 541, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuItemActionPerformed
-        System.exit(0);
-    }//GEN-LAST:event_exitMenuItemActionPerformed
-
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    /*public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
-        try {
+      /*  try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
@@ -153,29 +133,23 @@ public class frmGestionarUsuario extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
+       /* java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new frmGestionarUsuario().setVisible(true);
             }
-        });
-    }
+      //  });
+    //}*/
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JMenuItem aboutMenuItem;
-    private javax.swing.JMenuItem contentMenuItem;
-    private javax.swing.JMenuItem copyMenuItem;
-    private javax.swing.JMenuItem cutMenuItem;
-    private javax.swing.JMenuItem deleteMenuItem;
+    private javax.swing.JButton btnActualizarUsuario;
+    private javax.swing.JButton btnBuscarUsuario;
+    private javax.swing.JButton btnEliminarUsuario;
+    private javax.swing.JButton btnNuevoUsuario;
+    private javax.swing.JButton btnVolverInicio;
     private javax.swing.JDesktopPane desktopPane;
-    private javax.swing.JMenu editMenu;
-    private javax.swing.JMenuItem exitMenuItem;
-    private javax.swing.JMenu fileMenu;
-    private javax.swing.JMenu helpMenu;
-    private javax.swing.JMenuBar menuBar;
-    private javax.swing.JMenuItem openMenuItem;
-    private javax.swing.JMenuItem pasteMenuItem;
-    private javax.swing.JMenuItem saveAsMenuItem;
-    private javax.swing.JMenuItem saveMenuItem;
+    private javax.swing.JLabel lblFiaSupport;
+    private javax.swing.JLabel lblLogo;
+    private javax.swing.JToolBar tlbFiaSupport;
     // End of variables declaration//GEN-END:variables
 
 }
