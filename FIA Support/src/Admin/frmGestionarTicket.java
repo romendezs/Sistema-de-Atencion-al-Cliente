@@ -13,7 +13,7 @@ public class frmGestionarTicket extends javax.swing.JFrame {
 
         desktopPane = new javax.swing.JDesktopPane();
         jToolBar1 = new javax.swing.JToolBar();
-        jLabel1 = new javax.swing.JLabel();
+        lblFiaSupport = new javax.swing.JLabel();
         lblLogo = new javax.swing.JLabel();
         btnBuscarTicket = new javax.swing.JButton();
         btnAsignarTicket = new javax.swing.JButton();
@@ -26,10 +26,10 @@ public class frmGestionarTicket extends javax.swing.JFrame {
         jToolBar1.setBackground(new java.awt.Color(153, 153, 153));
         jToolBar1.setRollover(true);
 
-        jLabel1.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel1.setText("FIA Support");
-        jToolBar1.add(jLabel1);
+        lblFiaSupport.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        lblFiaSupport.setForeground(new java.awt.Color(0, 0, 0));
+        lblFiaSupport.setText("FIA Support");
+        jToolBar1.add(lblFiaSupport);
 
         desktopPane.add(jToolBar1);
         jToolBar1.setBounds(0, 0, 430, 100);
@@ -114,8 +114,8 @@ public class frmGestionarTicket extends javax.swing.JFrame {
     private javax.swing.JButton btnBuscarTicket;
     private javax.swing.JButton btnVolverInicio;
     private javax.swing.JDesktopPane desktopPane;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JToolBar jToolBar1;
+    private javax.swing.JLabel lblFiaSupport;
     private javax.swing.JLabel lblLogo;
     // End of variables declaration//GEN-END:variables
 

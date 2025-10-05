@@ -10,14 +10,30 @@ public class frmAsignarSolicitud extends javax.swing.JFrame {
     private void initComponents() {
 
         desktopPane = new javax.swing.JDesktopPane();
+        jToolBar1 = new javax.swing.JToolBar();
+        lblFiaSupport = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        desktopPane.setBackground(new java.awt.Color(204, 204, 204));
+        desktopPane.setForeground(new java.awt.Color(204, 204, 204));
+
+        jToolBar1.setBackground(new java.awt.Color(153, 153, 153));
+        jToolBar1.setRollover(true);
+
+        lblFiaSupport.setFont(new java.awt.Font("Dialog", 0, 24)); // NOI18N
+        lblFiaSupport.setForeground(new java.awt.Color(0, 0, 0));
+        lblFiaSupport.setText("FIA Support");
+        jToolBar1.add(lblFiaSupport);
+
+        desktopPane.add(jToolBar1);
+        jToolBar1.setBounds(0, 0, 420, 100);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(desktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 615, Short.MAX_VALUE)
+            .addComponent(desktopPane, javax.swing.GroupLayout.DEFAULT_SIZE, 563, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -62,6 +78,8 @@ public class frmAsignarSolicitud extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane desktopPane;
+    private javax.swing.JToolBar jToolBar1;
+    private javax.swing.JLabel lblFiaSupport;
     // End of variables declaration//GEN-END:variables
 
 }
