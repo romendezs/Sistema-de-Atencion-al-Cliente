@@ -59,18 +59,18 @@ public class LoginUI extends javax.swing.JFrame {
         javax.swing.GroupLayout jPanelTopLayout = new javax.swing.GroupLayout(jPanelTop);
         jPanelTop.setLayout(jPanelTopLayout);
         jPanelTopLayout.setHorizontalGroup(
-            jPanelTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelTopLayout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addComponent(jLabelBienvenido)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                jPanelTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanelTopLayout.createSequentialGroup()
+                                .addGap(15, 15, 15)
+                                .addComponent(jLabelBienvenido)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanelTopLayout.setVerticalGroup(
-            jPanelTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelTopLayout.createSequentialGroup()
-                .addGap(10, 10, 10)
-                .addComponent(jLabelBienvenido)
-                .addContainerGap(10, Short.MAX_VALUE))
+                jPanelTopLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanelTopLayout.createSequentialGroup()
+                                .addGap(10, 10, 10)
+                                .addComponent(jLabelBienvenido)
+                                .addContainerGap(10, Short.MAX_VALUE))
         );
 
         // Load image icon from package
@@ -110,34 +110,34 @@ public class LoginUI extends javax.swing.JFrame {
         javax.swing.GroupLayout jPanelLoginLayout = new javax.swing.GroupLayout(jPanelLogin);
         jPanelLogin.setLayout(jPanelLoginLayout);
         jPanelLoginLayout.setHorizontalGroup(
-            jPanelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelLoginLayout.createSequentialGroup()
-                .addGap(40, 40, 40)
-                .addGroup(jPanelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabelTitulo)
-                    .addComponent(jLabelCarnet)
-                    .addComponent(txtCarnet)
-                    .addComponent(jLabelPassword)
-                    .addComponent(txtPassword)
-                    .addComponent(btnIniciar, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE))
-                .addContainerGap(40, Short.MAX_VALUE))
+                jPanelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanelLoginLayout.createSequentialGroup()
+                                .addGap(40, 40, 40)
+                                .addGroup(jPanelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(jLabelTitulo)
+                                        .addComponent(jLabelCarnet)
+                                        .addComponent(txtCarnet)
+                                        .addComponent(jLabelPassword)
+                                        .addComponent(txtPassword)
+                                        .addComponent(btnIniciar, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE))
+                                .addContainerGap(40, Short.MAX_VALUE))
         );
         jPanelLoginLayout.setVerticalGroup(
-            jPanelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelLoginLayout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(jLabelTitulo)
-                .addGap(18, 18, 18)
-                .addComponent(jLabelCarnet)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtCarnet, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(15, 15, 15)
-                .addComponent(jLabelPassword)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btnIniciar, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(20, Short.MAX_VALUE))
+                jPanelLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanelLoginLayout.createSequentialGroup()
+                                .addGap(20, 20, 20)
+                                .addComponent(jLabelTitulo)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabelCarnet)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtCarnet, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(15, 15, 15)
+                                .addComponent(jLabelPassword)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnIniciar, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         jLabelProblemas.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
@@ -149,123 +149,137 @@ public class LoginUI extends javax.swing.JFrame {
         javax.swing.GroupLayout jPanelMainLayout = new javax.swing.GroupLayout(jPanelMain);
         jPanelMain.setLayout(jPanelMainLayout);
         jPanelMainLayout.setHorizontalGroup(
-            jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanelTop, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(jPanelMainLayout.createSequentialGroup()
-                .addContainerGap(275, Short.MAX_VALUE)
-                .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelMainLayout.createSequentialGroup()
-                        .addComponent(jLabelLogo, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(410, 410, 410))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelMainLayout.createSequentialGroup()
-                        .addComponent(jPanelLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(275, 275, 275))))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelMainLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabelProblemas, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(330, 330, 330))
+                jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jPanelTop, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanelMainLayout.createSequentialGroup()
+                                .addContainerGap(275, Short.MAX_VALUE)
+                                .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelMainLayout.createSequentialGroup()
+                                                .addComponent(jLabelLogo, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(410, 410, 410))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelMainLayout.createSequentialGroup()
+                                                .addComponent(jPanelLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(275, 275, 275))))
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelMainLayout.createSequentialGroup()
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabelProblemas, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(330, 330, 330))
         );
         jPanelMainLayout.setVerticalGroup(
-            jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelMainLayout.createSequentialGroup()
-                .addComponent(jPanelTop, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(50, 50, 50)
-                .addComponent(jLabelLogo, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(40, 40, 40)
-                .addComponent(jPanelLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabelProblemas)
-                .addContainerGap(40, Short.MAX_VALUE))
+                jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanelMainLayout.createSequentialGroup()
+                                .addComponent(jPanelTop, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(50, 50, 50)
+                                .addComponent(jLabelLogo, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(40, 40, 40)
+                                .addComponent(jPanelLogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabelProblemas)
+                                .addContainerGap(40, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanelMain, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jPanelMain, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanelMain, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jPanelMain, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
-        
+
         btnIniciar.addActionListener(new java.awt.event.ActionListener() {
-    public void actionPerformed(java.awt.event.ActionEvent evt) {
-        btnIniciarActionPerformed(evt);
-    }
-});
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnIniciarActionPerformed(evt);
+            }
+        });
+        jLabelProblemas.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                new ForgotDialog(LoginUI.this).setVisible(true);
+            }
 
-        
-    }
-    
-    private void btnIniciarActionPerformed(java.awt.event.ActionEvent evt) {                                           
-    // Placeholders opcionales (por si los usas)
-    final String PLACEHOLDER_CARNET = "Ingrese su carnet";
-    final String PLACEHOLDER_PASS   = "Ingrese su contraseña";
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                jLabelProblemas.setText("<html><u>¿Problemas con el carnet o la contraseña?</u></html>");
+            }
 
-    // Obtiene los textos
-    String carnet = txtCarnet.getText().trim();
-    String pass   = new String(txtPassword.getPassword());
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                jLabelProblemas.setText("¿Problemas con el carnet o la contraseña?");
+            }
+        });
 
-    // Trata placeholders como vacío
-    boolean carnetVacio = carnet.isEmpty() || PLACEHOLDER_CARNET.equals(carnet);
-    boolean passVacia   = pass.isEmpty()   || PLACEHOLDER_PASS.equals(pass);
-
-    // Validaciones mínimas
-    if (carnetVacio) {
-        txtCarnet.requestFocus();
-        txtCarnet.setToolTipText("Ingrese su carnet.");
-        javax.swing.JOptionPane.showMessageDialog(this, 
-            "Ingrese su carnet.", 
-            "Validación", 
-            javax.swing.JOptionPane.WARNING_MESSAGE);
-        return;
     }
 
-    if (passVacia) {
-        txtPassword.requestFocus();
-        txtPassword.setToolTipText("Ingrese su contraseña.");
-        javax.swing.JOptionPane.showMessageDialog(this, 
-            "Ingrese su contraseña.", 
-            "Validación", 
-            javax.swing.JOptionPane.WARNING_MESSAGE);
-        return;
+    private void btnIniciarActionPerformed(java.awt.event.ActionEvent evt) {
+        // Placeholders opcionales (por si los usas)
+        final String PLACEHOLDER_CARNET = "Ingrese su carnet";
+        final String PLACEHOLDER_PASS = "Ingrese su contraseña";
+
+        // Obtiene los textos
+        String carnet = txtCarnet.getText().trim();
+        String pass = new String(txtPassword.getPassword());
+
+        // Trata placeholders como vacío
+        boolean carnetVacio = carnet.isEmpty() || PLACEHOLDER_CARNET.equals(carnet);
+        boolean passVacia = pass.isEmpty() || PLACEHOLDER_PASS.equals(pass);
+
+        // Validaciones mínimas
+        if (carnetVacio) {
+            txtCarnet.requestFocus();
+            txtCarnet.setToolTipText("Ingrese su carnet.");
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "Ingrese su carnet.",
+                    "Validación",
+                    javax.swing.JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (passVacia) {
+            txtPassword.requestFocus();
+            txtPassword.setToolTipText("Ingrese su contraseña.");
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "Ingrese su contraseña.",
+                    "Validación",
+                    javax.swing.JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Valida formato del carnet (solo letras/números)
+        if (!carnet.matches("^[A-Za-z0-9]+$")) {
+            txtCarnet.requestFocus();
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "Carnet inválido (solo letras o números).",
+                    "Validación",
+                    javax.swing.JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // DEMO de autenticación
+        boolean ok = "NZ03021".equalsIgnoreCase(carnet) && "123456".equals(pass);
+
+        if (ok) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "Login OK (demo).",
+                    "FIA Support",
+                    javax.swing.JOptionPane.INFORMATION_MESSAGE);
+
+            // Aquí puedes abrir tu ventana principal y cerrar esta:
+            // new VentanaPrincipal().setVisible(true);
+            // this.dispose();
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "Usuario o contraseña inválidos.",
+                    "FIA Support",
+                    javax.swing.JOptionPane.ERROR_MESSAGE);
+        }
     }
 
-    // Valida formato del carnet (solo letras/números)
-    if (!carnet.matches("^[A-Za-z0-9]+$")) {
-        txtCarnet.requestFocus();
-        javax.swing.JOptionPane.showMessageDialog(this, 
-            "Carnet inválido (solo letras o números).", 
-            "Validación", 
-            javax.swing.JOptionPane.WARNING_MESSAGE);
-        return;
-    }
-
-    // DEMO de autenticación
-    boolean ok = "NZ03021".equalsIgnoreCase(carnet) && "123456".equals(pass);
-
-    if (ok) {
-        javax.swing.JOptionPane.showMessageDialog(this, 
-            "Login OK (demo).", 
-            "FIA Support", 
-            javax.swing.JOptionPane.INFORMATION_MESSAGE);
-
-        // Aquí puedes abrir tu ventana principal y cerrar esta:
-        // new VentanaPrincipal().setVisible(true);
-        // this.dispose();
-    } else {
-        javax.swing.JOptionPane.showMessageDialog(this, 
-            "Usuario o contraseña inválidos.", 
-            "FIA Support", 
-            javax.swing.JOptionPane.ERROR_MESSAGE);
-    }
-}
-    
     // </editor-fold>//GEN-END:initComponents
-
     /**
      * @param args the command line arguments
      */
