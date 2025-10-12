@@ -2,3 +2,5 @@
 /Soporte-/build/
 /Soporte-/dist/
 /Soporte-/nbproject/private/
+/build/ 
+*.class 
