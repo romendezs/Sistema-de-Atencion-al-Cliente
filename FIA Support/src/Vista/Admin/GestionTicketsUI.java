@@ -42,7 +42,7 @@ public class GestionTicketsUI extends JFrame {
         });
 
         btnCerrar.addActionListener(e -> {
-            int confirm = JOptionPane.showConfirmDialog(this, "¿Deseas cerrar sesión?", 
+            int confirm = JOptionPane.showConfirmDialog(this, "¿Deseas cerrar sesión?",
                     "Confirmar", JOptionPane.YES_NO_OPTION);
             if (confirm == JOptionPane.YES_OPTION) {
                 dispose(); // close current window
@@ -86,8 +86,7 @@ public class GestionTicketsUI extends JFrame {
             {"José Roberto", "Televisor B41", "Sin asignar", "Sin Asignar: 2 horas"},
             {"Alex Ezequiel", "Expediente en línea", "Santiago Hernández", "En Proceso: 3 días"},
             {"Christopher Enrique", "Cuentas de Google", "Juan Pérez", "En Proceso: 1 día"},
-            {"Arnoldo Inocencio", "Aires B21", "Carlos Rodríguez", "En Proceso: 2 horas"},
-        };
+            {"Arnoldo Inocencio", "Aires B21", "Carlos Rodríguez", "En Proceso: 2 horas"},};
 
         modelo = new DefaultTableModel(datos, columnas);
         tabla = new JTable(modelo) {
@@ -144,6 +143,7 @@ public class GestionTicketsUI extends JFrame {
 
     // 🔧 Renderizador para mostrar los íconos de acción
     private class AccionRenderer extends DefaultTableCellRenderer {
+
         private final JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
         private final JButton btnEditar = new JButton("✏");
         private final JButton btnEliminar = new JButton("🗑");
@@ -162,8 +162,8 @@ public class GestionTicketsUI extends JFrame {
 
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value,
-                                                      boolean isSelected, boolean hasFocus,
-                                                      int row, int column) {
+                boolean isSelected, boolean hasFocus,
+                int row, int column) {
             panel.setBackground(isSelected ? new Color(255, 220, 220) : Color.WHITE);
             btnEditar.setVisible(row == hoveredRow);
             btnEliminar.setVisible(row == hoveredRow);
@@ -173,6 +173,7 @@ public class GestionTicketsUI extends JFrame {
 
     // 🧩 Editor que responde a clics de los botones
     private class AccionEditor extends AbstractCellEditor implements TableCellEditor {
+
         private final JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
         private final JButton btnEditar = new JButton("✏");
         private final JButton btnEliminar = new JButton("🗑");
@@ -201,7 +202,7 @@ public class GestionTicketsUI extends JFrame {
 
         @Override
         public Component getTableCellEditorComponent(JTable table, Object value,
-                                                     boolean isSelected, int row, int column) {
+                boolean isSelected, int row, int column) {
             return panel;
         }
 
