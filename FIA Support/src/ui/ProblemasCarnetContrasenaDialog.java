@@ -9,65 +9,70 @@ package ui;
  * @author ceol7
  */
 public class ProblemasCarnetContrasenaDialog extends javax.swing.JDialog {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ProblemasCarnetContrasenaDialog.class.getName());
 
     /**
      * Creates new form ProblemasCarnetContrasenaDialog
      */
     public ProblemasCarnetContrasenaDialog(java.awt.Frame parent, boolean modal) {
-    super(parent, modal);
-    initComponents();
-    
-    final String ICON = "/img/Fia_Support_Icon.png"; // tu archivo nuevo
+        super(parent, modal);
+        initComponents();
+
+        final String ICON = "/img/Fia_Support_Icon.png"; // tu archivo nuevo
 
 // Escalar el icono del label a 50 px de alto (manteniendo proporción)
-javax.swing.Icon raw = lblIcono.getIcon();
-if (raw instanceof javax.swing.ImageIcon) {
-    javax.swing.ImageIcon imgIcon = (javax.swing.ImageIcon) raw;
-    java.awt.Image img = imgIcon.getImage();
-    int w = img.getWidth(null), h = img.getHeight(null);
-    if (w > 0 && h > 0) {
-        int maxH = 50, maxW = 50;
+        javax.swing.Icon raw = lblIcono.getIcon();
+        if (raw instanceof javax.swing.ImageIcon) {
+            javax.swing.ImageIcon imgIcon = (javax.swing.ImageIcon) raw;
+            java.awt.Image img = imgIcon.getImage();
+            int w = img.getWidth(null), h = img.getHeight(null);
+            if (w > 0 && h > 0) {
+                int maxH = 50, maxW = 50;
+                double s = Math.min((double) maxW / w, (double) maxH / h);
+                int nw = Math.max(1, (int) Math.round(w * s));
+                int nh = Math.max(1, (int) Math.round(h * s));
+                java.awt.Image scaled = img.getScaledInstance(nw, nh, java.awt.Image.SCALE_SMOOTH);
+                lblIcono.setIcon(new javax.swing.ImageIcon(scaled));
+                lblIcono.setPreferredSize(new java.awt.Dimension(nw, nh)); // opcional
+            }
+        }
+
+        // Placeholders
+        addPlaceholder(txtCorreoPersonal, "Digite su correo electrónico personal");
+        addPlaceholder(txtCarnet, "Digite su carnet");
+
+        // Enter = Enviar
+        getRootPane().setDefaultButton(btnEnviar);
+
+        // Esc = cerrar
+        getRootPane().registerKeyboardAction(
+                e -> dispose(),
+                javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ESCAPE, 0),
+                javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW
+        );
+
+        // Centrar sobre la ventana padre
+        setLocationRelativeTo(parent);
+    }
+
+    private javax.swing.ImageIcon loadScaledIcon(String resource, int maxW, int maxH) {
+        java.net.URL url = getClass().getResource(resource);
+        if (url == null) {
+            return null;
+        }
+        java.awt.Image img = new javax.swing.ImageIcon(url).getImage();
+        int w = img.getWidth(null), h = img.getHeight(null);
+        if (w <= 0 || h <= 0) {
+            return new javax.swing.ImageIcon(url);
+        }
         double s = Math.min((double) maxW / w, (double) maxH / h);
         int nw = Math.max(1, (int) Math.round(w * s));
         int nh = Math.max(1, (int) Math.round(h * s));
         java.awt.Image scaled = img.getScaledInstance(nw, nh, java.awt.Image.SCALE_SMOOTH);
-        lblIcono.setIcon(new javax.swing.ImageIcon(scaled));
-        lblIcono.setPreferredSize(new java.awt.Dimension(nw, nh)); // opcional
+        return new javax.swing.ImageIcon(scaled);
     }
-}
 
-    // Placeholders
-    addPlaceholder(txtCorreoPersonal, "Digite su correo electrónico personal");
-    addPlaceholder(txtCarnet,          "Digite su carnet");
-
-    // Enter = Enviar
-    getRootPane().setDefaultButton(btnEnviar);
-
-    // Esc = cerrar
-    getRootPane().registerKeyboardAction(
-        e -> dispose(),
-        javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ESCAPE, 0),
-        javax.swing.JComponent.WHEN_IN_FOCUSED_WINDOW
-    );
-
-    // Centrar sobre la ventana padre
-    setLocationRelativeTo(parent);
-}
-
-    private javax.swing.ImageIcon loadScaledIcon(String resource, int maxW, int maxH) {
-    java.net.URL url = getClass().getResource(resource);
-    if (url == null) return null;
-    java.awt.Image img = new javax.swing.ImageIcon(url).getImage();
-    int w = img.getWidth(null), h = img.getHeight(null);
-    if (w <= 0 || h <= 0) return new javax.swing.ImageIcon(url);
-    double s = Math.min((double)maxW / w, (double)maxH / h);
-    int nw = Math.max(1, (int)Math.round(w * s));
-    int nh = Math.max(1, (int)Math.round(h * s));
-    java.awt.Image scaled = img.getScaledInstance(nw, nh, java.awt.Image.SCALE_SMOOTH);
-    return new javax.swing.ImageIcon(scaled);
-}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -228,25 +233,25 @@ if (raw instanceof javax.swing.ImageIcon) {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarActionPerformed
-        String email  = getSafeText(txtCorreoPersonal);
+        String email = getSafeText(txtCorreoPersonal);
         String carnet = getSafeText(txtCarnet);
 
         if (email.isEmpty() && carnet.isEmpty()) {
             javax.swing.JOptionPane.showMessageDialog(this,
-                "Ingrese al menos su correo o su carnet.",
-                "Faltan datos", javax.swing.JOptionPane.WARNING_MESSAGE);
+                    "Ingrese al menos su correo o su carnet.",
+                    "Faltan datos", javax.swing.JOptionPane.WARNING_MESSAGE);
             return;
         }
         if (!chkCaptcha.isSelected()) {
             javax.swing.JOptionPane.showMessageDialog(this,
-                "Confirme que no es un robot.",
-                "Validación", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                    "Confirme que no es un robot.",
+                    "Validación", javax.swing.JOptionPane.INFORMATION_MESSAGE);
             return;
         }
 
         javax.swing.JOptionPane.showMessageDialog(this,
-            "Solicitud enviada. Revise su correo.",
-            "Listo", javax.swing.JOptionPane.PLAIN_MESSAGE);
+                "Solicitud enviada. Revise su correo.",
+                "Listo", javax.swing.JOptionPane.PLAIN_MESSAGE);
 
         dispose();
     }//GEN-LAST:event_btnEnviarActionPerformed
@@ -302,39 +307,42 @@ if (raw instanceof javax.swing.ImageIcon) {
     }
 
     // --- Helpers de placeholder ---
-private void addPlaceholder(final javax.swing.JTextField field, final String hint) {
-    final java.awt.Color fgNormal = field.getForeground();
-    final java.awt.Color fgHint   = java.awt.Color.GRAY;
+    private void addPlaceholder(final javax.swing.JTextField field, final String hint) {
+        final java.awt.Color fgNormal = field.getForeground();
+        final java.awt.Color fgHint = java.awt.Color.GRAY;
 
-    field.putClientProperty("isHint", true);
-    field.setForeground(fgHint);
-    field.setText(hint);
+        field.putClientProperty("isHint", true);
+        field.setForeground(fgHint);
+        field.setText(hint);
 
-    field.addFocusListener(new java.awt.event.FocusAdapter() {
-        @Override public void focusGained(java.awt.event.FocusEvent e) {
-            if (Boolean.TRUE.equals(field.getClientProperty("isHint"))) {
-                field.setText("");
-                field.setForeground(fgNormal);
-                field.putClientProperty("isHint", false);
+        field.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusGained(java.awt.event.FocusEvent e) {
+                if (Boolean.TRUE.equals(field.getClientProperty("isHint"))) {
+                    field.setText("");
+                    field.setForeground(fgNormal);
+                    field.putClientProperty("isHint", false);
+                }
             }
-        }
-        @Override public void focusLost(java.awt.event.FocusEvent e) {
-            if (field.getText().trim().isEmpty()) {
-                field.setForeground(fgHint);
-                field.setText(hint);
-                field.putClientProperty("isHint", true);
+
+            @Override
+            public void focusLost(java.awt.event.FocusEvent e) {
+                if (field.getText().trim().isEmpty()) {
+                    field.setForeground(fgHint);
+                    field.setText(hint);
+                    field.putClientProperty("isHint", true);
+                }
             }
-        }
-    });
-}
+        });
+    }
 
-private String getSafeText(javax.swing.JTextField field) {
-    boolean isHint = Boolean.TRUE.equals(field.getClientProperty("isHint"));
-    String txt = field.getText().trim();
-    return isHint ? "" : txt;
-}
+    private String getSafeText(javax.swing.JTextField field) {
+        boolean isHint = Boolean.TRUE.equals(field.getClientProperty("isHint"));
+        String txt = field.getText().trim();
+        return isHint ? "" : txt;
+    }
 
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel White_font;
     private javax.swing.JButton btnClose;
