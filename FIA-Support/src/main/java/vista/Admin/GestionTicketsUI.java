@@ -1,9 +1,13 @@
 package Vista.Admin;
 
-import controlador.GestionTicketsController;
-import modelo.dominio.*;
-import modelo.repo.*;
-import modelo.servicios.*;
+import controlador.AssignmentController;
+import controlador.ReportingController;
+import controlador.TicketController;
+import controlador.WorkflowController;
+import modelo.dominio.Empleado;
+import modelo.dominio.Estado;
+import modelo.dominio.Historial;
+import modelo.dominio.Ticket;
 
 import javax.swing.*;
 import javax.swing.border.*;
@@ -23,7 +27,10 @@ public class GestionTicketsUI extends JFrame {
     private static final Color ROJO_CLARO = new Color(244, 196, 192);
     private static final Color GRIS_TXT = new Color(90, 90, 90);
 
-    private final GestionTicketsController controller;
+    private final TicketController ticketController;
+    private final AssignmentController assignmentController;
+    private final WorkflowController workflowController;
+    private final ReportingController reportingController;
 
     // tabla
     private JTable table;
@@ -42,8 +49,14 @@ public class GestionTicketsUI extends JFrame {
     private static final int ICON_BTN = 20;
     private static final int ICON_GAP = 6;
 
-    public GestionTicketsUI(GestionTicketsController controller) {
-        this.controller = controller;
+    public GestionTicketsUI(TicketController ticketController,
+                            AssignmentController assignmentController,
+                            WorkflowController workflowController,
+                            ReportingController reportingController) {
+        this.ticketController = ticketController;
+        this.assignmentController = assignmentController;
+        this.workflowController = workflowController;
+        this.reportingController = reportingController;
 
         setTitle("FIA Support");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -93,6 +106,7 @@ public class GestionTicketsUI extends JFrame {
         JButton btnUsuarios = btnHeader("Gestionar Usuarios");
         btnUsuarios.addActionListener(e -> openUsuarios());
         JButton btnReportes = btnHeader("Ver Reportes y Estadísticas");
+        btnReportes.addActionListener(e -> mostrarResumenGlobal());
         mid.add(btnUsuarios);
         mid.add(btnReportes);
 
@@ -175,7 +189,7 @@ public class GestionTicketsUI extends JFrame {
         panel.add(north, BorderLayout.NORTH);
 
         // Tabla
-        model = new TicketTableModel(controller.getTickets());
+        model = new TicketTableModel(ticketController.listTickets());
         table = new JTable(model) {
             @Override
             public boolean getScrollableTracksViewportWidth() {
@@ -258,6 +272,47 @@ public class GestionTicketsUI extends JFrame {
         panel.add(sp, BorderLayout.CENTER);
 
         return panel;
+    }
+
+    private void mostrarResumenGlobal() {
+        try {
+            List<Object[]> resumen = reportingController.resumenPorEstadoGlobal();
+            if (resumen == null || resumen.isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                        "No hay datos para mostrar.",
+                        "Reportes",
+                        JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("Tickets por estado:\n");
+            for (Object[] fila : resumen) {
+                if (fila == null || fila.length < 2) {
+                    continue;
+                }
+                sb.append(" • ")
+                        .append(fila[0] == null ? "(sin estado)" : fila[0].toString())
+                        .append(": ")
+                        .append(fila[1] == null ? "0" : fila[1].toString())
+                        .append('\n');
+            }
+
+            JOptionPane.showMessageDialog(this,
+                    sb.toString(),
+                    "Reportes",
+                    JOptionPane.INFORMATION_MESSAGE);
+        } catch (IllegalArgumentException ex) {
+            JOptionPane.showMessageDialog(this,
+                    ex.getMessage(),
+                    "Reportes",
+                    JOptionPane.WARNING_MESSAGE);
+        } catch (RuntimeException ex) {
+            JOptionPane.showMessageDialog(this,
+                    "No fue posible obtener el resumen.",
+                    "Reportes",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }
 
 
@@ -408,7 +463,7 @@ public class GestionTicketsUI extends JFrame {
     }
 
     private void refiltrar() {
-        List<Ticket> lst = controller.filtrarPorSolicitante(txtBuscar.getText());
+        List<Ticket> lst = ticketController.filterBySolicitante(txtBuscar.getText());
         model.setData(lst);
     }
 
@@ -417,8 +472,8 @@ public class GestionTicketsUI extends JFrame {
         DeleteTicketDialog dlg = new DeleteTicketDialog(this, t);
         dlg.setVisible(true);
         if (dlg.isConfirmed()) {
-            controller.eliminar(t.getId());
-            model.setData(controller.getTickets());
+            ticketController.deleteTicket(t.getId());
+            model.setData(ticketController.listTickets());
         }
     }
 
@@ -428,20 +483,22 @@ public class GestionTicketsUI extends JFrame {
     }
 
     private void onAsignar(Ticket t) {
-        AssignDialog dlg = new AssignDialog(this, t, controller.getEmpleados());
+        AssignDialog dlg = new AssignDialog(this, t, assignmentController.listTechnicians());
         dlg.setVisible(true);
         if (dlg.getEmpleadoSeleccionado() != null) {
-            controller.asignar(t.getId(), dlg.getEmpleadoSeleccionado().getId());
-            model.setData(controller.getTickets());
+            assignmentController.assign(t.getId(), dlg.getEmpleadoSeleccionado().getId());
+            model.setData(ticketController.listTickets());
         }
     }
 
     private void onSeguimiento(Ticket t) {
-        StatusDialog dlg = new StatusDialog(this, t);
+        StatusDialog dlg = new StatusDialog(this, t,
+                workflowController.historial(t.getId()),
+                workflowController.estadosDisponibles());
         dlg.setVisible(true);
         if (dlg.isUpdated()) {
-            controller.actualizarEstado(t.getId(), dlg.getEstadoSeleccionado(), dlg.getComentario());
-            model.setData(controller.getTickets());
+            workflowController.advanceStatus(t.getId(), dlg.getEstadoSeleccionado(), t.getTecnicoAsignado(), dlg.getComentario());
+            model.setData(ticketController.listTickets());
         }
     }
 
@@ -633,7 +690,7 @@ public class GestionTicketsUI extends JFrame {
         private Estado nextEstado;
         private String comentario;
 
-        StatusDialog(Frame owner, Ticket t) {
+        StatusDialog(Frame owner, Ticket t, List<Historial> historial, List<Estado> estadosDisponibles) {
             super(owner, "Seguimiento Ticket", true);
             setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
@@ -661,11 +718,12 @@ public class GestionTicketsUI extends JFrame {
 
             // table historial
             String[] cols = {"Actualización", "Seguimiento", "Fecha"};
-            Object[][] rows = new Object[t.getHistorial().size() + 1][3];
+            List<Historial> historialData = historial == null ? java.util.Collections.emptyList() : historial;
+            Object[][] rows = new Object[historialData.size() + 1][3];
             DateTimeFormatter fmt = DateTimeFormatter.ofPattern("d/M/yyyy");
             int i = 0;
-            for (Historial s : t.getHistorial()) {
-                rows[i][0] = s.getEstado().getRotulo();
+            for (Historial s : historialData) {
+                rows[i][0] = s.getEstado() == null ? "" : s.getEstado().toString();
                 rows[i][1] = s.getComentario();
                 rows[i][2] = s.getFecha().format(fmt);
                 i++;
@@ -685,7 +743,9 @@ public class GestionTicketsUI extends JFrame {
             grid.setIntercellSpacing(new Dimension(0, 4));
 
             // editors for last row
-            JComboBox<Estado> cbEstado = new JComboBox<>(Estado.values());
+            JComboBox<Estado> cbEstado = new JComboBox<>(estadosDisponibles == null
+                    ? new Estado[0]
+                    : estadosDisponibles.toArray(new Estado[0]));
             grid.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(cbEstado));
             JTextField txt = new JTextField();
             grid.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(txt));
@@ -784,10 +844,10 @@ public class GestionTicketsUI extends JFrame {
                 return t.getTitulo();
             }
             if (c == COL_ASIG) {
-                return t.getAsignado() == null ? "Sin asignar" : t.getAsignado().toString();
+                return t.getTecnicoAsignado() == null ? "Sin asignar" : t.getTecnicoAsignado().toString();
             }
             if (c == COL_EST) {
-                return t.getEstadoActual().getRotulo();
+                return t.getEstadoActual() == null ? "" : t.getEstadoActual().toString();
             }
             return "";
         }
@@ -807,21 +867,18 @@ public class GestionTicketsUI extends JFrame {
     }
 
     private void openUsuarios() {
-        try {
-            Class<?> c = Class.forName("Vista.Admin.GestionUsuariosUI");
-            java.awt.Window next = (java.awt.Window) c.getDeclaredConstructor().newInstance();
-            next.setVisible(true);
-            dispose();
-        } catch (Throwable ex) {
-            JOptionPane.showMessageDialog(this, "No se pudo abrir Gestionar Usuarios.", "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        JOptionPane.showMessageDialog(this,
+                "Diríjase al módulo principal para gestionar usuarios.",
+                "Navegación",
+                JOptionPane.INFORMATION_MESSAGE);
     }
 
     public static void main(String[] args) {
-        modelo.repo.mem.TicketRepositoryMem repo = new modelo.repo.mem.TicketRepositoryMem();
-        repo.seed();
-        GestionTicketsController ctrl = new GestionTicketsController(repo);
-        SwingUtilities.invokeLater(() -> new GestionTicketsUI(ctrl).setVisible(true));
+        SwingUtilities.invokeLater(() ->
+                JOptionPane.showMessageDialog(null,
+                        "Configure un contenedor de dependencias para ejecutar la UI.",
+                        "FIA Support",
+                        JOptionPane.INFORMATION_MESSAGE));
     }
 
 }

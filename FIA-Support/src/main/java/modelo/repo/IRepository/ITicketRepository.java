@@ -4,6 +4,7 @@
  */
 package modelo.repo.IRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import modelo.dominio.*;
@@ -19,7 +20,20 @@ public interface ITicketRepository {
 
     Optional<Ticket> findById(int id);
 
+    List<Ticket> findByUsuarioId(String usuarioId);
+
+    List<Ticket> findByEstadoId(int estadoId);
+
+    List<Ticket> findByRangoFechas(LocalDateTime desde, LocalDateTime hasta);
+
     List<Empleado> findAllEmpleados();
+
+    Ticket save(Ticket ticket);
+
+    List<Historial> findHistorialByTicket(int ticketId);
+    List<Estado> findAllEstados();
+
+    List<TicketAsignacionHistorial> findAsignacionesByTicket(int ticketId);
 
     // Escrituras
     void deleteById(int ticketId);
