@@ -13,6 +13,7 @@
     <class>modelo.dominio.TicketCategoriaHistorial</class>
     <class>modelo.dominio.TicketMetricasDiarias</class>
     <class>modelo.dominio.UsuarioFinal</class>
+    <class>modelo.dominio.Administrador</class>
 
     <properties>
       <!-- JDBC -->
