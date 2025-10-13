@@ -1,48 +1,82 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package app;
 
-import Vista.Admin.GestionTicketsUI;
+import Vista.Admin.GestionUsuariosUI;
+import Vista.Login.LoginUI;
+import com.mycompany.soporte.SoporteFrame;
+import controlador.LoginController;
 import controlador.TicketController;
-import controlador.AssignmentController;
-import controlador.WorkflowController;
-import controlador.ReportingController;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
-
-/**
- *
- * @author Méndez
- */
+import controlador.UserAdminController;
 import javax.swing.SwingUtilities;
-import modelo.servicios.AssignmentService;
-import modelo.servicios.ReportingService;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+import modelo.db.JPAUtil;
+import modelo.repo.AdminRepository;
+import modelo.repo.CarreraRepository;
+import modelo.repo.FacultadRepository;
+import modelo.repo.TicketRepository;
+import modelo.repo.UsuarioRepository;
+import modelo.servicios.AuthService;
 import modelo.servicios.TicketService;
+import modelo.servicios.UserAdminService;
+import modelo.servicios.UsuarioService;
 import modelo.servicios.WorkflowService;
 
-public class AppMain {
+/**
+ * Punto de entrada de la aplicación. Configura las dependencias necesarias y
+ * muestra la pantalla de inicio de sesión.
+ */
+public final class AppMain {
+
+    private AppMain() {
+        // Evita la instanciación
+    }
 
     public static void main(String[] args) {
-        // 1️⃣ Initialize JPA
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("fiasupportPU");
+        configurarLookAndFeel();
+        Runtime.getRuntime().addShutdownHook(new Thread(JPAUtil::close));
 
-        // 2️⃣ Create your controllers (inject dependencies as needed)
-        TicketController ticketController = new TicketController((TicketService) emf);
-        AssignmentController assignmentController = new AssignmentController((AssignmentService) emf);
-        WorkflowController workflowController = new WorkflowController((WorkflowService) emf);
-        ReportingController reportingController = new ReportingController((ReportingService) emf);
-
-        // 3️⃣ Launch the UI
         SwingUtilities.invokeLater(() -> {
-            GestionTicketsUI ui = new GestionTicketsUI(
+            UsuarioRepository usuarioRepository = new UsuarioRepository();
+            AdminRepository adminRepository = new AdminRepository();
+            AuthService authService = new AuthService(usuarioRepository, adminRepository);
+
+            TicketRepository ticketRepository = new TicketRepository();
+            TicketService ticketService = new TicketService(ticketRepository, usuarioRepository);
+            TicketController ticketController = new TicketController(ticketService);
+            WorkflowService workflowService = new WorkflowService(ticketRepository);
+
+            FacultadRepository facultadRepository = new FacultadRepository();
+            CarreraRepository carreraRepository = new CarreraRepository();
+            UsuarioService usuarioService = new UsuarioService(usuarioRepository, facultadRepository, carreraRepository);
+            UserAdminService userAdminService = new UserAdminService(usuarioService);
+            GestionUsuariosUI adminView = new GestionUsuariosUI();
+            UserAdminController userAdminController = new UserAdminController(userAdminService, adminView);
+
+            LoginUI loginUI = new LoginUI();
+            LoginController loginController = new LoginController(
+                    authService,
+                    loginUI,
                     ticketController,
-                    assignmentController,
-                    workflowController,
-                    reportingController
+                    workflowService,
+                    SoporteFrame::new,
+                    userAdminController,
+                    adminView
             );
-            ui.setVisible(true);
+            loginController.showLogin();
         });
+    }
+
+    private static void configurarLookAndFeel() {
+        try {
+            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex)
+        {
+            System.err.println("No se pudo establecer Nimbus L&F: " + ex.getMessage());
+        }
     }
 }

@@ -4,13 +4,26 @@
  */
 package Vista.Login;
 
-import controlador.AuthController;
+import Vista.Admin.GestionUsuariosUI;
+import controlador.LoginController;
+import controlador.TicketController;
+import controlador.UserAdminController;
 import java.awt.Image;
 import java.net.URL;
 import java.util.Arrays;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
-import modelo.dominio.UsuarioFinal;
+import modelo.repo.AdminRepository;
+import modelo.repo.CarreraRepository;
+import modelo.repo.FacultadRepository;
+import modelo.repo.TicketRepository;
+import modelo.repo.UsuarioRepository;
+import modelo.servicios.AuthService;
+import modelo.servicios.TicketService;
+import modelo.servicios.UserAdminService;
+import modelo.servicios.UsuarioService;
+import modelo.servicios.WorkflowService;
+import com.mycompany.soporte.SoporteFrame;
 
 /**
  *
@@ -18,7 +31,7 @@ import modelo.dominio.UsuarioFinal;
  */
 public class LoginUI extends javax.swing.JFrame {
 
-    private AuthController controller;
+    private LoginController controller;
 
     /**
      * Creates new form LoginUI
@@ -43,7 +56,7 @@ public class LoginUI extends javax.swing.JFrame {
         return new ImageIcon(resource);
     }
 
-    public void setController(AuthController controller) {
+    public void setController(LoginController controller) {
         this.controller = controller;
     }
 
@@ -298,12 +311,8 @@ public class LoginUI extends javax.swing.JFrame {
 
         char[] password = pass.toCharArray();
         try {
-            UsuarioFinal usuario = controller.login(carnet, password);
-            JOptionPane.showMessageDialog(this,
-                    "¡Bienvenido " + usuario.getNombres() + "!",
-                    "FIA Support",
-                    JOptionPane.INFORMATION_MESSAGE);
-        } catch (IllegalArgumentException ex) {
+            controller.handleLogin(carnet, password);
+        } catch (IllegalArgumentException | IllegalStateException ex) {
             JOptionPane.showMessageDialog(this,
                     ex.getMessage(),
                     "FIA Support",
@@ -341,7 +350,33 @@ public class LoginUI extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> {
-            new LoginUI().setVisible(true);
+            UsuarioRepository usuarioRepository = new UsuarioRepository();
+            AdminRepository adminRepository = new AdminRepository();
+            AuthService authService = new AuthService(usuarioRepository, adminRepository);
+
+            TicketRepository ticketRepository = new TicketRepository();
+            TicketService ticketService = new TicketService(ticketRepository, usuarioRepository);
+            TicketController ticketController = new TicketController(ticketService);
+            WorkflowService workflowService = new WorkflowService(ticketRepository);
+
+            FacultadRepository facultadRepository = new FacultadRepository();
+            CarreraRepository carreraRepository = new CarreraRepository();
+            UsuarioService usuarioService = new UsuarioService(usuarioRepository, facultadRepository, carreraRepository);
+            UserAdminService userAdminService = new UserAdminService(usuarioService);
+            GestionUsuariosUI adminView = new GestionUsuariosUI();
+            UserAdminController userAdminController = new UserAdminController(userAdminService, adminView);
+
+            LoginUI loginUI = new LoginUI();
+            LoginController loginController = new LoginController(
+                    authService,
+                    loginUI,
+                    ticketController,
+                    workflowService,
+                    SoporteFrame::new,
+                    userAdminController,
+                    adminView
+            );
+            loginController.showLogin();
         });
     }
 

@@ -16,8 +16,16 @@ public class AuthController {
         this.authService = authService;
     }
 
+    protected AuthService getAuthService() {
+        return authService;
+    }
+
     public UsuarioFinal login(String carnet, char[] password) {
         return authService.login(carnet, password);
+    }
+
+    public AuthService.AuthenticationResult authenticate(String usuario, char[] password) {
+        return authService.authenticate(usuario, password);
     }
 
     public UsuarioFinal changePassword(String carnet, char[] currentPassword, char[] newPassword) {
