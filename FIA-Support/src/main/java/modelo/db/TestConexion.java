@@ -16,16 +16,16 @@ public class TestConexion {
         System.out.println("🔍 Iniciando prueba de conexión a la base de datos...");
 
         try {
-            // 1️⃣ Crear la fábrica de EntityManagers usando el nombre del persistence.xml
+            //Crear la fábrica de EntityManagers usando el nombre del persistence.xml
             EntityManagerFactory emf = Persistence.createEntityManagerFactory("fiasupportPU");
 
-            // 2️⃣ Obtener un EntityManager (esto fuerza la conexión)
+            //Obtener un EntityManager (esto fuerza la conexión)
             EntityManager em = emf.createEntityManager();
 
-            // 3️⃣ Si llega aquí, la conexión es exitosa
+            //Si llega aquí, la conexión es exitosa
             System.out.println("✅ Conexión exitosa a la base de datos mediante Hibernate!");
 
-            // 4️⃣ Cierra los recursos
+            //Cierra los recursos
             em.close();
             emf.close();
 

@@ -4,34 +4,60 @@
  */
 package modelo.dominio;
 
+import jakarta.persistence.*;
 import java.util.Objects;
-
 /**
  *
  * @author Méndez
  */
+
+@Entity
+@Table(name = "carrera")
 public class Carrera {
 
-    private int id;
-    private String nombre;
-    private int idFacultad;  // FK para validaciones
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_carrera")
+    private Integer id;
 
-    public Carrera(int id, String nombre, int idFacultad) {
-        this.id = id;
-        this.nombre = nombre;
-        this.idFacultad = idFacultad;
+    @Column(name = "nombre", nullable = false, length = 150)
+    private String nombre;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id_facultad", nullable = false) // FK -> facultad.id_facultad
+    private Facultad facultad;
+
+    public Carrera() {
     }
 
-    public int getId() {
+    public Carrera(Integer id, String nombre, Facultad facultad) {
+        this.id = id;
+        this.nombre = nombre;
+        this.facultad = facultad;
+    }
+
+    public Integer getId() {
         return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getNombre() {
         return nombre;
     }
 
-    public int getIdFacultad() {
-        return idFacultad;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public Facultad getFacultad() {
+        return facultad;
+    }
+
+    public void setFacultad(Facultad facultad) {
+        this.facultad = facultad;
     }
 
     @Override
@@ -42,17 +68,11 @@ public class Carrera {
         if (!(o instanceof Carrera)) {
             return false;
         }
-        Carrera that = (Carrera) o;
-        return id == that.id;
+        return Objects.equals(id, ((Carrera) o).id);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(id);
-    }
-
-    @Override
-    public String toString() {
-        return nombre;
     }
 }

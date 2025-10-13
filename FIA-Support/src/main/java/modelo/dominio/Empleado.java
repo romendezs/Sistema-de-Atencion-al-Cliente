@@ -4,26 +4,63 @@
  */
 package modelo.dominio;
 
+import jakarta.persistence.*;
 /**
  *
  * @author Méndez
  */
 
+@Entity
+@Table(name = "empleado")
 public class Empleado {
-    private final int id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_empleado")
+    private Integer id;
+
+    @Column(name = "nombres", nullable = false, length = 120)
     private String nombres;
+
+    @Column(name = "apellidos", nullable = false, length = 120)
     private String apellidos;
 
-    public Empleado(int id, String nombres, String apellidos) {
+    // agrega aquí otros @Column si existen (correo, área, etc.)
+    public Empleado() {
+    }
+
+    public Empleado(Integer id, String nombres, String apellidos) {
         this.id = id;
         this.nombres = nombres;
         this.apellidos = apellidos;
     }
 
-    public int getId(){ return id; }
-    public String getNombres(){ return nombres; }
-    public String getApellidos(){ return apellidos; }
+    public Integer getId() {
+        return id;
+    }
 
-    @Override public String toString(){ return nombres + " " + apellidos; }
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getNombres() {
+        return nombres;
+    }
+
+    public void setNombres(String nombres) {
+        this.nombres = nombres;
+    }
+
+    public String getApellidos() {
+        return apellidos;
+    }
+
+    public void setApellidos(String apellidos) {
+        this.apellidos = apellidos;
+    }
+
+    @Override
+    public String toString() {
+        return nombres + " " + apellidos;
+    }
 }
-

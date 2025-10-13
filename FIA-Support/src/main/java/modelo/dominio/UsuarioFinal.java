@@ -4,29 +4,35 @@
  */
 package modelo.dominio;
 
+import jakarta.persistence.*;
 import java.util.Objects;
 
 /**
  *
  * @author Méndez
  */
+@Entity
+@Table(name = "usuario_final")
 public class UsuarioFinal {
 
-    private String id;          // carnet (varchar)  ej. MS24030
-    private String nombres;
-    private String apellidos;
-    private boolean esEstudiante;
-    private Facultad facultad;  // null si no es estudiante
-    private Carrera carrera;    // null si no es estudiante
+    @Id
+    @Column(name = "id_usuario", length = 32) // ajusta length a tu PK real
+    private String id;
 
-    public UsuarioFinal(String id, String nombres, String apellidos,
-            boolean esEstudiante, Facultad facultad, Carrera carrera) {
+    @Column(name = "nombres", nullable = false, length = 120)
+    private String nombres;
+
+    @Column(name = "apellidos", nullable = false, length = 120)
+    private String apellidos;
+
+    // agrega otros campos si existen: correo, teléfono, etc.
+    public UsuarioFinal() {
+    }
+
+    public UsuarioFinal(String id, String nombres, String apellidos) {
         this.id = id;
         this.nombres = nombres;
         this.apellidos = apellidos;
-        this.esEstudiante = esEstudiante;
-        this.facultad = facultad;
-        this.carrera = carrera;
     }
 
     public String getId() {
@@ -53,30 +59,6 @@ public class UsuarioFinal {
         this.apellidos = apellidos;
     }
 
-    public boolean isEsEstudiante() {
-        return esEstudiante;
-    }
-
-    public void setEsEstudiante(boolean esEstudiante) {
-        this.esEstudiante = esEstudiante;
-    }
-
-    public Facultad getFacultad() {
-        return facultad;
-    }
-
-    public void setFacultad(Facultad facultad) {
-        this.facultad = facultad;
-    }
-
-    public Carrera getCarrera() {
-        return carrera;
-    }
-
-    public void setCarrera(Carrera carrera) {
-        this.carrera = carrera;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -85,8 +67,7 @@ public class UsuarioFinal {
         if (!(o instanceof UsuarioFinal)) {
             return false;
         }
-        UsuarioFinal that = (UsuarioFinal) o;
-        return Objects.equals(id, that.id);
+        return Objects.equals(id, ((UsuarioFinal) o).id);
     }
 
     @Override

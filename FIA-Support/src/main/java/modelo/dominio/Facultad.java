@@ -4,32 +4,48 @@
  */
 package modelo.dominio;
 
+import jakarta.persistence.*;
 import java.util.Objects;
 
 /**
  *
  * @author Méndez
  */
+
+@Entity
+@Table(name = "facultad")
 public class Facultad {
 
-    private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_facultad")
+    private Integer id;
+
+    @Column(name = "nombre", nullable = false, length = 150)
     private String nombre;
 
-    public Facultad(int id, String nombre) {
+    public Facultad() {
+    }
+
+    public Facultad(Integer id, String nombre) {
         this.id = id;
         this.nombre = nombre;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getNombre() {
         return nombre;
     }
 
-    public void setNombre(String n) {
-        this.nombre = n;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
     @Override
@@ -40,8 +56,7 @@ public class Facultad {
         if (!(o instanceof Facultad)) {
             return false;
         }
-        Facultad that = (Facultad) o;
-        return id == that.id;
+        return Objects.equals(id, ((Facultad) o).id);
     }
 
     @Override
@@ -52,5 +67,5 @@ public class Facultad {
     @Override
     public String toString() {
         return nombre;
-    } // útil para JComboBox
+    }
 }
