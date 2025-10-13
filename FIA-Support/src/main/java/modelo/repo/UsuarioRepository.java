@@ -8,22 +8,21 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
-import modelo.dominio.Carrera;
-import modelo.repo.IRepository.ICarreraRepository;
+import modelo.dominio.UsuarioFinal;
+import modelo.repo.IRepository.IUsuarioRepository;
 
 /**
  *
  * @author Méndez
  */
-// db/repo/CarreraRepository.java
-public class CarreraRepository extends BaseJpaRepository implements ICarreraRepository {
+public class UsuarioRepository extends BaseJpaRepository implements IUsuarioRepository {
 
     @Override
-    public List<Carrera> findAll() {
+    public List<UsuarioFinal> findAll() {
         EntityManager em = em();
         try {
-            TypedQuery<Carrera> q = em.createQuery(
-                    "SELECT c FROM Carrera c ORDER BY c.id", Carrera.class);
+            TypedQuery<UsuarioFinal> q = em.createQuery(
+                    "SELECT u FROM UsuarioFinal u ORDER BY u.apellidos, u.nombres", UsuarioFinal.class);
             return q.getResultList();
         } finally {
             em.close();
@@ -31,40 +30,37 @@ public class CarreraRepository extends BaseJpaRepository implements ICarreraRepo
     }
 
     @Override
-    public List<Carrera> findByFacultadId(int idFacultad) {
+    public Optional<UsuarioFinal> findById(String id) {
         EntityManager em = em();
         try {
-            TypedQuery<Carrera> q = em.createQuery(
-                    "SELECT c FROM Carrera c WHERE c.facultad.id = :id ORDER BY c.nombre", Carrera.class);
-            q.setParameter("id", idFacultad);
-            return q.getResultList();
+            return Optional.ofNullable(em.find(UsuarioFinal.class, id));
         } finally {
             em.close();
         }
     }
 
     @Override
-    public Optional<Carrera> findById(int id) {
-        EntityManager em = em();
+    public Optional<UsuarioFinal> searchByCarnet(String carnet) {
+        var em = em();
         try {
-            return Optional.ofNullable(em.find(Carrera.class, id));
+            return Optional.ofNullable(em.find(UsuarioFinal.class, carnet));
         } finally {
             em.close();
         }
     }
 
     // CRUD opcional
-    public Carrera save(Carrera c) {
+    public UsuarioFinal save(UsuarioFinal u) {
         EntityManager em = em();
         try {
             em.getTransaction().begin();
-            if (c.getId() == null) {
-                em.persist(c);
+            if (em.find(UsuarioFinal.class, u.getId()) == null) {
+                em.persist(u);          // PK String: decide si usas persist o merge
             } else {
-                c = em.merge(c);
+                u = em.merge(u);
             }
             em.getTransaction().commit();
-            return c;
+            return u;
         } catch (RuntimeException ex) {
             em.getTransaction().rollback();
             throw ex;
@@ -73,11 +69,11 @@ public class CarreraRepository extends BaseJpaRepository implements ICarreraRepo
         }
     }
 
-    public void deleteById(int id) {
+    public void deleteById(String id) {
         EntityManager em = em();
         try {
             em.getTransaction().begin();
-            Carrera ref = em.find(Carrera.class, id);
+            UsuarioFinal ref = em.find(UsuarioFinal.class, id);
             if (ref != null) {
                 em.remove(ref);
             }

@@ -8,22 +8,25 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
-import modelo.dominio.Carrera;
-import modelo.repo.IRepository.ICarreraRepository;
+
+import modelo.dominio.Facultad;
+
+import modelo.repo.IRepository.IFacultadRepository;
 
 /**
  *
  * @author Méndez
  */
-// db/repo/CarreraRepository.java
-public class CarreraRepository extends BaseJpaRepository implements ICarreraRepository {
+// db/repo/FacultadRepository.java
+
+public class FacultadRepository extends BaseJpaRepository implements IFacultadRepository {
 
     @Override
-    public List<Carrera> findAll() {
+    public List<Facultad> findAll() {
         EntityManager em = em();
         try {
-            TypedQuery<Carrera> q = em.createQuery(
-                    "SELECT c FROM Carrera c ORDER BY c.id", Carrera.class);
+            TypedQuery<Facultad> q = em.createQuery(
+                    "SELECT f FROM Facultad f ORDER BY f.nombre", Facultad.class);
             return q.getResultList();
         } finally {
             em.close();
@@ -31,40 +34,27 @@ public class CarreraRepository extends BaseJpaRepository implements ICarreraRepo
     }
 
     @Override
-    public List<Carrera> findByFacultadId(int idFacultad) {
+    public Optional<Facultad> findById(int id) {
         EntityManager em = em();
         try {
-            TypedQuery<Carrera> q = em.createQuery(
-                    "SELECT c FROM Carrera c WHERE c.facultad.id = :id ORDER BY c.nombre", Carrera.class);
-            q.setParameter("id", idFacultad);
-            return q.getResultList();
-        } finally {
-            em.close();
-        }
-    }
-
-    @Override
-    public Optional<Carrera> findById(int id) {
-        EntityManager em = em();
-        try {
-            return Optional.ofNullable(em.find(Carrera.class, id));
+            return Optional.ofNullable(em.find(Facultad.class, id));
         } finally {
             em.close();
         }
     }
 
     // CRUD opcional
-    public Carrera save(Carrera c) {
+    public Facultad save(Facultad f) {
         EntityManager em = em();
         try {
             em.getTransaction().begin();
-            if (c.getId() == null) {
-                em.persist(c);
+            if (f.getId() == null) {
+                em.persist(f);
             } else {
-                c = em.merge(c);
+                f = em.merge(f);
             }
             em.getTransaction().commit();
-            return c;
+            return f;
         } catch (RuntimeException ex) {
             em.getTransaction().rollback();
             throw ex;
@@ -77,7 +67,7 @@ public class CarreraRepository extends BaseJpaRepository implements ICarreraRepo
         EntityManager em = em();
         try {
             em.getTransaction().begin();
-            Carrera ref = em.find(Carrera.class, id);
+            Facultad ref = em.find(Facultad.class, id);
             if (ref != null) {
                 em.remove(ref);
             }

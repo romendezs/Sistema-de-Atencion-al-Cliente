@@ -5,6 +5,7 @@
 package modelo.repo.IRepository;
 
 import java.util.List;
+import java.util.Optional;
 import modelo.dominio.*;
 
 /**
@@ -16,7 +17,7 @@ public interface ITicketRepository {
     // Lecturas
     List<Ticket> findAll();
 
-    Ticket findById(int id);
+    Optional<Ticket> findById(int id);
 
     List<Empleado> findAllEmpleados();
 

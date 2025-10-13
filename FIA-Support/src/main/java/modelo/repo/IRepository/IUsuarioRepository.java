@@ -11,15 +11,15 @@ import java.util.*;
  *
  * @author Méndez
  */
-public interface IUsuarioRepository {
+    public interface IUsuarioRepository {
 
     List<UsuarioFinal> findAll();
 
     Optional<UsuarioFinal> findById(String id);
 
-    void save(UsuarioFinal u);      // upsert
+    UsuarioFinal save(UsuarioFinal u);      // upsert
 
     void deleteById(String id);
 
-    List<UsuarioFinal> searchByCarnet(String texto); // contains/startsWith
+    Optional<UsuarioFinal> searchByCarnet(String texto); // contains/startsWith
 }
