@@ -664,7 +664,7 @@ public class GestionTicketsUI extends JFrame {
             Object[][] rows = new Object[t.getHistorial().size() + 1][3];
             DateTimeFormatter fmt = DateTimeFormatter.ofPattern("d/M/yyyy");
             int i = 0;
-            for (Seguimiento s : t.getHistorial()) {
+            for (Historial s : t.getHistorial()) {
                 rows[i][0] = s.getEstado().getRotulo();
                 rows[i][1] = s.getComentario();
                 rows[i][2] = s.getFecha().format(fmt);

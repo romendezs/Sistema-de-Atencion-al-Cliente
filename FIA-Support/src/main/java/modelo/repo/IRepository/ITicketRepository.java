@@ -26,9 +26,5 @@ public interface ITicketRepository {
 
     void assignToEmpleado(int ticketId, int empleadoId);
 
-    void addSeguimiento(int ticketId, Estado estado, String comentario);
-
-    // Solo para demo (semilla)
-    default void seed() {
-    }
+    void addHistorial(int ticketId, Estado estado, String comentario);
 }

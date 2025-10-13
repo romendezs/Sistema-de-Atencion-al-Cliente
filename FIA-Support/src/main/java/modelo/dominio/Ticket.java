@@ -8,12 +8,12 @@ import java.util.List;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import static modelo.db.JPAUtil.em;
 
 /**
  *
  * @author Méndez
  */
-
 @Entity
 @Table(name = "ticket")
 public class Ticket {
@@ -49,7 +49,7 @@ public class Ticket {
 
     @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("fecha ASC, id ASC")
-    private List<Seguimiento> historial = new ArrayList<>();
+    private List<Historial> historial = new ArrayList<>();
 
     public Ticket() {
     }
@@ -119,19 +119,47 @@ public class Ticket {
         this.actualizadoEn = actualizadoEn;
     }
 
-    public List<Seguimiento> getHistorial() {
+    public List<Historial> getHistorial() {
         return historial;
     }
 
-    public void setHistorial(List<Seguimiento> historial) {
+    public void setHistorial(List<Historial> historial) {
         this.historial = historial;
     }
 
-    // helper de dominio
-    public void agregarSeguimiento(Seguimiento s) {
-        s.setTicket(this);
-        this.historial.add(s);
-        this.estadoActual = s.getEstado(); // si así manejas el flujo
-        this.actualizadoEn = LocalDateTime.now();
+    public void addHistorial(Historial h) {
+        h.setTicket(this);                 // dueño de la relación es Historial (FK)
+        this.historial.add(h);
+        this.setEstadoActual(h.getEstado());
+        this.setActualizadoEn(java.time.LocalDateTime.now());
     }
+
+    public void addHistorial(int ticketId, int estadoId, String texto) {
+        var em = em();
+        try {
+            em.getTransaction().begin();
+            var t = em.find(Ticket.class, ticketId);
+            if (t == null) {
+                throw new IllegalArgumentException("Ticket no encontrado: " + ticketId);
+            }
+
+            var estado = em.getReference(Estado.class, estadoId);
+
+            var h = new Historial(t, estado, texto, java.time.OffsetDateTime.now());
+            em.persist(h);
+
+            t.setEstadoActual(estado);
+            t.setActualizadoEn(java.time.LocalDateTime.now());
+
+            em.getTransaction().commit();
+        } catch (RuntimeException ex) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            throw ex;
+        } finally {
+            em.close();
+        }
+    }
+
 }
