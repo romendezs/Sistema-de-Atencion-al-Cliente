@@ -71,5 +71,10 @@ public class CarreraRepository implements ICarreraRepository{
         
         return carreras;
     }
+
+    @Override
+    public Optional<Carrera> findById(int id) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
     
 }
