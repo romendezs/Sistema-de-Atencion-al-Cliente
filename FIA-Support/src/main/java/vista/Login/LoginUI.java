@@ -4,14 +4,20 @@
  */
 package Vista.Login;
 
+import controlador.AuthController;
 import java.awt.Image;
+import java.util.Arrays;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+import modelo.dominio.UsuarioFinal;
 
 /**
  *
  * @author Méndez
  */
 public class LoginUI extends javax.swing.JFrame {
+
+    private AuthController controller;
 
     /**
      * Creates new form LoginUI
@@ -22,6 +28,10 @@ public class LoginUI extends javax.swing.JFrame {
         setResizable(false);
         setTitle("FIA Support");
         setIconImage(new ImageIcon(getClass().getResource("/Vista/img/icon.png")).getImage());
+    }
+
+    public void setController(AuthController controller) {
+        this.controller = controller;
     }
 
     /**
@@ -259,23 +269,29 @@ public class LoginUI extends javax.swing.JFrame {
             return;
         }
 
-        // DEMO de autenticación
-        boolean ok = "NZ03021".equalsIgnoreCase(carnet) && "123456".equals(pass);
-
-        if (ok) {
-            javax.swing.JOptionPane.showMessageDialog(this,
-                    "Login OK (demo).",
+        if (controller == null) {
+            JOptionPane.showMessageDialog(this,
+                    "No hay controlador configurado para el login.",
                     "FIA Support",
-                    javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
-            // Aquí puedes abrir tu ventana principal y cerrar esta:
-            // new VentanaPrincipal().setVisible(true);
-            // this.dispose();
-        } else {
-            javax.swing.JOptionPane.showMessageDialog(this,
-                    "Usuario o contraseña inválidos.",
+        char[] password = pass.toCharArray();
+        try {
+            UsuarioFinal usuario = controller.login(carnet, password);
+            JOptionPane.showMessageDialog(this,
+                    "¡Bienvenido " + usuario.getNombres() + "!",
                     "FIA Support",
-                    javax.swing.JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.INFORMATION_MESSAGE);
+        } catch (IllegalArgumentException ex) {
+            JOptionPane.showMessageDialog(this,
+                    ex.getMessage(),
+                    "FIA Support",
+                    JOptionPane.ERROR_MESSAGE);
+        } finally {
+            Arrays.fill(password, '\0');
+            txtPassword.setText("");
         }
     }
 

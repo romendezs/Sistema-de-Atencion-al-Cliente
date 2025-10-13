@@ -46,4 +46,8 @@ public class WorkflowService {
         }
         return ticketRepository.findHistorialByTicket(ticketId);
     }
+
+    public List<Estado> listarEstadosDisponibles() {
+        return ticketRepository.findAllEstados();
+    }
 }

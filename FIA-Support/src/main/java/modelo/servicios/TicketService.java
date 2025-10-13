@@ -82,6 +82,13 @@ public class TicketService {
         changeStatus(ticketId, estadoCerrado, comentario);
     }
 
+    public void deleteTicket(int ticketId) {
+        if (ticketId <= 0) {
+            throw new IllegalArgumentException("Ticket inválido.");
+        }
+        ticketRepository.deleteById(ticketId);
+    }
+
     private void changeStatus(int ticketId, Estado nuevoEstado, String comentario) {
         if (nuevoEstado == null || nuevoEstado.getId() == null) {
             throw new IllegalArgumentException("Estado inválido.");
@@ -117,12 +124,37 @@ public class TicketService {
         return ticketRepository.findHistorialByTicket(ticketId);
     }
 
-    public record TicketFilter(String solicitanteCarnet, Integer estadoId, LocalDate desde, LocalDate hasta) {
+    public static class TicketFilter {
 
-        public TicketFilter {
+        private final String solicitanteCarnet;
+        private final Integer estadoId;
+        private final LocalDate desde;
+        private final LocalDate hasta;
+
+        public TicketFilter(String solicitanteCarnet, Integer estadoId, LocalDate desde, LocalDate hasta) {
             if (desde != null && hasta != null && desde.isAfter(hasta)) {
                 throw new IllegalArgumentException("El rango de fechas es inválido.");
             }
+            this.solicitanteCarnet = solicitanteCarnet;
+            this.estadoId = estadoId;
+            this.desde = desde;
+            this.hasta = hasta;
+        }
+
+        public String getSolicitanteCarnet() {
+            return solicitanteCarnet;
+        }
+
+        public Integer getEstadoId() {
+            return estadoId;
+        }
+
+        public LocalDate getDesde() {
+            return desde;
+        }
+
+        public LocalDate getHasta() {
+            return hasta;
         }
 
         private boolean matchesSolicitante(String carnet) {

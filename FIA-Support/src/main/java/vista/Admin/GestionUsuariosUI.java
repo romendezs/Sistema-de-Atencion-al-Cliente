@@ -1,6 +1,6 @@
 package Vista.Admin;
 
-import controlador.GestionUsuariosController;
+import controlador.UserAdminController;
 import modelo.dominio.Carrera;
 import modelo.dominio.Facultad;
 import modelo.dominio.UsuarioFinal;
@@ -23,9 +23,9 @@ import javax.swing.text.*;
 public class GestionUsuariosUI extends JFrame {
 
     // ======== Controller inyectado ========
-    private GestionUsuariosController controller;
+    private UserAdminController controller;
 
-    public void setController(GestionUsuariosController c) {
+    public void setController(UserAdminController c) {
         this.controller = c;
     }
 
@@ -480,71 +480,10 @@ public class GestionUsuariosUI extends JFrame {
 
     /* -------------------- Lógica UI (llama al Controller) ------------------- */
     private void openGestionTickets() {
-        try {
-            // 1) Crear el repositorio en memoria por reflexión
-            Class<?> repoClass = Class.forName("Modelo.repo.mem.TicketRepositoryMem");
-            Object repo = repoClass.getDeclaredConstructor().newInstance();
-            // Llamar seed() si existe
-            try {
-                repoClass.getMethod("seed").invoke(repo);
-            } catch (NoSuchMethodException ignore) {
-                // ok si no hay seed()
-            }
-
-            // 2) Construir el controlador usando su ctor(ITicketRepository) o cualquier ctor de 1 parámetro
-            Class<?> ctrlClass = Class.forName("Controlador.GestionTicketsController");
-
-            java.lang.reflect.Constructor<?> ctrlCtor = null;
-            try {
-                // Preferir el ctor que recibe la interfaz del repo
-                Class<?> repoIface = Class.forName("Modelo.repo.ITicketRepository");
-                ctrlCtor = ctrlClass.getConstructor(repoIface);
-            } catch (ClassNotFoundException | NoSuchMethodException ignored) {
-                // Fallback: cualquier constructor público con 1 parámetro
-                for (java.lang.reflect.Constructor<?> c : ctrlClass.getConstructors()) {
-                    if (c.getParameterCount() == 1) {
-                        ctrlCtor = c;
-                        break;
-                    }
-                }
-            }
-            if (ctrlCtor == null) {
-                throw new NoSuchMethodException("No suitable constructor found for Controlador.GestionTicketsController");
-            }
-            Object ctrl = ctrlCtor.newInstance(repo);
-
-            // 3) Instanciar la vista con ctor(GestionTicketsController); fallback a ctor() si existe
-            Class<?> uiClass = Class.forName("Vista.Admin.GestionTicketsUI");
-            Object uiInstance;
-            try {
-                java.lang.reflect.Constructor<?> uiCtor = uiClass.getConstructor(ctrlClass);
-                uiInstance = uiCtor.newInstance(ctrl);
-            } catch (NoSuchMethodException e) {
-                // Fallback: ctor() sin parámetros si la vista lo ofrece
-                uiInstance = uiClass.getDeclaredConstructor().newInstance();
-            }
-
-            // 4) Mostrar y cerrar esta ventana
-            if (uiInstance instanceof java.awt.Window) {
-                java.awt.Window next = (java.awt.Window) uiInstance;
-                if (next instanceof javax.swing.JFrame) {
-                    ((javax.swing.JFrame) next).setLocationRelativeTo(this);
-                } else if (next instanceof javax.swing.JDialog) {
-                    ((javax.swing.JDialog) next).setLocationRelativeTo(this);
-                }
-                next.setVisible(true);
-                dispose(); // cerrar la ventana actual
-            } else {
-                JOptionPane.showMessageDialog(this,
-                        "La clase Vista.Admin.GestionTicketsUI no es una ventana.",
-                        "No se pudo abrir", JOptionPane.ERROR_MESSAGE);
-            }
-        } catch (Throwable ex) {
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(this,
-                    "No se pudo abrir Gestionar Tickets.\nVerifica los paquetes y constructores.",
-                    "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        JOptionPane.showMessageDialog(this,
+                "Diríjase al módulo de tickets desde el lanzador principal.",
+                "Navegación",
+                JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void actualizarDisponibilidadCarrera() {
@@ -826,7 +765,7 @@ public class GestionUsuariosUI extends JFrame {
      */
     private static class EditDialog extends JDialog {
 
-        private final GestionUsuariosController controller;
+        private final UserAdminController controller;
         private final UsuarioFinal user;
 
         private JTextField txtNombres, txtApellidos;
@@ -834,7 +773,7 @@ public class GestionUsuariosUI extends JFrame {
         private JComboBox<Facultad> cbFac;
         private JComboBox<Carrera> cbCar;
 
-        EditDialog(Frame owner, GestionUsuariosController controller, UsuarioFinal user) {
+        EditDialog(Frame owner, UserAdminController controller, UsuarioFinal user) {
             super(owner, "Editar Usuario", true);
             this.controller = controller;
             this.user = user;
@@ -1002,7 +941,7 @@ public class GestionUsuariosUI extends JFrame {
     // Eliminar
     private static class DeleteDialog extends JDialog {
 
-        public DeleteDialog(Frame owner, String carnet, GestionUsuariosController controller) {
+        public DeleteDialog(Frame owner, String carnet, UserAdminController controller) {
             super(owner, true);
             setTitle("Confirmación de Eliminar Usuario");
 
@@ -1077,25 +1016,10 @@ public class GestionUsuariosUI extends JFrame {
 
     /* =============================== MAIN ================================= */
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            // Bootstrapping: repos en memoria + servicio + controlador + vista
-            modelo.repo.IRepository.IUsuarioRepository uRepo = new modelo.repo.mem.InMemoryUsuarioRepository();
-            modelo.repo.IRepository.IFacultadRepository fRepo = new modelo.repo.mem.InMemoryFacultadRepository();
-            modelo.repo.IRepository.ICarreraRepository cRepo = new modelo.repo.mem.InMemoryCarreraRepository();
-            modelo.servicios.UsuarioService service = new modelo.servicios.UsuarioService(uRepo, fRepo, cRepo);
-
-            // Seed de ejemplo usando el servicio (para que todo quede consistente)
-            try {
-                service.crear("MS24030", "José Roberto", "Méndez Sosa", true, 1, 1);
-                service.crear("GC22090", "Alex Ezequiel", "García Córdova", true, 1, 2);
-                service.crear("OL24002", "Christopher Enrique", "Orellana Linares", false, null, null);
-            } catch (IllegalArgumentException ignore) {
-            }
-
-            GestionUsuariosUI vista = new GestionUsuariosUI();
-            GestionUsuariosController controller = new GestionUsuariosController(service, vista);
-            controller.init();
-            vista.setVisible(true);
-        });
+        SwingUtilities.invokeLater(() ->
+                JOptionPane.showMessageDialog(null,
+                        "Inicialice los repositorios reales para ejecutar la pantalla de usuarios.",
+                        "FIA Support",
+                        JOptionPane.INFORMATION_MESSAGE));
     }
 }

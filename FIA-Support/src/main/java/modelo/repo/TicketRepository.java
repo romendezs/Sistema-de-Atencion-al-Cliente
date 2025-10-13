@@ -115,6 +115,18 @@ public class TicketRepository extends BaseJpaRepository implements ITicketReposi
     }
 
     @Override
+    public List<Estado> findAllEstados() {
+        EntityManager em = em();
+        try {
+            TypedQuery<Estado> q = em.createQuery(
+                    "SELECT e FROM Estado e ORDER BY e.tipo", Estado.class);
+            return q.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
     public List<TicketAsignacionHistorial> findAsignacionesByTicket(int ticketId) {
         EntityManager em = em();
         try {

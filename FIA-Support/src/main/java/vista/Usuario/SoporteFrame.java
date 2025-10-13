@@ -4,7 +4,14 @@
  */
 package com.mycompany.soporte;
 
+import controlador.TicketController;
+import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
+import javax.swing.table.DefaultTableModel;
+import modelo.dominio.Estado;
+import modelo.dominio.Ticket;
+import modelo.dominio.UsuarioFinal;
 
 /**
  *
@@ -13,14 +20,42 @@ import javax.swing.UIManager;
 
 
 public class SoporteFrame extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(SoporteFrame.class.getName());
+
+    private TicketController ticketController;
+    private UsuarioFinal usuarioActual;
+    private Estado estadoInicial;
+    private DefaultTableModel tableModel;
 
     /**
      * Creates new form SoporteFrame
      */
     public SoporteFrame() {
         initComponents();
+        tableModel = (DefaultTableModel) jTable1.getModel();
+    }
+
+    public void configurar(TicketController controller, UsuarioFinal usuario, Estado estadoInicial) {
+        this.ticketController = controller;
+        this.usuarioActual = usuario;
+        this.estadoInicial = estadoInicial;
+        if (usuario != null) {
+            jLabel2.setText(usuario.getNombres() + " " + usuario.getApellidos());
+        }
+        refrescarTickets();
+    }
+
+    private void refrescarTickets() {
+        if (ticketController == null || usuarioActual == null) {
+            return;
+        }
+        List<Ticket> tickets = ticketController.filterBySolicitante(usuarioActual.getId());
+        tableModel.setRowCount(0);
+        for (Ticket t : tickets) {
+            String estado = t.getEstadoActual() == null ? "" : t.getEstadoActual().toString();
+            tableModel.addRow(new Object[]{t.getTitulo(), estado});
+        }
     }
 
     /**
@@ -232,7 +267,48 @@ public class SoporteFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jbtnCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnCrearActionPerformed
-        // TODO add your handling code here:
+        if (ticketController == null || usuarioActual == null) {
+            JOptionPane.showMessageDialog(this,
+                    "No hay un usuario autenticado.",
+                    "FIA Support",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (estadoInicial == null) {
+            JOptionPane.showMessageDialog(this,
+                    "No se ha configurado el estado inicial del ticket.",
+                    "FIA Support",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        String asunto = textField2.getText().trim();
+        String descripcion = textField1.getText().trim();
+
+        if (asunto.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "Ingrese un asunto para el ticket.",
+                    "Validación",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        try {
+            ticketController.openTicket(asunto, descripcion, usuarioActual.getId(), estadoInicial);
+            JOptionPane.showMessageDialog(this,
+                    "Ticket creado correctamente.",
+                    "FIA Support",
+                    JOptionPane.INFORMATION_MESSAGE);
+            textField1.setText("");
+            textField2.setText("");
+            refrescarTickets();
+        } catch (IllegalArgumentException ex) {
+            JOptionPane.showMessageDialog(this,
+                    ex.getMessage(),
+                    "FIA Support",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_jbtnCrearActionPerformed
 
     /**
