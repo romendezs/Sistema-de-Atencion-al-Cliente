@@ -78,7 +78,7 @@ public class UsuarioService {
                     new IllegalArgumentException("Facultad no válida."));
             car = carreras.findById(idCarrera).orElseThrow(() ->
                     new IllegalArgumentException("Carrera no válida."));
-            if (car.getIdFacultad() != fac.getId())
+            if (car.getFacultad().getId() != fac.getId())
                 throw new IllegalArgumentException("La carrera no pertenece a la facultad.");
         }
 
@@ -107,7 +107,7 @@ public class UsuarioService {
                     new IllegalArgumentException("Facultad no válida."));
             Carrera c = carreras.findById(idCarrera).orElseThrow(() ->
                     new IllegalArgumentException("Carrera no válida."));
-            if (c.getIdFacultad() != f.getId())
+            if (c.getFacultad().getId() != f.getId())
                 throw new IllegalArgumentException("La carrera no pertenece a la facultad.");
 
             u.setFacultad(f);

@@ -724,7 +724,7 @@ public class GestionTicketsUI extends JFrame {
             int i = 0;
             for (Historial s : historialData) {
                 rows[i][0] = s.getEstado() == null ? "" : s.getEstado().toString();
-                rows[i][1] = s.getComentario();
+                rows[i][1] = s.getSeguimiento();
                 rows[i][2] = s.getFecha().format(fmt);
                 i++;
             }

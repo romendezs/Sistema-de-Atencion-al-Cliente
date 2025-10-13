@@ -6,6 +6,7 @@ package Vista.Login;
 
 import controlador.AuthController;
 import java.awt.Image;
+import java.net.URL;
 import java.util.Arrays;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -27,7 +28,19 @@ public class LoginUI extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         setResizable(false);
         setTitle("FIA Support");
-        setIconImage(new ImageIcon(getClass().getResource("/Vista/img/icon.png")).getImage());
+        ImageIcon frameIcon = loadIcon("/vista/img/icon.png");
+        if (frameIcon != null) {
+            setIconImage(frameIcon.getImage());
+        }
+    }
+
+    private ImageIcon loadIcon(String resourcePath) {
+        URL resource = getClass().getResource(resourcePath);
+        if (resource == null) {
+            System.err.println("No se pudo encontrar el recurso de imagen: " + resourcePath);
+            return null;
+        }
+        return new ImageIcon(resource);
     }
 
     public void setController(AuthController controller) {
@@ -87,9 +100,15 @@ public class LoginUI extends javax.swing.JFrame {
         jLabelLogo.setSize(582, 844);
         jLabelLogo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabelLogo.setVerticalAlignment(javax.swing.SwingConstants.CENTER);
-        ImageIcon originalIcon = new ImageIcon(getClass().getResource("/Vista/img/Logo.png"));
-        Image scaledImage = originalIcon.getImage().getScaledInstance(160, -1, Image.SCALE_SMOOTH);
-        jLabelLogo.setIcon(new ImageIcon(scaledImage));
+        URL logoResource = getClass().getResource("/Vista/img/Logo.png");
+        if (logoResource != null) {
+            ImageIcon originalIcon = new ImageIcon(logoResource);
+            Image scaledImage = originalIcon.getImage().getScaledInstance(160, -1, Image.SCALE_SMOOTH);
+            jLabelLogo.setIcon(new ImageIcon(scaledImage));
+        } else {
+            System.err.println("No se pudo cargar el logo desde /Vista/img/Logo.png");
+            jLabelLogo.setText("Logo no disponible");
+        }
 
         jPanelLogin.setBackground(new java.awt.Color(180, 40, 25));
 
