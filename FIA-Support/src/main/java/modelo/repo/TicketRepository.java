@@ -40,7 +40,7 @@ public class TicketRepository extends BaseJpaRepository implements ITicketReposi
         }
     }
 
-    // ==== Ejemplos de métodos comunes (ajusta si tu interfaz los define) ====
+    @Override
     public List<Ticket> findByUsuarioId(String usuarioId) {
         EntityManager em = em();
         try {
@@ -53,6 +53,7 @@ public class TicketRepository extends BaseJpaRepository implements ITicketReposi
         }
     }
 
+    @Override
     public List<Ticket> findByEstadoId(int estadoId) {
         EntityManager em = em();
         try {
@@ -65,6 +66,7 @@ public class TicketRepository extends BaseJpaRepository implements ITicketReposi
         }
     }
 
+    @Override
     public List<Ticket> findByRangoFechas(LocalDateTime desde, LocalDateTime hasta) {
         EntityManager em = em();
         try {
@@ -79,6 +81,7 @@ public class TicketRepository extends BaseJpaRepository implements ITicketReposi
     }
 
     // CRUD
+    @Override
     public Ticket save(Ticket t) {
         EntityManager em = em();
         try {
@@ -93,6 +96,33 @@ public class TicketRepository extends BaseJpaRepository implements ITicketReposi
         } catch (RuntimeException ex) {
             em.getTransaction().rollback();
             throw ex;
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
+    public List<Historial> findHistorialByTicket(int ticketId) {
+        EntityManager em = em();
+        try {
+            TypedQuery<Historial> q = em.createQuery(
+                    "SELECT h FROM Historial h WHERE h.ticket.id = :tid ORDER BY h.fecha ASC", Historial.class);
+            q.setParameter("tid", ticketId);
+            return q.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
+    public List<TicketAsignacionHistorial> findAsignacionesByTicket(int ticketId) {
+        EntityManager em = em();
+        try {
+            TypedQuery<TicketAsignacionHistorial> q = em.createQuery(
+                    "SELECT a FROM TicketAsignacionHistorial a WHERE a.ticket.id = :tid ORDER BY a.fecha DESC",
+                    TicketAsignacionHistorial.class);
+            q.setParameter("tid", ticketId);
+            return q.getResultList();
         } finally {
             em.close();
         }

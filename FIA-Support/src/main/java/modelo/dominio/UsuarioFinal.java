@@ -16,7 +16,7 @@ import java.util.Objects;
 public class UsuarioFinal {
 
     @Id
-    @Column(name = "id_usuario", length = 32) // ajusta length a tu PK real
+    @Column(name = "id_usuario", length = 32)
     private String id;
 
     @Column(name = "nombres", nullable = false, length = 120)
@@ -25,14 +25,38 @@ public class UsuarioFinal {
     @Column(name = "apellidos", nullable = false, length = 120)
     private String apellidos;
 
-    // agrega otros campos si existen: correo, teléfono, etc.
+    @Column(name = "es_estudiante", nullable = false)
+    private boolean esEstudiante;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_facultad")
+    private Facultad facultad;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_carrera")
+    private Carrera carrera;
+
+    @Column(name = "password_hash", nullable = false, length = 255)
+    private String passwordHash;
+
     public UsuarioFinal() {
     }
 
-    public UsuarioFinal(String id, String nombres, String apellidos) {
+    public UsuarioFinal(String id, String nombres, String apellidos,
+                        boolean esEstudiante, Facultad facultad, Carrera carrera) {
+        this(id, nombres, apellidos, esEstudiante, facultad, carrera, null);
+    }
+
+    public UsuarioFinal(String id, String nombres, String apellidos,
+                        boolean esEstudiante, Facultad facultad, Carrera carrera,
+                        String passwordHash) {
         this.id = id;
         this.nombres = nombres;
         this.apellidos = apellidos;
+        this.esEstudiante = esEstudiante;
+        this.facultad = facultad;
+        this.carrera = carrera;
+        this.passwordHash = passwordHash;
     }
 
     public String getId() {
@@ -59,6 +83,38 @@ public class UsuarioFinal {
         this.apellidos = apellidos;
     }
 
+    public boolean isEsEstudiante() {
+        return esEstudiante;
+    }
+
+    public void setEsEstudiante(boolean esEstudiante) {
+        this.esEstudiante = esEstudiante;
+    }
+
+    public Facultad getFacultad() {
+        return facultad;
+    }
+
+    public void setFacultad(Facultad facultad) {
+        this.facultad = facultad;
+    }
+
+    public Carrera getCarrera() {
+        return carrera;
+    }
+
+    public void setCarrera(Carrera carrera) {
+        this.carrera = carrera;
+    }
+
+    public String getPasswordHash() {
+        return passwordHash;
+    }
+
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -73,5 +129,10 @@ public class UsuarioFinal {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return nombres + " " + apellidos;
     }
 }

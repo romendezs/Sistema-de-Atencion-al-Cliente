@@ -8,7 +8,8 @@ import modelo.repo.IRepository.ICarreraRepository;
 import modelo.repo.IRepository.IUsuarioRepository;
 import modelo.repo.IRepository.IFacultadRepository;
 import modelo.dominio.*;
-import modelo.repo.*;
+import modelo.utils.PasswordEncoder;
+import modelo.utils.Sha256PasswordEncoder;
 import modelo.utils.Validacion;
 
 import java.util.*;
@@ -22,13 +23,22 @@ public class UsuarioService {
     private final IUsuarioRepository usuarios;
     private final IFacultadRepository facultades;
     private final ICarreraRepository carreras;
+    private final PasswordEncoder passwordEncoder;
 
     public UsuarioService(IUsuarioRepository usuarios,
                           IFacultadRepository facultades,
                           ICarreraRepository carreras) {
-        this.usuarios   = usuarios;
-        this.facultades = facultades;
-        this.carreras   = carreras;
+        this(usuarios, facultades, carreras, new Sha256PasswordEncoder());
+    }
+
+    public UsuarioService(IUsuarioRepository usuarios,
+                          IFacultadRepository facultades,
+                          ICarreraRepository carreras,
+                          PasswordEncoder passwordEncoder) {
+        this.usuarios        = usuarios;
+        this.facultades      = facultades;
+        this.carreras        = carreras;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<UsuarioFinal> listar() { return usuarios.findAll(); }
@@ -37,7 +47,7 @@ public class UsuarioService {
 
     public Optional<UsuarioFinal> buscar(String carnet) { return usuarios.findById(carnet); }
 
-    public void crear(String carnet, String nombres, String apellidos,
+    public UsuarioFinal crear(String carnet, String nombres, String apellidos,
                       boolean esEstudiante, Integer idFacultad, Integer idCarrera) {
 
         carnet = Validacion.normalizarCarnet(carnet);
@@ -73,10 +83,12 @@ public class UsuarioService {
         }
 
         UsuarioFinal u = new UsuarioFinal(carnet, nombres.trim(), apellidos.trim(), esEstudiante, fac, car);
+        u.setPasswordHash(passwordEncoder.encode(carnet.toCharArray()));
         usuarios.save(u);
+        return u;
     }
 
-    public void actualizar(UsuarioFinal u, String nuevosNombres, String nuevosApellidos,
+    public UsuarioFinal actualizar(UsuarioFinal u, String nuevosNombres, String nuevosApellidos,
                            boolean esEstudiante, Integer idFacultad, Integer idCarrera) {
 
         if (!Validacion.esTextoLetras(nuevosNombres))
@@ -106,7 +118,17 @@ public class UsuarioService {
         }
 
         usuarios.save(u); // upsert
+        return u;
     }
 
     public void eliminar(String carnet) { usuarios.deleteById(carnet); }
+
+    public UsuarioFinal restablecerPassword(String carnet) {
+        carnet = Validacion.normalizarCarnet(carnet);
+        UsuarioFinal usuario = usuarios.findById(carnet)
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado."));
+        usuario.setPasswordHash(passwordEncoder.encode(carnet.toCharArray()));
+        usuarios.save(usuario);
+        return usuario;
+    }
 }
