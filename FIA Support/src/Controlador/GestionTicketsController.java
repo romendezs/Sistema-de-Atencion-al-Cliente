@@ -4,10 +4,11 @@
  */
 package Controlador;
 import Modelo.dominio.*;
-import Modelo.repo.*;
+import Modelo.servicios.AssignmentService;
+import Modelo.servicios.TicketService;
+import Modelo.servicios.WorkflowService;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 /**
@@ -17,30 +18,31 @@ import java.util.stream.Collectors;
 
 public class GestionTicketsController {
 
-    private final ITicketRepository repo;
+    private final TicketService ticketService;
+    private final AssignmentService assignmentService;
+    private final WorkflowService workflowService;
 
-    public GestionTicketsController(ITicketRepository repo){
-        this.repo = repo;
+    public GestionTicketsController(TicketService ticketService,
+                                    AssignmentService assignmentService,
+                                    WorkflowService workflowService){
+        this.ticketService = ticketService;
+        this.assignmentService = assignmentService;
+        this.workflowService = workflowService;
     }
 
     // consultas
-    public List<Ticket> getTickets(){ return repo.findAll(); }
-    public List<Empleado> getEmpleados(){ return repo.findAllEmpleados(); }
+    public List<Ticket> getTickets(){ return ticketService.listTickets(null); }
+    public List<Empleado> getEmpleados(){ return assignmentService.listEmpleados(); }
 
     // acciones
-    public void eliminar(int ticketId){ repo.deleteById(ticketId); }
-    public void asignar(int ticketId, int empleadoId){ repo.assignToEmpleado(ticketId, empleadoId); }
+    public void eliminar(int ticketId){ ticketService.deleteTicket(ticketId); }
+    public void asignar(int ticketId, int empleadoId){ assignmentService.assign(ticketId, empleadoId); }
     public void actualizarEstado(int ticketId, Estado estado, String comentario){
-        repo.addSeguimiento(ticketId, estado, comentario);
+        workflowService.advanceStatus(ticketId, estado, null, comentario);
     }
 
     // filtro por solicitante/carnet
     public List<Ticket> filtrarPorSolicitante(String query){
-        if (query==null || query.trim().isEmpty()) return getTickets();
-        final String q = query.trim().toLowerCase();
-        return getTickets().stream().filter(t ->
-            t.getSolicitante().getId().toLowerCase().contains(q) ||
-            t.getSolicitante().toString().toLowerCase().contains(q)
-        ).collect(Collectors.toList());
+        return ticketService.listTickets(query);
     }
 }

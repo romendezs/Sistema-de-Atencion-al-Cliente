@@ -20,8 +20,14 @@ public interface ITicketRepository {
 
     List<Empleado> findAllEmpleados();
 
+    Ticket create(UsuarioFinal solicitante, String titulo, String descripcion);
+
+    void update(int ticketId, String titulo, String descripcion);
+
     // Escrituras
     void deleteById(int ticketId);
+
+    void cancel(int ticketId, String comentario);
 
     void assignToEmpleado(int ticketId, int empleadoId);
 

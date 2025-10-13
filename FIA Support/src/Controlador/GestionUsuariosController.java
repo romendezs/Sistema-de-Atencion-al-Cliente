@@ -5,7 +5,7 @@
 package Controlador;
 
 import Modelo.dominio.*;
-import Modelo.servicios.UsuarioService;
+import Modelo.servicios.UserAdminService;
 import java.util.List;
 
 /**
@@ -14,10 +14,10 @@ import java.util.List;
  */
 public class GestionUsuariosController {
 
-    private final UsuarioService service;
+    private final UserAdminService service;
     private final Vista.Admin.GestionUsuariosUI view;
 
-    public GestionUsuariosController(UsuarioService service, Vista.Admin.GestionUsuariosUI view) {
+    public GestionUsuariosController(UserAdminService service, Vista.Admin.GestionUsuariosUI view) {
         this.service = service;
         this.view = view;
         this.view.setController(this);
@@ -25,22 +25,22 @@ public class GestionUsuariosController {
 
     // Inicializa combos y tabla
     public void init() {
-        view.setFacultades(service.listarFacultades());
-        view.setUsuarios(service.listar());
+        view.setFacultades(service.listFacultades());
+        view.setUsuarios(service.listUsers());
     }
 
     // Accesores para la vista / diálogos
     public List<Facultad> getFacultades() {
-        return service.listarFacultades();
+        return service.listFacultades();
     }
 
     public List<Carrera> getCarrerasByFacultad(int idFac) {
-        return service.listarCarrerasPorFacultad(idFac);
+        return service.listCarrerasPorFacultad(idFac);
     }
 
     public void onSeleccionFacultad(Facultad f) {
         if (f != null) {
-            view.setCarreras(service.listarCarrerasPorFacultad(f.getId()));
+            view.setCarreras(service.listCarrerasPorFacultad(f.getId()));
         } else {
             view.setCarreras(java.util.Collections.emptyList());
         }
@@ -51,9 +51,9 @@ public class GestionUsuariosController {
         try {
             Integer idFac = (fac == null ? null : fac.getId());
             Integer idCar = (car == null ? null : car.getId());
-            service.crear(carnet, nombres, apellidos, esEstudiante, idFac, idCar);
+            service.createUser(carnet, nombres, apellidos, esEstudiante, idFac, idCar);
             view.clearForm();
-            view.setUsuarios(service.listar());
+            view.setUsuarios(service.listUsers());
             view.showInfo("Usuario creado con éxito.");
             return true;
         } catch (IllegalArgumentException ex) {
@@ -67,8 +67,8 @@ public class GestionUsuariosController {
         try {
             Integer idFac = (fac == null ? null : fac.getId());
             Integer idCar = (car == null ? null : car.getId());
-            service.actualizar(u, nombres, apellidos, esEstudiante, idFac, idCar);
-            view.setUsuarios(service.listar());
+            service.updateUser(u, nombres, apellidos, esEstudiante, idFac, idCar);
+            view.setUsuarios(service.listUsers());
             view.showInfo("Usuario actualizado.");
             return true;
         } catch (IllegalArgumentException ex) {
@@ -78,8 +78,12 @@ public class GestionUsuariosController {
     }
 
     public void onEliminar(String carnet) {
-        service.eliminar(carnet);
-        view.setUsuarios(service.listar());
-        view.showInfo("Usuario eliminado.");
+        try {
+            service.deleteUser(carnet);
+            view.setUsuarios(service.listUsers());
+            view.showInfo("Usuario eliminado.");
+        } catch (IllegalArgumentException ex) {
+            view.showError(ex.getMessage());
+        }
     }
 }

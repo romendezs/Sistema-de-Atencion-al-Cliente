@@ -47,8 +47,42 @@ public class TicketRepositoryMem implements ITicketRepository {
     }
 
     @Override
+    public Ticket create(UsuarioFinal solicitante, String titulo, String descripcion) {
+        int id = seq.getAndIncrement();
+        Ticket ticket = new Ticket(id, solicitante, titulo, descripcion);
+        ticket.getHistorial().add(new Seguimiento(Estado.PENDIENTE, "Creado", LocalDate.now()));
+        tickets.add(ticket);
+        return ticket;
+    }
+
+    @Override
+    public void update(int ticketId, String titulo, String descripcion) {
+        Ticket t = findById(ticketId);
+        if (t != null) {
+            if (titulo != null) {
+                t.setTitulo(titulo);
+            }
+            if (descripcion != null) {
+                t.setDescripcion(descripcion);
+            }
+        }
+    }
+
+    @Override
     public void deleteById(int ticketId) {
         tickets.removeIf(t -> t.getId() == ticketId);
+    }
+
+    @Override
+    public void cancel(int ticketId, String comentario) {
+        Ticket t = findById(ticketId);
+        if (t != null) {
+            String nota = (comentario == null || comentario.trim().isEmpty())
+                    ? "Ticket cancelado"
+                    : comentario.trim();
+            t.setEstadoActual(Estado.CERRADO);
+            t.getHistorial().add(new Seguimiento(Estado.CERRADO, nota, LocalDate.now()));
+        }
     }
 
     @Override
@@ -120,6 +154,9 @@ public class TicketRepositoryMem implements ITicketRepository {
         tickets.add(t1);
         tickets.add(t2);
         tickets.add(t3);
+
+        int nextId = tickets.stream().mapToInt(Ticket::getId).max().orElse(0) + 1;
+        seq.set(nextId);
     }
 }
     
