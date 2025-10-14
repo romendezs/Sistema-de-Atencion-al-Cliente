@@ -45,7 +45,7 @@ public class LoginUI extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         setResizable(false);
         setTitle("FIA Support");
-        ImageIcon frameIcon = loadIcon("/vista/img/icon.png");
+        ImageIcon frameIcon = loadIcon("/Vista/img/icon.png");
         if (frameIcon != null) {
             setIconImage(frameIcon.getImage());
         }
