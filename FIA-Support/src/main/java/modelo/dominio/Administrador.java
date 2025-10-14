@@ -14,7 +14,7 @@ public class Administrador {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_admin")
+    @Column(name = "id")
     private Integer id;
 
     @Column(name = "usuario", nullable = false, unique = true, length = 64)
