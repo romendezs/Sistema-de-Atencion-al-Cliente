@@ -91,7 +91,10 @@ public class GestionUsuariosUI extends JFrame {
         scroller.getViewport().setBackground(Color.WHITE);     // fondo blanco
         scroller.getVerticalScrollBar().setUnitIncrement(18);  // scroll suave
         getContentPane().add(scroller, BorderLayout.CENTER);
-        setIconImage(new ImageIcon(getClass().getResource("/Vista/img/icon.png")).getImage());
+        ImageIcon windowIcon = loadIconSafely("/Vista/img/icon.png");
+        if (windowIcon != null) {
+            setIconImage(windowIcon.getImage());
+        }
 
     }
 
@@ -160,6 +163,15 @@ public class GestionUsuariosUI extends JFrame {
 
         Image scaled = ii.getImage().getScaledInstance(nw, nh, Image.SCALE_SMOOTH);
         return new ImageIcon(scaled);
+    }
+
+    private ImageIcon loadIconSafely(String resourcePath) {
+        java.net.URL url = getClass().getResource(resourcePath);
+        if (url == null) {
+            System.err.println("No se encontró el recurso: " + resourcePath);
+            return null;
+        }
+        return new ImageIcon(url);
     }
 
     private JPanel buildTopMenu() {
