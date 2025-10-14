@@ -20,7 +20,7 @@ public class AdminRepository extends BaseJpaRepository implements IAdminReposito
         EntityManager em = em();
         try {
             TypedQuery<Administrador> query = em.createQuery(
-                    "SELECT a FROM Administrador a WHERE UPPER(a.usuario) = :usuario",
+                    "SELECT a FROM Administrador a WHERE UPPER(a.id_administrador) = :usuario",
                     Administrador.class);
             query.setParameter("usuario", usuario.trim().toUpperCase());
             return Optional.of(query.getSingleResult());
