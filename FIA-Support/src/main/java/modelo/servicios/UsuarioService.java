@@ -41,22 +41,35 @@ public class UsuarioService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public List<UsuarioFinal> listar() { return usuarios.findAll(); }
-    public List<Facultad> listarFacultades() { return facultades.findAll(); }
-    public List<Carrera> listarCarrerasPorFacultad(int idFac) { return carreras.findByFacultadId(idFac); }
+    // ----------------- Lecturas básicas -----------------
+    public List<UsuarioFinal> listar() {
+        return usuarios.findAll();
+    }
 
-    public Optional<UsuarioFinal> buscar(String carnet) { return usuarios.findById(carnet); }
+    public List<Facultad> listarFacultades() {
+        return facultades.findAll();
+    }
 
+    public List<Carrera> listarCarrerasPorFacultad(int idFac) {
+        return carreras.findByFacultadId(idFac);
+    }
+
+    public Optional<UsuarioFinal> buscar(String carnet) {
+        String id = Validacion.normalizarCarnet(carnet);
+        return usuarios.findById(id); // Repositorio ya debe ser case-insensitive con UPPER(...)
+    }
+
+    // ----------------- Crear -----------------
     public UsuarioFinal crear(String carnet, String nombres, String apellidos,
-                      boolean esEstudiante, Integer idFacultad, Integer idCarrera) {
+                              boolean esEstudiante, Integer idFacultad, Integer idCarrera) {
 
         carnet = Validacion.normalizarCarnet(carnet);
 
-        // 1. campos vacíos
+        // 1) Campos vacíos
         if (carnet.isEmpty() || nombres == null || apellidos == null)
             throw new IllegalArgumentException("Ningún campo puede estar vacío.");
 
-        // 2. formatos
+        // 2) Formatos
         if (!Validacion.esCarnetValido(carnet))
             throw new IllegalArgumentException("Carnet inválido. Formato: LLNNNNN.");
         if (!Validacion.esTextoLetras(nombres))
@@ -64,11 +77,11 @@ public class UsuarioService {
         if (!Validacion.esTextoLetras(apellidos))
             throw new IllegalArgumentException("Apellidos solo letras y espacios.");
 
-        // 3. unicidad
+        // 3) Unicidad (en subtipo UsuarioFinal)
         if (usuarios.findById(carnet).isPresent())
-            throw new IllegalArgumentException("Ya existe un usuario con ese carnet.");
+            throw new IllegalArgumentException("Ya existe un usuario final con ese carnet.");
 
-        // 4. Reglas estudiante
+        // 4) Reglas estudiante
         Facultad fac = null;
         Carrera car  = null;
         if (esEstudiante) {
@@ -78,26 +91,37 @@ public class UsuarioService {
                     new IllegalArgumentException("Facultad no válida."));
             car = carreras.findById(idCarrera).orElseThrow(() ->
                     new IllegalArgumentException("Carrera no válida."));
-            if (car.getFacultad().getId() != fac.getId())
+            if (!Objects.equals(car.getFacultad().getId(), fac.getId()))
                 throw new IllegalArgumentException("La carrera no pertenece a la facultad.");
         }
-        
-        //contrasña por defecto
-        String pass = passwordEncoder.encode(carnet.toCharArray());
-        Usuario nuevoU = new Usuario(carnet, nombres.trim(), apellidos.trim(), pass);
-        UsuarioFinal u = new UsuarioFinal(esEstudiante, fac, car, nuevoU);
+
+        // 5) Contraseña por defecto = hash(carnet)
+        String passHash = passwordEncoder.encode(carnet.toCharArray());
+
+        // 6) Crear directamente el subtipo (JOINED persistirá en usuario + usuariofinal)
+        UsuarioFinal u = new UsuarioFinal(
+                carnet,
+                nombres.trim(),
+                apellidos.trim(),
+                passHash,
+                esEstudiante,
+                fac,
+                car
+        );
+
         usuarios.save(u);
         return u;
     }
 
+    // ----------------- Actualizar -----------------
     public UsuarioFinal actualizar(UsuarioFinal u, String nuevosNombres, String nuevosApellidos,
-                           boolean esEstudiante, Integer idFacultad, Integer idCarrera) {
+                                   boolean esEstudiante, Integer idFacultad, Integer idCarrera) {
 
         if (!Validacion.esTextoLetras(nuevosNombres))
             throw new IllegalArgumentException("Nombres solo letras y espacios.");
         if (!Validacion.esTextoLetras(nuevosApellidos))
             throw new IllegalArgumentException("Apellidos solo letras y espacios.");
-        
+
         u.setNombres(nuevosNombres.trim());
         u.setApellidos(nuevosApellidos.trim());
         u.setEsEstudiante(esEstudiante);
@@ -109,7 +133,7 @@ public class UsuarioService {
                     new IllegalArgumentException("Facultad no válida."));
             Carrera c = carreras.findById(idCarrera).orElseThrow(() ->
                     new IllegalArgumentException("Carrera no válida."));
-            if (c.getFacultad().getId() != f.getId())
+            if (!Objects.equals(c.getFacultad().getId(), f.getId()))
                 throw new IllegalArgumentException("La carrera no pertenece a la facultad.");
 
             u.setFacultad(f);
@@ -123,13 +147,18 @@ public class UsuarioService {
         return u;
     }
 
-    public void eliminar(String carnet) { usuarios.deleteById(carnet); }
+    // ----------------- Eliminar -----------------
+    public void eliminar(String carnet) {
+        String id = Validacion.normalizarCarnet(carnet);
+        usuarios.deleteById(id);
+    }
 
+    // ----------------- Reset Password -----------------
     public UsuarioFinal restablecerPassword(String carnet) {
-        carnet = Validacion.normalizarCarnet(carnet);
-        UsuarioFinal usuario = usuarios.findById(carnet)
+        String id = Validacion.normalizarCarnet(carnet);
+        UsuarioFinal usuario = usuarios.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado."));
-        usuario.setPasswordHash(passwordEncoder.encode(carnet.toCharArray()));
+        usuario.setPasswordHash(passwordEncoder.encode(id.toCharArray()));
         usuarios.save(usuario);
         return usuario;
     }

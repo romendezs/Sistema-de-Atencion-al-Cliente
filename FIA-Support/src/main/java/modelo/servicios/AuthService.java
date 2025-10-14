@@ -1,5 +1,6 @@
 package modelo.servicios;
 
+import java.util.Optional;
 import modelo.dominio.Administrador;
 import modelo.dominio.UsuarioFinal;
 import modelo.repo.IRepository.IAdminRepository;
@@ -10,8 +11,8 @@ import modelo.utils.Validacion;
 
 /**
  * Servicio centrado en el caso de uso "Iniciar Sesión". Contiene la lógica de
- * validación de credenciales y la actualización de contraseñas, evitando que
- * la capa de presentación interactúe directamente con los repositorios.
+ * validación de credenciales y la actualización de contraseñas, evitando que la
+ * capa de presentación interactúe directamente con los repositorios.
  */
 public class AuthService {
 
@@ -30,8 +31,8 @@ public class AuthService {
     }
 
     public AuthService(IUsuarioRepository usuarios,
-                       IAdminRepository administradores,
-                       PasswordEncoder passwordEncoder) {
+            IAdminRepository administradores,
+            PasswordEncoder passwordEncoder) {
         this.usuarios = usuarios;
         this.administradores = administradores;
         this.passwordEncoder = passwordEncoder;
@@ -47,14 +48,32 @@ public class AuthService {
             throw new IllegalArgumentException("Carnet inválido. Formato esperado LLNNNNN.");
         }
 
-        UsuarioFinal usuario = usuarios.findById(carnet)
-                .orElseThrow(() -> new IllegalArgumentException(MSG_INVALID_CREDENTIALS));
-
-        if (usuario.getPasswordHash() == null
-                || !passwordEncoder.matches(password, usuario.getPasswordHash())) {
+        // Buscar usuario manualmente (sin lambda) para poder imprimir logs
+        Optional<UsuarioFinal> opt = usuarios.findById(carnet);
+        if (opt.isEmpty()) {
+            System.err.println("[LOGIN] No existe en usuariofinal: " + carnet);
             throw new IllegalArgumentException(MSG_INVALID_CREDENTIALS);
         }
 
+        UsuarioFinal usuario = opt.get();
+
+        if (usuario.getPasswordHash() == null) {
+            System.err.println("[LOGIN] passwordHash NULL para: " + carnet);
+            throw new IllegalArgumentException(MSG_INVALID_CREDENTIALS);
+        }
+
+        boolean ok = passwordEncoder.matches(password, usuario.getPasswordHash());
+        System.err.println("[LOGIN] match=" + ok);
+        System.err.println("[LOGIN] storedHash=" + usuario.getPasswordHash());
+        System.err.println("[LOGIN] inputHash="
+                + new Sha256PasswordEncoder().encode(password)); // para comparar manualmente
+
+        if (!ok) {
+            System.err.println("[LOGIN] Contraseña incorrecta para " + carnet);
+            throw new IllegalArgumentException(MSG_INVALID_CREDENTIALS);
+        }
+
+        System.err.println("[LOGIN] Inicio de sesión correcto para: " + carnet);
         return usuario;
     }
 
@@ -108,7 +127,9 @@ public class AuthService {
 
     public static final class AuthenticationResult {
 
-        public enum Tipo { USUARIO_FINAL, ADMINISTRADOR }
+        public enum Tipo {
+            USUARIO_FINAL, ADMINISTRADOR
+        }
 
         private final Tipo tipo;
         private final UsuarioFinal usuarioFinal;
@@ -118,6 +139,16 @@ public class AuthService {
             this.tipo = tipo;
             this.usuarioFinal = usuarioFinal;
             this.administrador = administrador;
+        }
+        // Validacion.java
+
+        public static String normalizarCarnet(String c) {
+            if (c == null) {
+                return null;
+            }
+            return java.text.Normalizer.normalize(c, java.text.Normalizer.Form.NFKC)
+                    .trim()
+                    .toUpperCase(java.util.Locale.ROOT);
         }
 
         public static AuthenticationResult forUsuarioFinal(UsuarioFinal usuario) {

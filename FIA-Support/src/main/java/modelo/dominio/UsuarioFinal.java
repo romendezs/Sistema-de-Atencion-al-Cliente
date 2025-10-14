@@ -20,18 +20,20 @@ public class UsuarioFinal extends Usuario {
     private boolean esEstudiante;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_facultad")
+    @JoinColumn(name = "id_facultad", nullable = false)
     private Facultad facultad;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_carrera")
+    @JoinColumn(name = "id_carrera", nullable = false)
     private Carrera carrera;
 
     public UsuarioFinal() {
     }
 
-    public UsuarioFinal(boolean esEstudiante, Facultad facultad, Carrera carrera, Usuario usuario) {
-        super(usuario.getId(), usuario.getNombres(), usuario.getApellidos(), usuario.getPasswordHash());
+    // Si quieres un ctor de conveniencia:
+    public UsuarioFinal(String id, String nombres, String apellidos, String passwordHash,
+            boolean esEstudiante, Facultad facultad, Carrera carrera) {
+        super(id, nombres, apellidos, passwordHash);
         this.esEstudiante = esEstudiante;
         this.facultad = facultad;
         this.carrera = carrera;
@@ -62,6 +64,11 @@ public class UsuarioFinal extends Usuario {
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hash(getId());
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -69,12 +76,6 @@ public class UsuarioFinal extends Usuario {
         if (!(o instanceof UsuarioFinal)) {
             return false;
         }
-        UsuarioFinal that = (UsuarioFinal) o;
-        return Objects.equals(getId(), that.getId());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.getId());
+        return Objects.equals(getId(), ((UsuarioFinal) o).getId());
     }
 }

@@ -11,31 +11,23 @@ import java.util.Objects;
 @Entity
 @Table(name = "administrador")
 @PrimaryKeyJoinColumn(name = "id_administrador", referencedColumnName = "id_usuario")
-public class Administrador extends Usuario{
-    
-    
-        public Administrador() {
+public class Administrador extends Usuario {
+
+    public Administrador() {}
+
+    // Ctor de conveniencia, opcional
+    public Administrador(String id, String nombres, String apellidos, String passwordHash) {
+        super(id, nombres, apellidos, passwordHash);
     }
 
-    public Administrador(String id, Usuario usuario) {
-        super(usuario.getId(),usuario.getNombres(),usuario.getApellidos(), usuario.getPasswordHash());
-    }
+    @Override
+    public int hashCode() { return Objects.hash(getId()); }
 
-    
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Administrador)) {
-            return false;
-        }
-        Administrador that = (Administrador) o;
-        return Objects.equals(getId(), that.getId());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.getId());
+        if (this == o) return true;
+        if (!(o instanceof Administrador)) return false;
+        return Objects.equals(getId(), ((Administrador) o).getId());
     }
 }
+

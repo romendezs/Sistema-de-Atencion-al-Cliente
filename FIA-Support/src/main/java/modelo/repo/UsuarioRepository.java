@@ -5,6 +5,7 @@
 package modelo.repo;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
@@ -18,71 +19,83 @@ import modelo.repo.IRepository.IUsuarioRepository;
 public class UsuarioRepository extends BaseJpaRepository implements IUsuarioRepository {
 
     @Override
+    public Optional<UsuarioFinal> findById(String id) {
+        if (id == null) return Optional.empty();
+        String idUpper = java.text.Normalizer
+                .normalize(id, java.text.Normalizer.Form.NFKC)
+                .trim().toUpperCase(java.util.Locale.ROOT);
+
+        EntityManager em = em();
+        try {
+            var q = em.createQuery(
+                "SELECT uf FROM UsuarioFinal uf WHERE UPPER(uf.id) = :id",
+                UsuarioFinal.class
+            );
+            q.setParameter("id", idUpper);
+            // ¡no uses setMaxResults(1) por tu PG 9.3! (rompe con FETCH FIRST ?)
+            return q.getResultStream().findFirst();
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
     public List<UsuarioFinal> findAll() {
         EntityManager em = em();
         try {
-            TypedQuery<UsuarioFinal> q = em.createQuery(
-                    "SELECT u FROM UsuarioFinal u ORDER BY u.apellidos, u.nombres", UsuarioFinal.class);
-            return q.getResultList();
+            return em.createQuery("SELECT uf FROM UsuarioFinal uf", UsuarioFinal.class)
+                     .getResultList();
         } finally {
             em.close();
         }
     }
 
     @Override
-    public Optional<UsuarioFinal> findById(String id) {
-        EntityManager em = em();
-        try {
-            return Optional.ofNullable(em.find(UsuarioFinal.class, id));
-        } finally {
-            em.close();
-        }
-    }
-
-    @Override
-    public Optional<UsuarioFinal> searchByCarnet(String carnet) {
-        var em = em();
-        try {
-            return Optional.ofNullable(em.find(UsuarioFinal.class, carnet));
-        } finally {
-            em.close();
-        }
-    }
-
-    // CRUD opcional
     public UsuarioFinal save(UsuarioFinal u) {
         EntityManager em = em();
+        EntityTransaction tx = em.getTransaction();
         try {
-            em.getTransaction().begin();
-            if (em.find(UsuarioFinal.class, u.getId()) == null) {
-                em.persist(u);          // PK String: decide si usas persist o merge
-            } else {
-                u = em.merge(u);
-            }
-            em.getTransaction().commit();
-            return u;
+            tx.begin();
+            UsuarioFinal managed = (u.getId() == null || em.find(UsuarioFinal.class, u.getId()) == null)
+                    ? persistCascade(em, u)
+                    : em.merge(u);
+            tx.commit();
+            return managed;
         } catch (RuntimeException ex) {
-            em.getTransaction().rollback();
+            if (tx.isActive()) tx.rollback();
             throw ex;
         } finally {
             em.close();
         }
     }
 
+    private UsuarioFinal persistCascade(EntityManager em, UsuarioFinal u) {
+        em.persist(u); // JOINED: inserta en usuario y luego en usuariofinal
+        return u;
+    }
+
+    @Override
     public void deleteById(String id) {
+        if (id == null) return;
+        String idUpper = java.text.Normalizer
+                .normalize(id, java.text.Normalizer.Form.NFKC)
+                .trim().toUpperCase(java.util.Locale.ROOT);
+
         EntityManager em = em();
+        EntityTransaction tx = em.getTransaction();
         try {
-            em.getTransaction().begin();
-            UsuarioFinal ref = em.find(UsuarioFinal.class, id);
-            if (ref != null) {
-                em.remove(ref);
+            tx.begin();
+            UsuarioFinal uf = em.find(UsuarioFinal.class, idUpper);
+            if (uf != null) {
+                em.remove(uf); // borra fila en usuariofinal; OJO: en tu DDL NO borra usuario
             }
-            em.getTransaction().commit();
+            tx.commit();
         } catch (RuntimeException ex) {
-            em.getTransaction().rollback();
+            if (tx.isActive()) tx.rollback();
             throw ex;
         } finally {
             em.close();
         }
     }
 }
+

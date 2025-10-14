@@ -246,7 +246,7 @@ public class TicketRepository extends BaseJpaRepository implements ITicketReposi
             em.close();
         }
     }
-    
+
     @Override
     public Optional<Historial> findUltimoHistorial(int ticketId) {
         EntityManager em = em();
@@ -257,13 +257,50 @@ public class TicketRepository extends BaseJpaRepository implements ITicketReposi
                 WHERE h.ticket.id = :ticketId
                 ORDER BY h.id DESC
             """, Historial.class)
-            .setParameter("ticketId", ticketId)
-            .setMaxResults(1)
-            .getSingleResult();
+                    .setParameter("ticketId", ticketId)
+                    .setMaxResults(1)
+                    .getSingleResult();
 
             return Optional.of(ultimo);
         } catch (NoResultException e) {
             return Optional.empty();
+        }
+    }
+
+    // TicketRepository.java (ejemplos)
+    public List<Ticket> findAllOrderByFechaDesc() {
+        var em = em();
+        try {
+            return em.createQuery(
+                    "SELECT t "
+                    + "FROM Ticket t "
+                    + "JOIN FETCH t.solicitante s "
+                    + // ✅ evita proxy LAZY
+                    // si además necesitas nombres/apellidos (están en Usuario base),
+                    // no hace falta otro join: herencia JOINED lo resuelve al hidratar s
+                    "ORDER BY t.fechaCreacion DESC",
+                    Ticket.class
+            ).getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    public List<Ticket> findBySolicitante(String carnetUpper) {
+        var em = em();
+        try {
+            return em.createQuery(
+                    "SELECT t "
+                    + "FROM Ticket t "
+                    + "JOIN FETCH t.solicitante s "
+                    + "WHERE UPPER(s.id) = :id "
+                    + "ORDER BY t.fechaCreacion DESC",
+                    Ticket.class
+            )
+                    .setParameter("id", carnetUpper)
+                    .getResultList();
+        } finally {
+            em.close();
         }
     }
 

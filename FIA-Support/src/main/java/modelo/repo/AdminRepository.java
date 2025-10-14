@@ -14,18 +14,21 @@ public class AdminRepository extends BaseJpaRepository implements IAdminReposito
 
     @Override
     public Optional<Administrador> findByUsuario(String usuario) {
-        if (usuario == null || usuario.trim().isEmpty()) {
+        if (usuario == null) {
             return Optional.empty();
         }
+        String idUpper = java.text.Normalizer
+                .normalize(usuario, java.text.Normalizer.Form.NFKC)
+                .trim().toUpperCase(java.util.Locale.ROOT);
+
         EntityManager em = em();
         try {
-            TypedQuery<Administrador> query = em.createQuery(
-                    "SELECT a FROM Administrador a WHERE UPPER(a.id_administrador) = :usuario",
-                    Administrador.class);
-            query.setParameter("usuario", usuario.trim().toUpperCase());
-            return Optional.of(query.getSingleResult());
-        } catch (NoResultException ex) {
-            return Optional.empty();
+            var q = em.createQuery(
+                    "SELECT a FROM Administrador a WHERE UPPER(a.id) = :id",
+                    Administrador.class
+            );
+            q.setParameter("id", idUpper);
+            return q.getResultStream().findFirst();
         } finally {
             em.close();
         }

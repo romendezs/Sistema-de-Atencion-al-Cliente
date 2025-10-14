@@ -20,6 +20,4 @@ import java.util.*;
     UsuarioFinal save(UsuarioFinal u);      // upsert
 
     void deleteById(String id);
-
-    Optional<UsuarioFinal> searchByCarnet(String texto); // contains/startsWith
 }
