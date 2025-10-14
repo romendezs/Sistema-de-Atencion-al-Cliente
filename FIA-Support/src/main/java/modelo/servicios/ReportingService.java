@@ -70,10 +70,10 @@ public class ReportingService {
         StringBuilder sb = new StringBuilder();
         sb.append("fecha,abiertos,cerrados,en_proceso,promedio_resolucion_min\n");
         for (TicketMetricasDiarias m : metricas) {
-            sb.append(m.getDia()).append(',')
+            sb.append(m.getId().getDia()).append(',')
                     .append(valor(m.getAbiertos())).append(',')
                     .append(valor(m.getCerrados())).append(',')
-                    .append(valor(m.getEnProceso())).append(',')
+                    .append(valor(m.getReabiertos())).append(',')
                     .append(valor(m.getPromedioResolucionMin()))
                     .append('\n');
         }

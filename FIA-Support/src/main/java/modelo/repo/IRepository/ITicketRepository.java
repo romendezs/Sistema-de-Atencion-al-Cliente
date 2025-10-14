@@ -31,6 +31,7 @@ public interface ITicketRepository {
     Ticket save(Ticket ticket);
 
     List<Historial> findHistorialByTicket(int ticketId);
+    Optional<Historial> findUltimoHistorial(int ticketId);
     List<Estado> findAllEstados();
 
     List<TicketAsignacionHistorial> findAsignacionesByTicket(int ticketId);

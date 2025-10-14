@@ -85,7 +85,7 @@ public class Historial {
     public void setFecha(OffsetDateTime fecha) {
         this.fecha = fecha;
     }
-
+    
     @Override
     public boolean equals(Object o) {
         if (this == o) {

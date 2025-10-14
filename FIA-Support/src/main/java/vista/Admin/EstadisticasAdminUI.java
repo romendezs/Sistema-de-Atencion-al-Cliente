@@ -226,10 +226,10 @@ public class EstadisticasAdminUI extends JDialog {
             metricasModel.setRowCount(0);
             for (TicketMetricasDiarias m : metricas) {
                 metricasModel.addRow(new Object[]{
-                        m.getDia(),
+                        m.getId().getDia(),
                         safeNumber(m.getAbiertos()),
                         safeNumber(m.getCerrados()),
-                        safeNumber(m.getEnProceso()),
+                        safeNumber(m.getReabiertos()),
                         safeNumber(m.getPromedioResolucionMin())
                 });
             }

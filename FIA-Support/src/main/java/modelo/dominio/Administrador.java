@@ -10,76 +10,18 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "administrador")
-public class Administrador {
-
-    @Id
-    @Column(name = "id_administrador", length = 32)
-    private String id;
-
-    @Column(name = "usuario", nullable = false, unique = true, length = 64)
-    private String usuario;
-
-    @Column(name = "password_hash", nullable = false, length = 255)
-    private String passwordHash;
-
-    @Column(name = "nombres", nullable = false, length = 120)
-    private String nombres;
-
-    @Column(name = "apellidos", nullable = false, length = 120)
-    private String apellidos;
-
-    public Administrador() {
+@PrimaryKeyJoinColumn(name = "id_administrador", referencedColumnName = "id_usuario")
+public class Administrador extends Usuario{
+    
+    
+        public Administrador() {
     }
 
-    public Administrador(String id, String usuario, String passwordHash,
-                         String nombres, String apellidos) {
-        this.id = id;
-        this.usuario = usuario;
-        this.passwordHash = passwordHash;
-        this.nombres = nombres;
-        this.apellidos = apellidos;
+    public Administrador(String id, Usuario usuario) {
+        super(usuario.getId(),usuario.getNombres(),usuario.getApellidos(), usuario.getPasswordHash());
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(String usuario) {
-        this.usuario = usuario;
-    }
-
-    public String getPasswordHash() {
-        return passwordHash;
-    }
-
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
-    }
-
-    public String getNombres() {
-        return nombres;
-    }
-
-    public void setNombres(String nombres) {
-        this.nombres = nombres;
-    }
-
-    public String getApellidos() {
-        return apellidos;
-    }
-
-    public void setApellidos(String apellidos) {
-        this.apellidos = apellidos;
-    }
-
+    
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -89,16 +31,11 @@ public class Administrador {
             return false;
         }
         Administrador that = (Administrador) o;
-        return Objects.equals(id, that.id);
+        return Objects.equals(getId(), that.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
-    }
-
-    @Override
-    public String toString() {
-        return usuario;
+        return Objects.hash(super.getId());
     }
 }

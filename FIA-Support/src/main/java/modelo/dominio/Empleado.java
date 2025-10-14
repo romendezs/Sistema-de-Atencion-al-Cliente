@@ -19,7 +19,7 @@ public class Empleado {
     @Column(name = "id_empleado")
     private Integer id;
 
-    @Column(name = "nombres", nullable = false, length = 120)
+    @Column(name = "nombre", nullable = false, length = 120)
     private String nombres;
 
     @Column(name = "apellidos", nullable = false, length = 120)

@@ -6,6 +6,7 @@ package modelo.dominio;
 
 import jakarta.persistence.*;
 import java.util.Objects;
+import org.hibernate.annotations.Immutable;
 
 /**
  *
@@ -14,6 +15,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "estado")
+@Immutable
 public class Estado {
 
     @Id
@@ -36,16 +38,8 @@ public class Estado {
         return id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
     public String getTipo() {
         return tipo;
-    }
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
     }
 
     @Override

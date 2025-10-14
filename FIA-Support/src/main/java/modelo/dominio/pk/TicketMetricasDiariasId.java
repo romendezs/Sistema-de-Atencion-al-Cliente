@@ -55,6 +55,22 @@ public class TicketMetricasDiariasId implements Serializable {
         return canal;
     }
 
+    public void setDia(LocalDate dia) {
+        this.dia = dia;
+    }
+
+    public void setIdCategoria(Integer idCategoria) {
+        this.idCategoria = idCategoria;
+    }
+
+    public void setIdEmpleado(Integer idEmpleado) {
+        this.idEmpleado = idEmpleado;
+    }
+
+    public void setCanal(String canal) {
+        this.canal = canal;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -74,4 +90,6 @@ public class TicketMetricasDiariasId implements Serializable {
     public int hashCode() {
         return Objects.hash(dia, idCategoria, idEmpleado, canal);
     }
+    
+    
 }

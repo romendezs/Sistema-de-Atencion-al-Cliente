@@ -16,7 +16,11 @@ import java.awt.*;
 import java.awt.event.*;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.function.IntFunction;
 
 /**
  * UI: Gestionar Tickets
@@ -50,9 +54,9 @@ public class GestionTicketsUI extends JFrame {
     private static final int ICON_GAP = 6;
 
     public GestionTicketsUI(TicketController ticketController,
-                            AssignmentController assignmentController,
-                            WorkflowController workflowController,
-                            ReportingController reportingController) {
+            AssignmentController assignmentController,
+            WorkflowController workflowController,
+            ReportingController reportingController) {
         this.ticketController = ticketController;
         this.assignmentController = assignmentController;
         this.workflowController = workflowController;
@@ -187,9 +191,15 @@ public class GestionTicketsUI extends JFrame {
         north.setLayout(new BoxLayout(north, BoxLayout.Y_AXIS));
         north.add(search);
         panel.add(north, BorderLayout.NORTH);
-
+        
+        List<Ticket> tickets = ticketController.listTickets();
         // Tabla
-        model = new TicketTableModel(ticketController.listTickets());
+        TicketTableModel model = new TicketTableModel(
+                tickets,
+                ticketController::estadoActualNombre // IntFunction<String> que consulta al controller
+        );
+        table.setModel(model);
+
         table = new JTable(model) {
             @Override
             public boolean getScrollableTracksViewportWidth() {
@@ -286,7 +296,6 @@ public class GestionTicketsUI extends JFrame {
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
     }
-
 
     private DefaultTableCellRenderer cell() {
         DefaultTableCellRenderer r = new DefaultTableCellRenderer();
@@ -772,15 +781,44 @@ public class GestionTicketsUI extends JFrame {
     // ---- model ----
     private static class TicketTableModel extends AbstractTableModel {
 
+        // Índices de columna (ajusta si ya los tienes definidos en otro lado)
+        private static final int COL_DEL = 0;
+        private static final int COL_SOL = 1;
+        private static final int COL_TIT = 2;
+        private static final int COL_ASIG = 3;
+        private static final int COL_EST = 4;
+
         private final String[] cols = {"", "Solicitante", "Título", "Asignación", "Estado"};
         private List<Ticket> data;
 
-        TicketTableModel(List<Ticket> data) {
-            this.data = new ArrayList<>(data);
+        /**
+         * Proveedor del nombre del estado actual según el ticketId. Ej: id ->
+         * ticketRepository.findUltimoHistorial(id) .map(h -> h.getEstado() !=
+         * null ? h.getEstado().getNombre() : "—") .orElse("—")
+         */
+        private final IntFunction<String> estadoActualProvider;
+
+        /**
+         * Cache para no recalcular en cada getValueAt
+         */
+        private final Map<Integer, String> estadoCache = new HashMap<>();
+
+        TicketTableModel(List<Ticket> data, IntFunction<String> estadoActualProvider) {
+            this.estadoActualProvider = Objects.requireNonNull(estadoActualProvider, "estadoActualProvider requerido");
+            setData(data);
         }
 
         void setData(List<Ticket> lst) {
-            this.data = new ArrayList<>(lst);
+            this.data = (lst == null) ? new ArrayList<>() : new ArrayList<>(lst);
+            // Pre-cargar el cache UNA VEZ por ticket (evita N+1 en getValueAt)
+            estadoCache.clear();
+            for (Ticket t : this.data) {
+                if (t != null) {
+                    int id = t.getId();
+                    String nombreEstado = safeString(estadoActualProvider.apply(id));
+                    estadoCache.put(id, nombreEstado);
+                }
+            }
             fireTableDataChanged();
         }
 
@@ -790,7 +828,7 @@ public class GestionTicketsUI extends JFrame {
 
         @Override
         public int getRowCount() {
-            return data.size();
+            return data == null ? 0 : data.size();
         }
 
         @Override
@@ -806,22 +844,41 @@ public class GestionTicketsUI extends JFrame {
         @Override
         public Object getValueAt(int r, int c) {
             Ticket t = data.get(r);
-            if (c == COL_DEL) {
+            if (t == null) {
                 return "";
             }
-            if (c == COL_SOL) {
-                return t.getSolicitante().toString();
+
+            switch (c) {
+                case COL_DEL:
+                    return ""; // ícono/botón borrar si usas renderer/editor
+                case COL_SOL:
+                    return t.getSolicitante() == null ? "—" : safeString(t.getSolicitante().toString());
+                case COL_TIT:
+                    return safeString(t.getTitulo());
+                case COL_ASIG:
+                    return t.getTecnicoAsignado() == null ? "Sin asignar" : safeString(t.getTecnicoAsignado().toString());
+                case COL_EST:
+                    // Tomar del cache (precalculado con el provider)
+                    return estadoCache.getOrDefault(t.getId(), "—");
+                default:
+                    return "";
             }
-            if (c == COL_TIT) {
-                return t.getTitulo();
-            }
-            if (c == COL_ASIG) {
-                return t.getTecnicoAsignado() == null ? "Sin asignar" : t.getTecnicoAsignado().toString();
-            }
-            if (c == COL_EST) {
-                return t.getEstadoActual() == null ? "" : t.getEstadoActual().toString();
-            }
-            return "";
+        }
+
+        @Override
+        public Class<?> getColumnClass(int columnIndex) {
+            // útil para renderers; si la primera columna es botón/ícono, puedes usar Icon.class
+            return String.class;
+        }
+
+        @Override
+        public boolean isCellEditable(int rowIndex, int columnIndex) {
+            // Si la primera columna es un botón de eliminar, podrías permitir edición ahí.
+            return columnIndex == COL_DEL;
+        }
+
+        private static String safeString(String s) {
+            return (s == null || s.isBlank()) ? "—" : s;
         }
     }
 
@@ -846,8 +903,8 @@ public class GestionTicketsUI extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() ->
-                JOptionPane.showMessageDialog(null,
+        SwingUtilities.invokeLater(()
+                -> JOptionPane.showMessageDialog(null,
                         "Configure un contenedor de dependencias para ejecutar la UI.",
                         "FIA Support",
                         JOptionPane.INFORMATION_MESSAGE));

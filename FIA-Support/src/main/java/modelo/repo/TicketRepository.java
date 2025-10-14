@@ -5,6 +5,7 @@
 package modelo.repo;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -233,7 +234,6 @@ public class TicketRepository extends BaseJpaRepository implements ITicketReposi
             em.persist(h);
 
             // 4) Actualizar el estado/timestamp del ticket
-            t.setEstadoActual(estadoRef);
             t.setActualizadoEn(java.time.LocalDateTime.now());
 
             em.getTransaction().commit();
@@ -244,6 +244,26 @@ public class TicketRepository extends BaseJpaRepository implements ITicketReposi
             throw ex;
         } finally {
             em.close();
+        }
+    }
+    
+    @Override
+    public Optional<Historial> findUltimoHistorial(int ticketId) {
+        EntityManager em = em();
+        try {
+            Historial ultimo = em.createQuery("""
+                SELECT h
+                FROM Historial h
+                WHERE h.ticket.id = :ticketId
+                ORDER BY h.id DESC
+            """, Historial.class)
+            .setParameter("ticketId", ticketId)
+            .setMaxResults(1)
+            .getSingleResult();
+
+            return Optional.of(ultimo);
+        } catch (NoResultException e) {
+            return Optional.empty();
         }
     }
 

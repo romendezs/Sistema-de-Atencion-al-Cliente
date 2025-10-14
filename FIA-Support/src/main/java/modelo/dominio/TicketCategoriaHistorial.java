@@ -5,41 +5,57 @@
 package modelo.dominio;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import org.hibernate.annotations.Immutable;
 import java.time.OffsetDateTime;
+import org.hibernate.annotations.CreationTimestamp;
 
 /**
  *
  * @author Méndez
  */
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Immutable;
+
 @Entity
-@Table(name = "ticket_categoria_historial")
-@Immutable
+@Table(
+        name = "ticket_categoria_historial",
+        indexes = {
+            @Index(name = "idx_tch_categoria_nueva_fecha", columnList = "id_categoria_nueva, fecha"),
+            @Index(name = "idx_tch_ticket_fecha", columnList = "id_ticket, fecha")
+        }
+)
+@Immutable // history rows are append-only; Hibernate won’t update them
 public class TicketCategoriaHistorial {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_categoria_historial")
+    @Column(name = "id_cambio")
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_ticket", nullable = false)
     private Ticket ticket;
 
-    // Si tu tabla guarda FK numérica a una tabla categoria:
-    @Column(name = "id_categoria")
-    private Integer idCategoria;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_categoria_anterior") // nullable in DB
+    private Categoria categoriaAnterior;
 
-    // y si además guarda el nombre (común en historiales):
-    @Column(name = "categoria", length = 150)
-    private String categoria;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_categoria_nueva") // nullable in DB
+    private Categoria categoriaNueva;
 
-    @Column(name = "comentario", length = 500)
-    private String comentario;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_usuario_cambio") // nullable in DB
+    private Usuario usuarioCambio;
 
-    @Column(name = "fecha", nullable = false)
-    private OffsetDateTime fecha;
+    @CreationTimestamp
+    @Column(name = "fecha", nullable = false, updatable = false)
+    private LocalDateTime fecha;
 
+    // --- getters/setters ---
     public Integer getId() {
         return id;
     }
@@ -48,19 +64,52 @@ public class TicketCategoriaHistorial {
         return ticket;
     }
 
-    public Integer getIdCategoria() {
-        return idCategoria;
+    public void setTicket(Ticket ticket) {
+        this.ticket = ticket;
     }
 
-    public String getCategoria() {
-        return categoria;
+    public Categoria getCategoriaAnterior() {
+        return categoriaAnterior;
     }
 
-    public String getComentario() {
-        return comentario;
+    public void setCategoriaAnterior(Categoria categoriaAnterior) {
+        this.categoriaAnterior = categoriaAnterior;
     }
 
-    public OffsetDateTime getFecha() {
+    public Categoria getCategoriaNueva() {
+        return categoriaNueva;
+    }
+
+    public void setCategoriaNueva(Categoria categoriaNueva) {
+        this.categoriaNueva = categoriaNueva;
+    }
+
+    public Usuario getUsuarioCambio() {
+        return usuarioCambio;
+    }
+
+    public void setUsuarioCambio(Usuario usuarioCambio) {
+        this.usuarioCambio = usuarioCambio;
+    }
+
+    public LocalDateTime getFecha() {
         return fecha;
+    }
+
+    // equals/hashCode only by id (PK)
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof TicketCategoriaHistorial)) {
+            return false;
+        }
+        return id != null && id.equals(((TicketCategoriaHistorial) o).id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

@@ -2,7 +2,7 @@ package app;
 
 import Vista.Admin.GestionUsuariosUI;
 import Vista.Login.LoginUI;
-import com.mycompany.soporte.SoporteFrame;
+import vista.Usuario.SoporteFrame;
 import controlador.LoginController;
 import controlador.ReportingController;
 import controlador.TicketController;

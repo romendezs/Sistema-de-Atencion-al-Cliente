@@ -2,12 +2,16 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package com.mycompany.soporte;
+package vista.Usuario;
 
 import controlador.ReportingController;
 import controlador.TicketController;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
 import modelo.dominio.Estado;
@@ -18,11 +22,10 @@ import modelo.dominio.UsuarioFinal;
  *
  * @author anaed
  */
-
-
 public class SoporteFrame extends javax.swing.JFrame {
 
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(SoporteFrame.class.getName());
+    private static final java.util.logging.Logger logger
+            = java.util.logging.Logger.getLogger(SoporteFrame.class.getName());
 
     private TicketController ticketController;
     private ReportingController reportingController;
@@ -30,15 +33,15 @@ public class SoporteFrame extends javax.swing.JFrame {
     private Estado estadoInicial;
     private DefaultTableModel tableModel;
 
-    /**
-     * Creates new form SoporteFrame
-     */
     public SoporteFrame() {
         initComponents();
         tableModel = (DefaultTableModel) jTable1.getModel();
     }
 
-    public void configurar(TicketController controller, ReportingController reportingController, UsuarioFinal usuario, Estado estadoInicial) {
+    public void configurar(TicketController controller,
+            ReportingController reportingController,
+            UsuarioFinal usuario,
+            Estado estadoInicial) {
         this.ticketController = controller;
         this.reportingController = reportingController;
         this.usuarioActual = usuario;
@@ -53,11 +56,25 @@ public class SoporteFrame extends javax.swing.JFrame {
         if (ticketController == null || usuarioActual == null) {
             return;
         }
+
         List<Ticket> tickets = ticketController.filterBySolicitante(usuarioActual.getId());
         tableModel.setRowCount(0);
+        if (tickets == null || tickets.isEmpty()) {
+            return;
+        }
+
+        List<Integer> ids = tickets.stream()
+                .map(Ticket::getId)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+
+        Map<Integer, String> estados = ticketController.estadosActualesPorTicket(ids);
+
         for (Ticket t : tickets) {
-            String estado = t.getEstadoActual() == null ? "" : t.getEstadoActual().toString();
-            tableModel.addRow(new Object[]{t.getTitulo(), estado});
+            Integer id = t.getId();
+            String titulo = (t.getTitulo() == null) ? "—" : t.getTitulo();
+            String estado = estados.getOrDefault(id, "—");
+            tableModel.addRow(new Object[]{titulo, estado});
         }
     }
 
@@ -282,7 +299,10 @@ public class SoporteFrame extends javax.swing.JFrame {
                     JOptionPane.WARNING_MESSAGE);
             return;
         }
-        EstadisticasUsuarioUI dialog = new EstadisticasUsuarioUI(this, reportingController, usuarioActual);
+
+        // Tu diálogo recibe Window, no Frame:
+        java.awt.Window owner = SwingUtilities.getWindowAncestor(this);
+        EstadisticasUsuarioUI dialog= new EstadisticasUsuarioUI(owner, reportingController, usuarioActual);
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
     }//GEN-LAST:event_jbtnReportesActionPerformed
@@ -336,7 +356,7 @@ public class SoporteFrame extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-    try {
+        try {
             for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
                     UIManager.setLookAndFeel(info.getClassName());
@@ -345,7 +365,7 @@ public class SoporteFrame extends javax.swing.JFrame {
             }
         } catch (Exception e) {
             // Optionally log or ignore
-        }   
+        }
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.

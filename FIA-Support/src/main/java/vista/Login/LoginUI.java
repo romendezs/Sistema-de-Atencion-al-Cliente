@@ -27,7 +27,7 @@ import modelo.servicios.TicketService;
 import modelo.servicios.UserAdminService;
 import modelo.servicios.UsuarioService;
 import modelo.servicios.WorkflowService;
-import com.mycompany.soporte.SoporteFrame;
+import vista.Usuario.SoporteFrame;
 
 /**
  *

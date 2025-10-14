@@ -81,9 +81,11 @@ public class UsuarioService {
             if (car.getFacultad().getId() != fac.getId())
                 throw new IllegalArgumentException("La carrera no pertenece a la facultad.");
         }
-
-        UsuarioFinal u = new UsuarioFinal(carnet, nombres.trim(), apellidos.trim(), esEstudiante, fac, car);
-        u.setPasswordHash(passwordEncoder.encode(carnet.toCharArray()));
+        
+        //contrasña por defecto
+        String pass = passwordEncoder.encode(carnet.toCharArray());
+        Usuario nuevoU = new Usuario(carnet, nombres.trim(), apellidos.trim(), pass);
+        UsuarioFinal u = new UsuarioFinal(esEstudiante, fac, car, nuevoU);
         usuarios.save(u);
         return u;
     }
@@ -95,7 +97,7 @@ public class UsuarioService {
             throw new IllegalArgumentException("Nombres solo letras y espacios.");
         if (!Validacion.esTextoLetras(nuevosApellidos))
             throw new IllegalArgumentException("Apellidos solo letras y espacios.");
-
+        
         u.setNombres(nuevosNombres.trim());
         u.setApellidos(nuevosApellidos.trim());
         u.setEsEstudiante(esEstudiante);

@@ -12,20 +12,11 @@ import java.util.Objects;
  * @author Méndez
  */
 @Entity
-@Table(name = "usuario_final")
-public class UsuarioFinal {
+@Table(name = "usuariofinal")
+@PrimaryKeyJoinColumn(name = "id_usuariofinal", referencedColumnName = "id_usuario")
+public class UsuarioFinal extends Usuario {
 
-    @Id
-    @Column(name = "id_usuario", length = 32)
-    private String id;
-
-    @Column(name = "nombres", nullable = false, length = 120)
-    private String nombres;
-
-    @Column(name = "apellidos", nullable = false, length = 120)
-    private String apellidos;
-
-    @Column(name = "es_estudiante", nullable = false)
+    @Column(name = "esestudiante", nullable = false)
     private boolean esEstudiante;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -36,51 +27,14 @@ public class UsuarioFinal {
     @JoinColumn(name = "id_carrera")
     private Carrera carrera;
 
-    @Column(name = "password_hash", nullable = false, length = 255)
-    private String passwordHash;
-
     public UsuarioFinal() {
     }
 
-    public UsuarioFinal(String id, String nombres, String apellidos,
-                        boolean esEstudiante, Facultad facultad, Carrera carrera) {
-        this(id, nombres, apellidos, esEstudiante, facultad, carrera, null);
-    }
-
-    public UsuarioFinal(String id, String nombres, String apellidos,
-                        boolean esEstudiante, Facultad facultad, Carrera carrera,
-                        String passwordHash) {
-        this.id = id;
-        this.nombres = nombres;
-        this.apellidos = apellidos;
+    public UsuarioFinal(boolean esEstudiante, Facultad facultad, Carrera carrera, Usuario usuario) {
+        super(usuario.getId(), usuario.getNombres(), usuario.getApellidos(), usuario.getPasswordHash());
         this.esEstudiante = esEstudiante;
         this.facultad = facultad;
         this.carrera = carrera;
-        this.passwordHash = passwordHash;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getNombres() {
-        return nombres;
-    }
-
-    public void setNombres(String nombres) {
-        this.nombres = nombres;
-    }
-
-    public String getApellidos() {
-        return apellidos;
-    }
-
-    public void setApellidos(String apellidos) {
-        this.apellidos = apellidos;
     }
 
     public boolean isEsEstudiante() {
@@ -107,14 +61,6 @@ public class UsuarioFinal {
         this.carrera = carrera;
     }
 
-    public String getPasswordHash() {
-        return passwordHash;
-    }
-
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -123,16 +69,12 @@ public class UsuarioFinal {
         if (!(o instanceof UsuarioFinal)) {
             return false;
         }
-        return Objects.equals(id, ((UsuarioFinal) o).id);
+        UsuarioFinal that = (UsuarioFinal) o;
+        return Objects.equals(getId(), that.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
-    }
-
-    @Override
-    public String toString() {
-        return nombres + " " + apellidos;
+        return Objects.hash(super.getId());
     }
 }

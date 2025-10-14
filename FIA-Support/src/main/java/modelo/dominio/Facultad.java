@@ -6,6 +6,7 @@ package modelo.dominio;
 
 import jakarta.persistence.*;
 import java.util.Objects;
+import org.hibernate.annotations.Immutable;
 
 /**
  *
@@ -14,6 +15,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "facultad")
+@Immutable
 public class Facultad {
 
     @Id
@@ -36,18 +38,10 @@ public class Facultad {
         return id;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
     public String getNombre() {
         return nombre;
     }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
+    
     @Override
     public boolean equals(Object o) {
         if (this == o) {

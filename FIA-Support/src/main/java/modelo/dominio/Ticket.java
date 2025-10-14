@@ -22,34 +22,30 @@ public class Ticket {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_ticket")
     private Integer id;
-
+    
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id_solicitante", nullable = false)
+    private UsuarioFinal solicitante;
+    
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "id_empleado") // técnico asignado, puede ser null
+    private Empleado tecnicoAsignado;
+    
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id_categoria", nullable = false)
+    private Categoria categoria;
+    
     @Column(name = "titulo", nullable = false, length = 200)
     private String titulo;
 
     @Column(name = "descripcion", columnDefinition = "text")
     private String descripcion;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id_usuario", nullable = false) // FK -> usuario_final.id_usuario
-    private UsuarioFinal solicitante;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_empleado") // técnico asignado, puede ser null
-    private Empleado tecnicoAsignado;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id_estado", nullable = false) // FK -> estado.id_estado
-    private Estado estadoActual;
-
-    @Column(name = "creado_en", nullable = false)
+    @Column(name = "fecha_creacion", nullable = false)
     private LocalDateTime creadoEn;
 
-    @Column(name = "actualizado_en")
+    @Column(name = "fecha_cierre")
     private LocalDateTime actualizadoEn;
-
-    @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL, orphanRemoval = true)
-    @OrderBy("fecha ASC, id ASC")
-    private List<Historial> historial = new ArrayList<>();
 
     public Ticket() {
     }
@@ -95,14 +91,6 @@ public class Ticket {
         this.tecnicoAsignado = tecnicoAsignado;
     }
 
-    public Estado getEstadoActual() {
-        return estadoActual;
-    }
-
-    public void setEstadoActual(Estado estadoActual) {
-        this.estadoActual = estadoActual;
-    }
-
     public LocalDateTime getCreadoEn() {
         return creadoEn;
     }
@@ -119,47 +107,12 @@ public class Ticket {
         this.actualizadoEn = actualizadoEn;
     }
 
-    public List<Historial> getHistorial() {
-        return historial;
+    public Categoria getCategoria() {
+        return categoria;
     }
 
-    public void setHistorial(List<Historial> historial) {
-        this.historial = historial;
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
     }
-
-    public void addHistorial(Historial h) {
-        h.setTicket(this);                 // dueño de la relación es Historial (FK)
-        this.historial.add(h);
-        this.setEstadoActual(h.getEstado());
-        this.setActualizadoEn(java.time.LocalDateTime.now());
-    }
-
-    public void addHistorial(int ticketId, int estadoId, String texto) {
-        var em = em();
-        try {
-            em.getTransaction().begin();
-            var t = em.find(Ticket.class, ticketId);
-            if (t == null) {
-                throw new IllegalArgumentException("Ticket no encontrado: " + ticketId);
-            }
-
-            var estado = em.getReference(Estado.class, estadoId);
-
-            var h = new Historial(t, estado, texto, java.time.OffsetDateTime.now());
-            em.persist(h);
-
-            t.setEstadoActual(estado);
-            t.setActualizadoEn(java.time.LocalDateTime.now());
-
-            em.getTransaction().commit();
-        } catch (RuntimeException ex) {
-            if (em.getTransaction().isActive()) {
-                em.getTransaction().rollback();
-            }
-            throw ex;
-        } finally {
-            em.close();
-        }
-    }
-
+    
 }

@@ -1,3 +1,4 @@
+C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\src\main\java\modelo\dominio\Usuario.java
 C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\src\main\java\modelo\servicios\WorkflowService.java
 C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\src\main\java\modelo\repo\IRepository\ITicketRepository.java
 C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\src\main\java\controlador\WorkflowController.java
@@ -8,6 +9,8 @@ C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\sr
 C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\src\main\java\vista\Admin\GestionUsuariosUI.java
 C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\src\main\java\modelo\dominio\TicketMetricasDiarias.java
 C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\src\main\java\controlador\TicketController.java
+C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\src\main\java\vista\Admin\EstadisticasAdminUI.java
+C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\src\main\java\modelo\dominio\EstadisticaConteo.java
 C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\src\main\java\modelo\repo\FacultadRepository.java
 C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\src\main\java\app\AppMain.java
 C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\src\main\java\modelo\repo\IRepository\IEstadisticasUsuarioRepository.java
@@ -16,6 +19,7 @@ C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\sr
 C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\src\main\java\modelo\repo\EstadisticasUsuarioRepository.java
 C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\src\main\java\modelo\dominio\UsuarioFinal.java
 C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\src\main\java\modelo\repo\UsuarioRepository.java
+C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\src\main\java\modelo\dominio\Administrador.java
 C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\src\main\java\modelo\servicios\TicketService.java
 C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\src\main\java\controlador\AuthController.java
 C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\src\main\java\modelo\utils\PasswordEncoder.java
@@ -25,6 +29,7 @@ C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\sr
 C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\src\main\java\modelo\db\TestConexion.java
 C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\src\main\java\modelo\dominio\Facultad.java
 C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\src\main\java\controlador\ReportingController.java
+C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\src\main\java\modelo\repo\AdminRepository.java
 C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\src\main\java\modelo\repo\CarreraRepository.java
 C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\src\main\java\modelo\repo\IRepository\ICarreraRepository.java
 C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\src\main\java\modelo\dominio\Historial.java
@@ -35,15 +40,20 @@ C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\sr
 C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\src\main\java\modelo\servicios\AuthService.java
 C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\src\main\java\vista\Login\LoginUI.java
 C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\src\main\java\modelo\repo\TicketRepository.java
+C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\src\main\java\vista\Usuario\EstadisticasUsuarioUI.java
 C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\src\main\java\modelo\servicios\UsuarioService.java
 C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\src\main\java\vista\Usuario\SoporteFrame.java
 C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\src\main\java\modelo\dominio\pk\TicketMetricasDiariasId.java
 C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\src\main\java\vista\Admin\GestionTicketsUI.java
+C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\src\main\java\modelo\repo\IRepository\IAdminRepository.java
 C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\src\main\java\vista\Login\ForgotDialog.java
 C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\src\main\java\controlador\UserAdminController.java
 C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\src\main\java\modelo\servicios\ReportingService.java
+C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\src\main\java\modelo\dominio\Categoria.java
 C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\src\main\java\modelo\repo\IRepository\IEstadisticasAdminRepository.java
+C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\src\main\java\controlador\LoginController.java
 C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\src\main\java\modelo\db\JPAUtil.java
+C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\src\main\java\modelo\dominio\EstadisticaDiaria.java
 C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\src\main\java\modelo\utils\Validacion.java
 C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\src\main\java\modelo\dominio\Estado.java
 C:\Users\mende\OneDrive\Documentos\Sistema-de-Atencion-al-Cliente\FIA-Support\src\main\java\modelo\utils\Sha256PasswordEncoder.java

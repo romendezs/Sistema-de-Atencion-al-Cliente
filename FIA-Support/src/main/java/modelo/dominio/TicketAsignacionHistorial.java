@@ -5,54 +5,97 @@
 package modelo.dominio;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.Immutable;
-import java.time.OffsetDateTime;
 
 /**
  *
  * @author Méndez
  */
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Immutable;
+
+import java.time.LocalDateTime;
+import java.util.Objects;
+
 @Entity
-@Table(name = "ticket_asignacion_historial")
-@Immutable
+@Table(
+        name = "ticket_asignacion_historial",
+        indexes = {
+            @Index(name = "idx_tah_empleado_nuevo_fecha", columnList = "id_empleado_nuevo,fecha"),
+            @Index(name = "idx_tah_ticket_fecha", columnList = "id_ticket,fecha")
+        }
+)
+@Immutable // tabla de historial: solo lectura desde JPA
 public class TicketAsignacionHistorial {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_asignacion_historial")
+    @Column(name = "id_asignacion")
     private Integer id;
+
+    // DDL: timestamp without time zone -> usar LocalDateTime
+    @CreationTimestamp
+    @Column(name = "fecha", nullable = false,
+            columnDefinition = "timestamp without time zone default now()")
+    private LocalDateTime fecha;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_ticket", nullable = false)
     private Ticket ticket;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id_empleado", nullable = false)
-    private Empleado empleado; // técnico asignado
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_empleado_anterior")
+    private Empleado empleadoAnterior;
 
-    @Column(name = "comentario", length = 500)
-    private String comentario;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_empleado_nuevo")
+    private Empleado empleadoNuevo;
 
-    @Column(name = "fecha", nullable = false) // timestamp with time zone
-    private OffsetDateTime fecha;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_usuario_cambio")
+    private Usuario usuarioCambio;
+
+    protected TicketAsignacionHistorial() {
+    } // requerido por JPA
 
     public Integer getId() {
         return id;
+    }
+
+    public LocalDateTime getFecha() {
+        return fecha;
     }
 
     public Ticket getTicket() {
         return ticket;
     }
 
-    public Empleado getEmpleado() {
-        return empleado;
+    public Empleado getEmpleadoAnterior() {
+        return empleadoAnterior;
     }
 
-    public String getComentario() {
-        return comentario;
+    public Empleado getEmpleadoNuevo() {
+        return empleadoNuevo;
     }
 
-    public OffsetDateTime getFecha() {
-        return fecha;
+    public Usuario getUsuarioCambio() {
+        return usuarioCambio;
+    }
+
+    // equals/hashCode por id
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof TicketAsignacionHistorial)) {
+            return false;
+        }
+        TicketAsignacionHistorial that = (TicketAsignacionHistorial) o;
+        return id != null && id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

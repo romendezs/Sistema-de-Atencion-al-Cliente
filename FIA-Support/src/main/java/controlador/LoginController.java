@@ -2,7 +2,7 @@ package controlador;
 
 import Vista.Admin.GestionUsuariosUI;
 import Vista.Login.LoginUI;
-import com.mycompany.soporte.SoporteFrame;
+import vista.Usuario.SoporteFrame;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Supplier;

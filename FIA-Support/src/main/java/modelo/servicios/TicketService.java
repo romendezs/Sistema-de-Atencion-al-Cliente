@@ -2,10 +2,7 @@ package modelo.servicios;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import modelo.dominio.Estado;
 import modelo.dominio.Historial;
@@ -45,18 +42,22 @@ public class TicketService {
         UsuarioFinal solicitante = usuarioRepository.findById(carnet)
                 .orElseThrow(() -> new IllegalArgumentException("El solicitante no existe."));
 
+        // 1) Creamos el Ticket SIN estado
         Ticket ticket = new Ticket();
         ticket.setTitulo(titulo.trim());
         ticket.setDescripcion(descripcion == null ? null : descripcion.trim());
         ticket.setSolicitante(solicitante);
-        ticket.setEstadoActual(estadoInicial);
         ticket.setCreadoEn(LocalDateTime.now());
         ticket.setActualizadoEn(LocalDateTime.now());
 
         Ticket creado = ticketRepository.save(ticket);
-        if (descripcion != null && !descripcion.isBlank()) {
-            ticketRepository.addHistorial(creado.getId(), estadoInicial, descripcion.trim());
-        }
+
+        // 2) Insertamos el primer Historial con el estado inicial
+        String comentarioInicial = (descripcion == null || descripcion.isBlank())
+                ? "Ticket creado"
+                : descripcion.trim();
+        ticketRepository.addHistorial(creado.getId(), estadoInicial, comentarioInicial);
+
         return creado;
     }
 
@@ -97,9 +98,11 @@ public class TicketService {
             throw new IllegalArgumentException("Debe agregar un comentario.");
         }
 
+        // Verificamos existencia del ticket
         ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new IllegalArgumentException("Ticket no encontrado."));
 
+        // Solo agregamos un nuevo historial; el estado actual se deriva del último historial
         ticketRepository.addHistorial(ticketId, nuevoEstado, comentario.trim());
     }
 
@@ -113,9 +116,18 @@ public class TicketService {
             return base;
         }
 
+        // Para evitar N+1, cacheamos por si se filtra por estado
+        final Map<Integer, Integer> estadoActualCache = new HashMap<>();
+
         return base.stream()
                 .filter(t -> filter.matchesSolicitante(t.getSolicitante() == null ? null : t.getSolicitante().getId()))
-                .filter(t -> filter.matchesEstado(t.getEstadoActual() == null ? null : t.getEstadoActual().getId()))
+                .filter(t -> {
+                    if (filter.getEstadoId() == null) {
+                        return true;
+                    }
+                    Integer estadoActual = resolveEstadoActualId(t.getId(), estadoActualCache);
+                    return filter.matchesEstado(estadoActual);
+                })
                 .filter(t -> filter.matchesFecha(t.getCreadoEn()))
                 .collect(Collectors.toList());
     }
@@ -124,6 +136,20 @@ public class TicketService {
         return ticketRepository.findHistorialByTicket(ticketId);
     }
 
+    /**
+     * Resuelve el id de estado actual del ticket a partir de su último
+     * historial. Usa caché local para evitar múltiples accesos por el mismo
+     * ticket.
+     */
+    private Integer resolveEstadoActualId(int ticketId, Map<Integer, Integer> cache) {
+        return cache.computeIfAbsent(ticketId, id
+                -> ticketRepository.findUltimoHistorial(id)
+                        .map(h -> h.getEstado() != null ? h.getEstado().getId() : null)
+                        .orElse(null)
+        );
+    }
+
+    // ------------------------------ Filtro ------------------------------
     public static class TicketFilter {
 
         private final String solicitanteCarnet;
@@ -167,21 +193,22 @@ public class TicketService {
             return carnet.equalsIgnoreCase(Validacion.normalizarCarnet(solicitanteCarnet));
         }
 
-        private boolean matchesEstado(Integer estado) {
+        private boolean matchesEstado(Integer estadoActualId) {
             if (estadoId == null) {
                 return true;
             }
-            return Objects.equals(estadoId, estado);
+            return Objects.equals(estadoId, estadoActualId);
         }
 
-        private boolean matchesFecha(LocalDateTime fecha) {
-            if (fecha == null) {
+        private boolean matchesFecha(LocalDateTime fechaCreacionTicket) {
+            if (fechaCreacionTicket == null) {
                 return true;
             }
-            if (desde != null && fecha.toLocalDate().isBefore(desde)) {
+            LocalDate f = fechaCreacionTicket.toLocalDate();
+            if (desde != null && f.isBefore(desde)) {
                 return false;
             }
-            if (hasta != null && fecha.toLocalDate().isAfter(hasta)) {
+            if (hasta != null && f.isAfter(hasta)) {
                 return false;
             }
             return true;

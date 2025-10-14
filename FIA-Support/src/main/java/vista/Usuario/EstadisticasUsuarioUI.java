@@ -1,4 +1,4 @@
-package com.mycompany.soporte;
+package vista.Usuario;
 
 import controlador.ReportingController;
 import java.awt.BorderLayout;
@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.Objects;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -46,19 +47,41 @@ public class EstadisticasUsuarioUI extends JDialog {
     private final JTextField txtHasta = new JTextField(10);
     private final JLabel lblPromedio = new JLabel("Promedio resolución: -");
 
-    public EstadisticasUsuarioUI(Window owner, ReportingController reportingController, UsuarioFinal usuario) {
+    public EstadisticasUsuarioUI(Window owner,
+            ReportingController reportingController,
+            UsuarioFinal usuario) {
         super(owner, "Mis estadísticas", ModalityType.APPLICATION_MODAL);
-        this.reportingController = reportingController;
-        this.usuario = usuario;
+        this.reportingController = Objects.requireNonNull(reportingController, "reportingController");
+        this.usuario = Objects.requireNonNull(usuario, "usuario");
+
         setPreferredSize(new Dimension(720, 520));
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setLocationRelativeTo(owner);
+
+        // If owner is null (e.g., from unit tests), center on screen:
+        if (owner != null) {
+            setLocationRelativeTo(owner);
+        }
+
         buildUi();
+
+        // Rango inicial de 14 días
         LocalDate hoy = LocalDate.now();
         LocalDate inicio = hoy.minusDays(14);
         txtDesde.setText(DATE_FORMAT.format(inicio));
         txtHasta.setText(DATE_FORMAT.format(hoy));
-        cargarDatos();
+
+        // Validación defensiva de rango antes de cargar
+        if (hoy.isBefore(inicio)) {
+            // No debería pasar, pero por si cambias el preset arriba
+            JOptionPane.showMessageDialog(this,
+                    "'Hasta' no puede ser anterior a 'Desde'.",
+                    "Fechas",
+                    JOptionPane.WARNING_MESSAGE);
+        } else {
+            cargarDatos();
+        }
+
+        pack(); // asegura layout correcto con el preferred size
     }
 
     private void buildUi() {
