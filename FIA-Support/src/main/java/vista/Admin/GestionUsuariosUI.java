@@ -85,8 +85,20 @@ public class GestionUsuariosUI extends JFrame {
         scroller.getViewport().setBackground(Color.WHITE);     // fondo blanco
         scroller.getVerticalScrollBar().setUnitIncrement(18);  // scroll suave
         getContentPane().add(scroller, BorderLayout.CENTER);
-        setIconImage(new ImageIcon(getClass().getResource("/Vista/img/icon.png")).getImage());
+        Image frameIcon = loadImage("/Vista/img/icon.png");
+        if (frameIcon != null) {
+            setIconImage(frameIcon);
+        }
 
+    }
+
+    private Image loadImage(String resourcePath) {
+        java.net.URL resource = getClass().getResource(resourcePath);
+        if (resource == null) {
+            System.err.println("No se pudo encontrar el recurso de imagen: " + resourcePath);
+            return null;
+        }
+        return new ImageIcon(resource).getImage();
     }
 
     /* ----------------- Métodos puente usados por el Controller ----------------- */
