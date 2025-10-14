@@ -27,12 +27,29 @@ public class GestionUsuariosUI extends JFrame {
     private UserAdminController controller;
     private ReportingController reportingController;
 
+    //para las opciones del menu
+    private controlador.TicketController ticketsController;
+    private controlador.AssignmentController assignmentController;
+    private controlador.WorkflowController workflowController;
+
     public void setController(UserAdminController c) {
         this.controller = c;
     }
 
     public void setReportingController(ReportingController reportingController) {
         this.reportingController = reportingController;
+    }
+
+    public void setTicketsController(controlador.TicketController c) {
+        this.ticketsController = c;
+    }
+
+    public void setAssignmentController(controlador.AssignmentController c) {
+        this.assignmentController = c;
+    }
+
+    public void setWorkflowController(controlador.WorkflowController c) {
+        this.workflowController = c;
     }
 
     // Colores
@@ -73,6 +90,28 @@ public class GestionUsuariosUI extends JFrame {
     });
     private final int actionsColumnWidth = 140;
 
+    private static DefaultListCellRenderer nombreFacultadRenderer() {
+        return new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(
+                    JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                String txt = (value instanceof Facultad f) ? f.getNombre() : "";
+                return super.getListCellRendererComponent(list, txt, index, isSelected, cellHasFocus);
+            }
+        };
+    }
+
+    private static DefaultListCellRenderer nombreCarreraRenderer() {
+        return new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(
+                    JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                String txt = (value instanceof Carrera c) ? c.getNombre() : "";
+                return super.getListCellRendererComponent(list, txt, index, isSelected, cellHasFocus);
+            }
+        };
+    }
+
     public GestionUsuariosUI() {
         setTitle("FIA Support");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -98,6 +137,7 @@ public class GestionUsuariosUI extends JFrame {
 
     }
 
+    // Mostrar nombre legible en los combos
     /* ----------------- Métodos puente usados por el Controller ----------------- */
     public void setFacultades(List<Facultad> facs) {
         cbFacultad.removeAllItems();
@@ -295,6 +335,8 @@ public class GestionUsuariosUI extends JFrame {
 
         cbFacultad = new JComboBox<>();
         cbCarrera = new JComboBox<>();
+        cbFacultad.setRenderer(nombreFacultadRenderer());
+        cbCarrera.setRenderer(nombreCarreraRenderer());
         cbCarrera.setEnabled(false);
         cbFacultad.addActionListener(e -> cbFacultadAction());
         rbEstSi.addActionListener(e -> actualizarDisponibilidadCarrera());
@@ -419,7 +461,6 @@ public class GestionUsuariosUI extends JFrame {
         table.setIntercellSpacing(new Dimension(0, 4));
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-// (Opcional) si te gusta mantener el renderer de celdas:
         DefaultTableCellRenderer cell = new DefaultTableCellRenderer();
         cell.setBackground(new Color(242, 242, 242));
         cell.setBorder(new EmptyBorder(0, 12, 0, 12));
@@ -499,10 +540,20 @@ public class GestionUsuariosUI extends JFrame {
 
     /* -------------------- Lógica UI (llama al Controller) ------------------- */
     private void openGestionTickets() {
-        JOptionPane.showMessageDialog(this,
-                "Diríjase al módulo de tickets desde el lanzador principal.",
-                "Navegación",
-                JOptionPane.INFORMATION_MESSAGE);
+        if (ticketsController == null || assignmentController == null || workflowController == null || reportingController == null) {
+            JOptionPane.showMessageDialog(this,
+                    "Faltan controladores para abrir Gestión de Tickets.",
+                    "Navegación", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        GestionTicketsUI ui = new GestionTicketsUI(
+                ticketsController,
+                assignmentController,
+                workflowController,
+                reportingController
+        );
+        ui.setLocationRelativeTo(this);
+        ui.setVisible(true);
     }
 
     private void openReportes() {
@@ -805,6 +856,29 @@ public class GestionUsuariosUI extends JFrame {
         private JComboBox<Facultad> cbFac;
         private JComboBox<Carrera> cbCar;
 
+        // Mostrar nombre legible en los combos
+        private static DefaultListCellRenderer nombreFacultadRenderer() {
+            return new DefaultListCellRenderer() {
+                @Override
+                public Component getListCellRendererComponent(
+                        JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                    String txt = (value instanceof Facultad f) ? f.getNombre() : "";
+                    return super.getListCellRendererComponent(list, txt, index, isSelected, cellHasFocus);
+                }
+            };
+        }
+
+        private static DefaultListCellRenderer nombreCarreraRenderer() {
+            return new DefaultListCellRenderer() {
+                @Override
+                public Component getListCellRendererComponent(
+                        JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                    String txt = (value instanceof Carrera c) ? c.getNombre() : "";
+                    return super.getListCellRendererComponent(list, txt, index, isSelected, cellHasFocus);
+                }
+            };
+        }
+
         EditDialog(Frame owner, UserAdminController controller, UsuarioFinal user) {
             super(owner, "Editar Usuario", true);
             this.controller = controller;
@@ -899,6 +973,7 @@ public class GestionUsuariosUI extends JFrame {
             gc.gridy++;
             gc.insets = new Insets(0, 0, 0, 0);
             form.add(cbFac, gc);
+            cbFac.setRenderer(nombreFacultadRenderer());
 
             // Carrera
             gc.gridy++;
@@ -908,6 +983,7 @@ public class GestionUsuariosUI extends JFrame {
             gc.gridy++;
             gc.insets = new Insets(0, 0, 0, 0);
             form.add(cbCar, gc);
+            cbCar.setRenderer(nombreCarreraRenderer());
 
             // Carga carreras según facultad
             ActionListener loadCars = e -> {
@@ -1048,8 +1124,8 @@ public class GestionUsuariosUI extends JFrame {
 
     /* =============================== MAIN ================================= */
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() ->
-                JOptionPane.showMessageDialog(null,
+        SwingUtilities.invokeLater(()
+                -> JOptionPane.showMessageDialog(null,
                         "Inicialice los repositorios reales para ejecutar la pantalla de usuarios.",
                         "FIA Support",
                         JOptionPane.INFORMATION_MESSAGE));

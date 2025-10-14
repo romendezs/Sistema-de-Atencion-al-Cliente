@@ -58,6 +58,11 @@ public class UserAdminController {
             return false;
         }
     }
+    
+    public List<UsuarioFinal> listUsuarios() {
+        // tu repo ya tiene findAll() ordenado por apellidos/nombres según lo que definiste
+        return userAdminService.listUsers(null);
+    }
 
     public boolean onEditar(UsuarioFinal usuario, String nombres, String apellidos,
                             boolean esEstudiante, Facultad facultad, Carrera carrera) {

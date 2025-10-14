@@ -13,6 +13,7 @@ Vista\Admin\GestionTicketsUI$TicketTableModel.class
 Vista\Login\LoginUI$2.class
 modelo\dominio\Categoria.class
 modelo\servicios\TicketService$TicketFilter.class
+Vista\Admin\GestionUsuariosUI$EditDialog$1.class
 app\AppMain.class
 Vista\Admin\GestionUsuariosUI.class
 controlador\WorkflowController.class
@@ -52,12 +53,14 @@ Vista\Admin\GestionTicketsUI$StatusDialog$1.class
 modelo\servicios\AuthService.class
 Vista\Usuario\EstadisticasUsuarioUI$2.class
 modelo\repo\CarreraRepository.class
+Vista\Admin\GestionUsuariosUI$8.class
 modelo\dominio\Carrera.class
 modelo\dominio\TicketMetricasDiarias$Builder.class
 Vista\Admin\GestionTicketsUI$DeleteTicketDialog.class
 Vista\Admin\GestionTicketsUI$PencilRenderer$1.class
 Vista\Admin\GestionUsuariosUI$RowActionRenderer.class
 modelo\repo\UsuarioRepository.class
+Vista\Admin\GestionUsuariosUI$EditDialog$2.class
 Vista\Admin\GestionUsuariosUI$5.class
 Vista\Admin\GestionTicketsUI$PencilRenderer.class
 modelo\repo\IRepository\ICarreraRepository.class
@@ -91,6 +94,7 @@ modelo\servicios\AssignmentService.class
 Vista\Admin\GestionUsuariosUI$2.class
 Vista\Admin\GestionTicketsUI$AssignDialog.class
 modelo\dominio\TicketMetricasDiarias.class
+Vista\Admin\GestionUsuariosUI$7.class
 Vista\Admin\GestionTicketsUI.class
 Vista\Admin\EstadisticasAdminUI.class
 modelo\servicios\TicketService.class

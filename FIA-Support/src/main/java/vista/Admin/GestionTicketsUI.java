@@ -30,6 +30,11 @@ public class GestionTicketsUI extends JFrame {
     private static final Color ROJO = new Color(180, 40, 25);
     private static final Color ROJO_CLARO = new Color(244, 196, 192);
     private static final Color GRIS_TXT = new Color(90, 90, 90);
+    private controlador.UserAdminController userAdminController;
+
+    public void setUserAdminController(controlador.UserAdminController c) {
+        this.userAdminController = c;
+    }
 
     private final TicketController ticketController;
     private final AssignmentController assignmentController;
@@ -191,98 +196,155 @@ public class GestionTicketsUI extends JFrame {
         north.setLayout(new BoxLayout(north, BoxLayout.Y_AXIS));
         north.add(search);
         panel.add(north, BorderLayout.NORTH);
-        
+
         List<Ticket> tickets = ticketController.listTickets();
         // Tabla
-        TicketTableModel model = new TicketTableModel(
+        model = new TicketTableModel(
                 tickets,
-                ticketController::estadoActualNombre // IntFunction<String> que consulta al controller
+                ticketController::estadoActualNombre
         );
-        table.setModel(model);
-
         table = new JTable(model) {
-            @Override
-            public boolean getScrollableTracksViewportWidth() {
+                @Override
+                public boolean getScrollableTracksViewportWidth
+                
+                    () {
                 return true;
+                }
+
+                @Override
+                public boolean isCellEditable
+                (int r, int c
+                
+                    ) {
+                return false;
+                }
             }
 
-            @Override
-            public boolean isCellEditable(int r, int c) {
-                return false;
-            }
-        };
-        table.setRowHeight(36);
-        table.setShowGrid(false);
-        table.setIntercellSpacing(new Dimension(0, 4));
-        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        table.getTableHeader().setReorderingAllowed(false);
-        table.getTableHeader().setResizingAllowed(false);
+            ;
+            table.setRowHeight (
+
+            36);
+            table.setShowGrid (
+
+            false);
+            table.setIntercellSpacing (
+
+            new Dimension(0, 4));
+            table.setSelectionMode (ListSelectionModel.SINGLE_SELECTION);
+
+            table.getTableHeader ()
+
+            .setReorderingAllowed(false);
+            table.getTableHeader ()
+
+            .setResizingAllowed(false);
 
         // renderers
-        table.getColumnModel().getColumn(COL_DEL).setPreferredWidth(30);
-        table.getColumnModel().getColumn(COL_DEL).setCellRenderer(new DeleteRenderer());
-        table.getColumnModel().getColumn(COL_SOL).setCellRenderer(cell());
-        table.getColumnModel().getColumn(COL_TIT).setCellRenderer(cell());
-        table.getColumnModel().getColumn(COL_ASIG).setCellRenderer(new PencilRenderer());
-        table.getColumnModel().getColumn(COL_EST).setCellRenderer(new StatusRenderer());
+            table.getColumnModel ()
 
-        table.addMouseMotionListener(new MouseMotionAdapter() {
+            .getColumn(COL_DEL).setPreferredWidth(30);
+            table.getColumnModel ()
+
+            .getColumn(COL_DEL).setCellRenderer(new DeleteRenderer());
+            table.getColumnModel ()
+
+            .getColumn(COL_SOL).setCellRenderer(cell());
+            table.getColumnModel ()
+
+            .getColumn(COL_TIT).setCellRenderer(cell());
+            table.getColumnModel ()
+
+            .getColumn(COL_ASIG).setCellRenderer(new PencilRenderer());
+            table.getColumnModel ()
+
+            .getColumn(COL_EST).setCellRenderer(new StatusRenderer());
+
+            table.addMouseMotionListener ( 
+                new MouseMotionAdapter() {
             @Override
-            public void mouseMoved(MouseEvent e) {
+                public void mouseMoved
+                (MouseEvent e
+                
+                    ) {
                 hoveredRow = table.rowAtPoint(e.getPoint());
-                updateCursor(e);
-                if (!hoverTimer.isRunning()) {
-                    hoverTimer.start();
-                }
-            }
-        });
-        table.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseExited(MouseEvent e) {
-                hoveredRow = -1;
-                table.setCursor(Cursor.getDefaultCursor());
-                if (!hoverTimer.isRunning()) {
-                    hoverTimer.start();
+                    updateCursor(e);
+                    if (!hoverTimer.isRunning()) {
+                        hoverTimer.start();
+                    }
                 }
             }
 
+            );
+            table.addMouseListener ( 
+                new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
+                public void mouseExited
+                (MouseEvent e
+                
+                    ) {
+                hoveredRow = -1;
+                    table.setCursor(Cursor.getDefaultCursor());
+                    if (!hoverTimer.isRunning()) {
+                        hoverTimer.start();
+                    }
+                }
+
+                @Override
+                public void mouseClicked
+                (MouseEvent e
+                
+                    ) {
                 handleClick(e);
+                }
             }
-        });
+            );
 
         // ---- header styling ----
         JTableHeader th = table.getTableHeader();
-        th.setPreferredSize(new Dimension(th.getPreferredSize().width, 36));
-        th.setReorderingAllowed(false);
-        th.setResizingAllowed(false);
+
+            th.setPreferredSize (
+
+            new Dimension(th.getPreferredSize().width, 36));
+            th.setReorderingAllowed (
+
+            false);
+            th.setResizingAllowed (
+            false);
 
         DefaultTableCellRenderer headerRenderer = new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value,
-                    boolean isSelected, boolean hasFocus, int row, int column) {
-                JLabel l = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                l.setHorizontalAlignment(SwingConstants.LEFT);
-                l.setOpaque(true);
-                l.setBackground(ROJO_CLARO);      // mismo color que usabas
-                l.setForeground(GRIS_TXT);
-                l.setBorder(new EmptyBorder(8, 12, 8, 12));
-                l.setFont(l.getFont().deriveFont(Font.BOLD));
-                return l;
-            }
-        };
-        TableColumnModel cm = table.getColumnModel();
-        for (int c = 0; c < cm.getColumnCount(); c++) {
+                @Override
+                public Component getTableCellRendererComponent(JTable table, Object value,
+                        boolean isSelected, boolean hasFocus, int row, int column) {
+                    JLabel l = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                    l.setHorizontalAlignment(SwingConstants.LEFT);
+                    l.setOpaque(true);
+                    l.setBackground(ROJO_CLARO);      // mismo color que usabas
+                    l.setForeground(GRIS_TXT);
+                    l.setBorder(new EmptyBorder(8, 12, 8, 12));
+                    l.setFont(l.getFont().deriveFont(Font.BOLD));
+                    return l;
+                }
+            };
+            TableColumnModel cm = table.getColumnModel();
+            for (int c = 0;
+
+            c< cm.getColumnCount ();
+            c
+
+            
+                ++) {
             cm.getColumn(c).setHeaderRenderer(headerRenderer);
+            }
+
+            JScrollPane sp = new JScrollPane(table);
+
+            sp.setBorder (
+
+            new EmptyBorder(6, 0, 0, 0));
+            panel.add (sp, BorderLayout.CENTER);
+
+            return panel ;
         }
-
-        JScrollPane sp = new JScrollPane(table);
-        sp.setBorder(new EmptyBorder(6, 0, 0, 0));
-        panel.add(sp, BorderLayout.CENTER);
-
-        return panel;
-    }
 
     private void mostrarResumenGlobal() {
         if (reportingController == null) {
@@ -896,10 +958,26 @@ public class GestionTicketsUI extends JFrame {
     }
 
     private void openUsuarios() {
-        JOptionPane.showMessageDialog(this,
-                "Diríjase al módulo principal para gestionar usuarios.",
-                "Navegación",
-                JOptionPane.INFORMATION_MESSAGE);
+        if (userAdminController == null || reportingController == null) {
+            JOptionPane.showMessageDialog(this,
+                    "Faltan controladores para abrir Gestión de Usuarios.",
+                    "Navegación", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        GestionUsuariosUI ui = new GestionUsuariosUI();
+        ui.setController(userAdminController);
+        ui.setReportingController(reportingController);
+        // si quieres volver a tickets desde usuarios, reinyecta los controllers:
+        ui.setTicketsController(ticketController);
+        ui.setAssignmentController(assignmentController);
+        ui.setWorkflowController(workflowController);
+
+        // Precarga listas (si las expones en el controller)
+        ui.setFacultades(userAdminController.getFacultades());
+        ui.setUsuarios(userAdminController.listUsuarios());
+
+        ui.setLocationRelativeTo(this);
+        ui.setVisible(true);
     }
 
     public static void main(String[] args) {
