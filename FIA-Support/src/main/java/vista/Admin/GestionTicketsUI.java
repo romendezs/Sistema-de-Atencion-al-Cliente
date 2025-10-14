@@ -275,44 +275,16 @@ public class GestionTicketsUI extends JFrame {
     }
 
     private void mostrarResumenGlobal() {
-        try {
-            List<Object[]> resumen = reportingController.resumenPorEstadoGlobal();
-            if (resumen == null || resumen.isEmpty()) {
-                JOptionPane.showMessageDialog(this,
-                        "No hay datos para mostrar.",
-                        "Reportes",
-                        JOptionPane.INFORMATION_MESSAGE);
-                return;
-            }
-
-            StringBuilder sb = new StringBuilder();
-            sb.append("Tickets por estado:\n");
-            for (Object[] fila : resumen) {
-                if (fila == null || fila.length < 2) {
-                    continue;
-                }
-                sb.append(" • ")
-                        .append(fila[0] == null ? "(sin estado)" : fila[0].toString())
-                        .append(": ")
-                        .append(fila[1] == null ? "0" : fila[1].toString())
-                        .append('\n');
-            }
-
+        if (reportingController == null) {
             JOptionPane.showMessageDialog(this,
-                    sb.toString(),
-                    "Reportes",
-                    JOptionPane.INFORMATION_MESSAGE);
-        } catch (IllegalArgumentException ex) {
-            JOptionPane.showMessageDialog(this,
-                    ex.getMessage(),
+                    "No se configuró el servicio de reportes.",
                     "Reportes",
                     JOptionPane.WARNING_MESSAGE);
-        } catch (RuntimeException ex) {
-            JOptionPane.showMessageDialog(this,
-                    "No fue posible obtener el resumen.",
-                    "Reportes",
-                    JOptionPane.ERROR_MESSAGE);
+            return;
         }
+        EstadisticasAdminUI dialog = new EstadisticasAdminUI(this, reportingController);
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
     }
 
 

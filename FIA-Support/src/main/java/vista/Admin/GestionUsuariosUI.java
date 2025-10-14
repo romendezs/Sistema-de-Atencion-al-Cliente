@@ -1,5 +1,6 @@
 package Vista.Admin;
 
+import controlador.ReportingController;
 import controlador.UserAdminController;
 import modelo.dominio.Carrera;
 import modelo.dominio.Facultad;
@@ -24,9 +25,14 @@ public class GestionUsuariosUI extends JFrame {
 
     // ======== Controller inyectado ========
     private UserAdminController controller;
+    private ReportingController reportingController;
 
     public void setController(UserAdminController c) {
         this.controller = c;
+    }
+
+    public void setReportingController(ReportingController reportingController) {
+        this.reportingController = reportingController;
     }
 
     // Colores
@@ -187,6 +193,7 @@ public class GestionUsuariosUI extends JFrame {
         JButton btnTickets = btnHeader("Gestionar Tickets");
         btnTickets.addActionListener(e -> openGestionTickets());
         JButton btnReportes = btnHeader("Ver Reportes y Estadísticas");
+        btnReportes.addActionListener(e -> openReportes());
         mid.add(btnTickets);
         mid.add(btnReportes);
 
@@ -484,6 +491,19 @@ public class GestionUsuariosUI extends JFrame {
                 "Diríjase al módulo de tickets desde el lanzador principal.",
                 "Navegación",
                 JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void openReportes() {
+        if (reportingController == null) {
+            JOptionPane.showMessageDialog(this,
+                    "No se configuró el servicio de reportes.",
+                    "Reportes",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        EstadisticasAdminUI dialog = new EstadisticasAdminUI(this, reportingController);
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
     }
 
     private void actualizarDisponibilidadCarrera() {

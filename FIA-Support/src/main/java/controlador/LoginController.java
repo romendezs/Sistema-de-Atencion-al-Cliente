@@ -26,6 +26,7 @@ public class LoginController extends AuthController {
     private final Supplier<SoporteFrame> soporteFrameSupplier;
     private final UserAdminController userAdminController;
     private final GestionUsuariosUI adminView;
+    private final ReportingController reportingController;
 
     public LoginController(AuthService authService,
                            LoginUI view,
@@ -33,7 +34,8 @@ public class LoginController extends AuthController {
                            WorkflowService workflowService,
                            Supplier<SoporteFrame> soporteFrameSupplier,
                            UserAdminController userAdminController,
-                           GestionUsuariosUI adminView) {
+                           GestionUsuariosUI adminView,
+                           ReportingController reportingController) {
         super(authService);
         this.view = Objects.requireNonNull(view, "view");
         this.ticketController = Objects.requireNonNull(ticketController, "ticketController");
@@ -41,6 +43,7 @@ public class LoginController extends AuthController {
         this.soporteFrameSupplier = Objects.requireNonNull(soporteFrameSupplier, "soporteFrameSupplier");
         this.userAdminController = Objects.requireNonNull(userAdminController, "userAdminController");
         this.adminView = Objects.requireNonNull(adminView, "adminView");
+        this.reportingController = Objects.requireNonNull(reportingController, "reportingController");
         this.view.setController(this);
     }
 
@@ -60,7 +63,7 @@ public class LoginController extends AuthController {
     private void openSoporteFrame(UsuarioFinal usuario) {
         Estado estadoInicial = resolveEstadoInicial();
         SoporteFrame soporteFrame = soporteFrameSupplier.get();
-        soporteFrame.configurar(ticketController, usuario, estadoInicial);
+        soporteFrame.configurar(ticketController, reportingController, usuario, estadoInicial);
         JOptionPane.showMessageDialog(view,
                 "¡Bienvenido " + usuario.getNombres() + "!",
                 "FIA Support",

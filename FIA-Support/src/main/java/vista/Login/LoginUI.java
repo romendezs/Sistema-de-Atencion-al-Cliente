@@ -6,6 +6,7 @@ package Vista.Login;
 
 import Vista.Admin.GestionUsuariosUI;
 import controlador.LoginController;
+import controlador.ReportingController;
 import controlador.TicketController;
 import controlador.UserAdminController;
 import java.awt.Image;
@@ -15,10 +16,13 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import modelo.repo.AdminRepository;
 import modelo.repo.CarreraRepository;
+import modelo.repo.EstadisticasAdminRepository;
+import modelo.repo.EstadisticasUsuarioRepository;
 import modelo.repo.FacultadRepository;
 import modelo.repo.TicketRepository;
 import modelo.repo.UsuarioRepository;
 import modelo.servicios.AuthService;
+import modelo.servicios.ReportingService;
 import modelo.servicios.TicketService;
 import modelo.servicios.UserAdminService;
 import modelo.servicios.UsuarioService;
@@ -359,11 +363,17 @@ public class LoginUI extends javax.swing.JFrame {
             TicketController ticketController = new TicketController(ticketService);
             WorkflowService workflowService = new WorkflowService(ticketRepository);
 
+            ReportingService reportingService = new ReportingService(
+                    new EstadisticasAdminRepository(),
+                    new EstadisticasUsuarioRepository());
+            ReportingController reportingController = new ReportingController(reportingService);
+
             FacultadRepository facultadRepository = new FacultadRepository();
             CarreraRepository carreraRepository = new CarreraRepository();
             UsuarioService usuarioService = new UsuarioService(usuarioRepository, facultadRepository, carreraRepository);
             UserAdminService userAdminService = new UserAdminService(usuarioService);
             GestionUsuariosUI adminView = new GestionUsuariosUI();
+            adminView.setReportingController(reportingController);
             UserAdminController userAdminController = new UserAdminController(userAdminService, adminView);
 
             LoginUI loginUI = new LoginUI();
@@ -374,7 +384,8 @@ public class LoginUI extends javax.swing.JFrame {
                     workflowService,
                     SoporteFrame::new,
                     userAdminController,
-                    adminView
+                    adminView,
+                    reportingController
             );
             loginController.showLogin();
         });

@@ -4,6 +4,7 @@
  */
 package com.mycompany.soporte;
 
+import controlador.ReportingController;
 import controlador.TicketController;
 import java.util.List;
 import javax.swing.JOptionPane;
@@ -24,6 +25,7 @@ public class SoporteFrame extends javax.swing.JFrame {
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(SoporteFrame.class.getName());
 
     private TicketController ticketController;
+    private ReportingController reportingController;
     private UsuarioFinal usuarioActual;
     private Estado estadoInicial;
     private DefaultTableModel tableModel;
@@ -36,8 +38,9 @@ public class SoporteFrame extends javax.swing.JFrame {
         tableModel = (DefaultTableModel) jTable1.getModel();
     }
 
-    public void configurar(TicketController controller, UsuarioFinal usuario, Estado estadoInicial) {
+    public void configurar(TicketController controller, ReportingController reportingController, UsuarioFinal usuario, Estado estadoInicial) {
         this.ticketController = controller;
+        this.reportingController = reportingController;
         this.usuarioActual = usuario;
         this.estadoInicial = estadoInicial;
         if (usuario != null) {
@@ -95,6 +98,11 @@ public class SoporteFrame extends javax.swing.JFrame {
         jbtnReportes.setText("Ver Reportes y Estadisticas");
         jbtnReportes.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jbtnReportes.setBorderPainted(false);
+        jbtnReportes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbtnReportesActionPerformed(evt);
+            }
+        });
 
         jbtnCerrar.setBackground(new java.awt.Color(255, 51, 51));
         jbtnCerrar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -265,6 +273,19 @@ public class SoporteFrame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jbtnReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnReportesActionPerformed
+        if (reportingController == null || usuarioActual == null) {
+            JOptionPane.showMessageDialog(this,
+                    "No se pudieron cargar las estadísticas.",
+                    "Reportes",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        EstadisticasUsuarioUI dialog = new EstadisticasUsuarioUI(this, reportingController, usuarioActual);
+        dialog.setLocationRelativeTo(this);
+        dialog.setVisible(true);
+    }//GEN-LAST:event_jbtnReportesActionPerformed
 
     private void jbtnCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnCrearActionPerformed
         if (ticketController == null || usuarioActual == null) {
