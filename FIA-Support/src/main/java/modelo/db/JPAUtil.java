@@ -44,19 +44,24 @@ public class JPAUtil {
 
     private static void ensureAdministradorIdColumn() {
         try (Connection connection = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
-            boolean hasIdAdmin = columnExists(connection, "administrador", "id_admin");
-            if (hasIdAdmin) {
+            if (columnExists(connection, "administrador", "id_administrador")) {
                 return;
             }
-            boolean hasLegacyId = columnExists(connection, "administrador", "id");
-            if (hasLegacyId) {
-                renameColumn(connection, "administrador", "id", "id_admin");
+
+            if (columnExists(connection, "administrador", "id_admin")) {
+                renameColumn(connection, "administrador", "id_admin", "id_administrador");
                 return;
             }
-            throw new IllegalStateException("La tabla administrador no tiene columnas id_admin ni id");
+
+            if (columnExists(connection, "administrador", "id")) {
+                renameColumn(connection, "administrador", "id", "id_administrador");
+                return;
+            }
+
+            throw new IllegalStateException("La tabla administrador no tiene columnas id_administrador, id_admin ni id");
         } catch (SQLException ex) {
             throw new ExceptionInInitializerError(
-                    new IllegalStateException("Error verificando la columna id_admin de administrador", ex));
+                    new IllegalStateException("Error verificando la columna id_administrador de administrador", ex));
         }
     }
 
