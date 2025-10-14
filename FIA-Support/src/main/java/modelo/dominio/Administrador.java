@@ -13,9 +13,8 @@ import java.util.Objects;
 public class Administrador {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Integer id;
+    @Column(name = "id_administrador", length = 32)
+    private String id;
 
     @Column(name = "usuario", nullable = false, unique = true, length = 64)
     private String usuario;
@@ -32,7 +31,7 @@ public class Administrador {
     public Administrador() {
     }
 
-    public Administrador(Integer id, String usuario, String passwordHash,
+    public Administrador(String id, String usuario, String passwordHash,
                          String nombres, String apellidos) {
         this.id = id;
         this.usuario = usuario;
@@ -41,11 +40,11 @@ public class Administrador {
         this.apellidos = apellidos;
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
