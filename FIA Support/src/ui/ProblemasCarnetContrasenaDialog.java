@@ -4,6 +4,11 @@
  */
 package ui;
 
+import com.tuapp.seguridad.captcha.CaptchaPanel;
+import com.tuapp.seguridad.captcha.CaptchaProvider;
+import com.tuapp.seguridad.captcha.CaptchaVerifier;
+import com.tuapp.seguridad.captcha.LocalCaptchaProvider;
+
 /**
  *
  * @author ceol7
@@ -11,6 +16,8 @@ package ui;
 public class ProblemasCarnetContrasenaDialog extends javax.swing.JDialog {
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ProblemasCarnetContrasenaDialog.class.getName());
+
+    private CaptchaPanel captchaPanel;
 
     /**
      * Creates new form ProblemasCarnetContrasenaDialog
@@ -54,6 +61,19 @@ public class ProblemasCarnetContrasenaDialog extends javax.swing.JDialog {
 
         // Centrar sobre la ventana padre
         setLocationRelativeTo(parent);
+        
+        // --- CAPTCHA: provider + verifier + panel visual ---
+CaptchaProvider provider = new LocalCaptchaProvider(); // hoy OFFLINE; luego puedes cambiar a Remote
+CaptchaVerifier verifier = new CaptchaVerifier(provider);
+captchaPanel = new CaptchaPanel(verifier);
+
+// Montarlo dentro del JPanel placeholder del diseñador:
+pnlCaptcha.setLayout(new java.awt.BorderLayout());
+pnlCaptcha.removeAll();
+pnlCaptcha.add(captchaPanel, java.awt.BorderLayout.CENTER);
+pnlCaptcha.revalidate();
+pnlCaptcha.repaint();
+
     }
 
     private javax.swing.ImageIcon loadScaledIcon(String resource, int maxW, int maxH) {
@@ -88,10 +108,10 @@ public class ProblemasCarnetContrasenaDialog extends javax.swing.JDialog {
         txtCorreoPersonal = new javax.swing.JTextField();
         lblOlvidoSuContrasena = new javax.swing.JLabel();
         txtCarnet = new javax.swing.JTextField();
-        chkCaptcha = new javax.swing.JCheckBox();
         btnEnviar = new javax.swing.JButton();
         btnClose = new javax.swing.JButton();
         lblIcono = new javax.swing.JLabel();
+        pnlCaptcha = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("ProblemasCarnetContrasena");
@@ -123,9 +143,6 @@ public class ProblemasCarnetContrasenaDialog extends javax.swing.JDialog {
             }
         });
 
-        chkCaptcha.setFont(new java.awt.Font("Comic Sans MS", 0, 14)); // NOI18N
-        chkCaptcha.setText("No soy un robot");
-
         btnEnviar.setBackground(new java.awt.Color(0, 102, 255));
         btnEnviar.setFont(new java.awt.Font("Cambria", 1, 24)); // NOI18N
         btnEnviar.setForeground(new java.awt.Color(255, 255, 255));
@@ -153,6 +170,10 @@ public class ProblemasCarnetContrasenaDialog extends javax.swing.JDialog {
         lblIcono.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ui/Fia_Support_Icon.png"))); // NOI18N
         lblIcono.setToolTipText("");
 
+        pnlCaptcha.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        pnlCaptcha.setPreferredSize(new java.awt.Dimension(320, 160));
+        pnlCaptcha.setLayout(new java.awt.BorderLayout());
+
         javax.swing.GroupLayout White_fontLayout = new javax.swing.GroupLayout(White_font);
         White_font.setLayout(White_fontLayout);
         White_fontLayout.setHorizontalGroup(
@@ -165,25 +186,20 @@ public class ProblemasCarnetContrasenaDialog extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnClose))
                     .addComponent(lblTitulo))
-                .addGap(27, 27, 27))
+                .addGap(7, 7, 7))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, White_fontLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnEnviar)
+                .addGap(170, 170, 170))
             .addGroup(White_fontLayout.createSequentialGroup()
-                .addGroup(White_fontLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(White_fontLayout.createSequentialGroup()
-                        .addGap(25, 25, 25)
-                        .addGroup(White_fontLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblOlvidoSuContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 311, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtCarnet, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(White_fontLayout.createSequentialGroup()
-                        .addGap(25, 25, 25)
-                        .addGroup(White_fontLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblOlvidoSuCarnet, javax.swing.GroupLayout.PREFERRED_SIZE, 311, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtCorreoPersonal, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(White_fontLayout.createSequentialGroup()
-                        .addGap(162, 162, 162)
-                        .addComponent(btnEnviar))
-                    .addGroup(White_fontLayout.createSequentialGroup()
-                        .addGap(153, 153, 153)
-                        .addComponent(chkCaptcha, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(19, 19, 19)
+                .addGroup(White_fontLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(pnlCaptcha, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(White_fontLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(lblOlvidoSuContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 311, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtCarnet, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblOlvidoSuCarnet, javax.swing.GroupLayout.PREFERRED_SIZE, 311, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtCorreoPersonal, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         White_fontLayout.setVerticalGroup(
@@ -194,19 +210,19 @@ public class ProblemasCarnetContrasenaDialog extends javax.swing.JDialog {
                         .addGap(4, 4, 4)
                         .addComponent(btnClose))
                     .addComponent(lblIcono, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(lblTitulo)
                 .addGap(41, 41, 41)
                 .addComponent(lblOlvidoSuCarnet)
                 .addGap(18, 18, 18)
                 .addComponent(txtCorreoPersonal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(32, 32, 32)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(lblOlvidoSuContrasena)
                 .addGap(18, 18, 18)
                 .addComponent(txtCarnet, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(23, 23, 23)
-                .addComponent(chkCaptcha)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(pnlCaptcha, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnEnviar)
                 .addContainerGap())
         );
@@ -215,10 +231,9 @@ public class ProblemasCarnetContrasenaDialog extends javax.swing.JDialog {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
                 .addComponent(White_font, javax.swing.GroupLayout.PREFERRED_SIZE, 464, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(0, 12, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -242,12 +257,14 @@ public class ProblemasCarnetContrasenaDialog extends javax.swing.JDialog {
                     "Faltan datos", javax.swing.JOptionPane.WARNING_MESSAGE);
             return;
         }
-        if (!chkCaptcha.isSelected()) {
-            javax.swing.JOptionPane.showMessageDialog(this,
-                    "Confirme que no es un robot.",
-                    "Validación", javax.swing.JOptionPane.INFORMATION_MESSAGE);
-            return;
-        }
+        // Validar CAPTCHA antes de continuar
+if (!captchaPanel.verifyNow()) {
+    javax.swing.JOptionPane.showMessageDialog(this,
+            "CAPTCHA incorrecto o expirado.\nInténtalo de nuevo.",
+            "Validación", javax.swing.JOptionPane.WARNING_MESSAGE);
+    return;
+}
+
 
         javax.swing.JOptionPane.showMessageDialog(this,
                 "Solicitud enviada. Revise su correo.",
@@ -347,11 +364,11 @@ public class ProblemasCarnetContrasenaDialog extends javax.swing.JDialog {
     private javax.swing.JPanel White_font;
     private javax.swing.JButton btnClose;
     private javax.swing.JButton btnEnviar;
-    private javax.swing.JCheckBox chkCaptcha;
     private javax.swing.JLabel lblIcono;
     private javax.swing.JLabel lblOlvidoSuCarnet;
     private javax.swing.JLabel lblOlvidoSuContrasena;
     private javax.swing.JLabel lblTitulo;
+    private javax.swing.JPanel pnlCaptcha;
     private javax.swing.JTextField txtCarnet;
     private javax.swing.JTextField txtCorreoPersonal;
     // End of variables declaration//GEN-END:variables
