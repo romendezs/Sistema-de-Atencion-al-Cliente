@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <title>Inicio</title>
+
+        <style>
+            body {
+                margin: 0;
+                padding: 0;
+                height: 100vh;
+                background-color: #f7e9df;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-family: Arial, sans-serif;
+            }
+
+            .main-container {
+                background: #ffffff;
+                padding: 40px;
+                border-radius: 12px;
+                width: 350px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+                text-align: center;
+            }
+
+            /* SOLUCIÓN PARA QUE EL LOGO NO quede a la par */
+            .logo {
+                width: 100%;
+                display: block;
+                text-align: center;
+            }
+
+            .logo img {
+                width: 150px;
+                display: block;
+                margin: 0 auto 25px auto;
+            }
+
+            .btn-iniciar {
+                width: 100%;
+                padding: 14px;
+                border: none;
+                border-radius: 8px;
+                background-color: #c2482c;
+                color: white;
+                font-size: 17px;
+                cursor: pointer;
+                text-decoration: none;
+                display: inline-block;
+            }
+
+            .btn-iniciar:hover {
+                background-color: #a33b25;
+            }
+        </style>
+    </head>
+    <body>
+
+        <div class="main-container">
+
+            <div class="logo">
+                <img src="imagenes/Logo_FIASupport.png" alt="Logo">
+            </div>
+
+            <a href="vistas/login.jsp" class="btn-iniciar">Iniciar Sesión</a>
+
+        </div>
+
+    </body>
+</html>
