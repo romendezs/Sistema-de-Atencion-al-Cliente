@@ -254,6 +254,7 @@
                     </div>
 
                     <!---<button type="submit" class="submit-btn">Iniciar Sesión</button>-->
+                    <!---<a href="vistasAdministrador/gestionarUsuarios.jsp" class="submit-btn">Iniciar Sesión</a>--->
                     <a href="vistasUsuario/interfazUsuario.jsp" class="submit-btn">Iniciar Sesión</a>
                 </form>
             </div>
