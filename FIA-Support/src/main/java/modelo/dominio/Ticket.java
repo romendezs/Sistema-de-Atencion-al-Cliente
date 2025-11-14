@@ -6,6 +6,7 @@ package modelo.dominio;
 
 import java.util.List;
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import static modelo.db.JPAUtil.em;

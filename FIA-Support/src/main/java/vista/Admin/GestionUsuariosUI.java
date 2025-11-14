@@ -546,6 +546,7 @@ public class GestionUsuariosUI extends JFrame {
                     "Navegación", JOptionPane.WARNING_MESSAGE);
             return;
         }
+        
         GestionTicketsUI ui = new GestionTicketsUI(
                 ticketsController,
                 assignmentController,
@@ -553,6 +554,12 @@ public class GestionUsuariosUI extends JFrame {
                 reportingController
         );
         ui.setLocationRelativeTo(this);
+        ui.setUserAdminController(controller);
+        ui.setTicketController(ticketsController);
+        ui.setAssignmentController(assignmentController);
+        ui.setWorkflowController(workflowController);
+        ui.setReportingController(reportingController);
+        dispose();
         ui.setVisible(true);
     }
 
@@ -566,6 +573,7 @@ public class GestionUsuariosUI extends JFrame {
         }
         EstadisticasAdminUI dialog = new EstadisticasAdminUI(this, reportingController);
         dialog.setLocationRelativeTo(this);
+        dispose();
         dialog.setVisible(true);
     }
 

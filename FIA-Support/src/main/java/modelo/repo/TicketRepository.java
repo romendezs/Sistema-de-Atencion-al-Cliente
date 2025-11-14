@@ -23,9 +23,14 @@ public class TicketRepository extends BaseJpaRepository implements ITicketReposi
     public List<Ticket> findAll() {
         EntityManager em = em();
         try {
-            TypedQuery<Ticket> q = em.createQuery(
-                    "SELECT t FROM Ticket t ORDER BY t.creadoEn DESC", Ticket.class);
-            return q.getResultList();
+            // DISTINCT evita filas duplicadas por los fetch joins
+            return em.createQuery(
+                    "SELECT DISTINCT t FROM Ticket t "
+                    + "JOIN FETCH t.solicitante s "
+                    + "LEFT JOIN FETCH t.tecnicoAsignado ta "
+                    + "ORDER BY t.creadoEn DESC",
+                    Ticket.class
+            ).getResultList();
         } finally {
             em.close();
         }
@@ -45,10 +50,15 @@ public class TicketRepository extends BaseJpaRepository implements ITicketReposi
     public List<Ticket> findByUsuarioId(String usuarioId) {
         EntityManager em = em();
         try {
-            TypedQuery<Ticket> q = em.createQuery(
-                    "SELECT t FROM Ticket t WHERE t.solicitante.id = :uid ORDER BY t.creadoEn DESC", Ticket.class);
-            q.setParameter("uid", usuarioId);
-            return q.getResultList();
+            return em.createQuery(
+                    "SELECT DISTINCT t FROM Ticket t "
+                    + "JOIN FETCH t.solicitante s "
+                    + "LEFT JOIN FETCH t.tecnicoAsignado ta "
+                    + "WHERE s.id = :uid "
+                    + "ORDER BY t.creadoEn DESC",
+                    Ticket.class
+            ).setParameter("uid", usuarioId)
+                    .getResultList();
         } finally {
             em.close();
         }
@@ -58,10 +68,19 @@ public class TicketRepository extends BaseJpaRepository implements ITicketReposi
     public List<Ticket> findByEstadoId(int estadoId) {
         EntityManager em = em();
         try {
-            TypedQuery<Ticket> q = em.createQuery(
-                    "SELECT t FROM Ticket t WHERE t.estadoActual.id = :eid ORDER BY t.creadoEn DESC", Ticket.class);
-            q.setParameter("eid", estadoId);
-            return q.getResultList();
+            return em.createQuery(
+                    "SELECT DISTINCT t FROM Ticket t "
+                    + "JOIN FETCH t.solicitante s "
+                    + "LEFT JOIN FETCH t.tecnicoAsignado ta "
+                    + "WHERE ("
+                    + "  SELECT h.estado.id FROM Historial h "
+                    + "  WHERE h.ticket = t "
+                    + "    AND h.id = (SELECT MAX(h2.id) FROM Historial h2 WHERE h2.ticket = t)"
+                    + ") = :eid "
+                    + "ORDER BY t.creadoEn DESC",
+                    Ticket.class
+            ).setParameter("eid", estadoId)
+                    .getResultList();
         } finally {
             em.close();
         }
@@ -71,11 +90,16 @@ public class TicketRepository extends BaseJpaRepository implements ITicketReposi
     public List<Ticket> findByRangoFechas(LocalDateTime desde, LocalDateTime hasta) {
         EntityManager em = em();
         try {
-            TypedQuery<Ticket> q = em.createQuery(
-                    "SELECT t FROM Ticket t WHERE t.creadoEn BETWEEN :d AND :h ORDER BY t.creadoEn DESC", Ticket.class);
-            q.setParameter("d", desde);
-            q.setParameter("h", hasta);
-            return q.getResultList();
+            return em.createQuery(
+                    "SELECT DISTINCT t FROM Ticket t "
+                    + "JOIN FETCH t.solicitante s "
+                    + "LEFT JOIN FETCH t.tecnicoAsignado ta "
+                    + "WHERE t.creadoEn BETWEEN :d AND :h "
+                    + "ORDER BY t.creadoEn DESC",
+                    Ticket.class
+            ).setParameter("d", desde)
+                    .setParameter("h", hasta)
+                    .getResultList();
         } finally {
             em.close();
         }
@@ -106,10 +130,15 @@ public class TicketRepository extends BaseJpaRepository implements ITicketReposi
     public List<Historial> findHistorialByTicket(int ticketId) {
         EntityManager em = em();
         try {
-            TypedQuery<Historial> q = em.createQuery(
-                    "SELECT h FROM Historial h WHERE h.ticket.id = :tid ORDER BY h.fecha ASC", Historial.class);
-            q.setParameter("tid", ticketId);
-            return q.getResultList();
+            return em.createQuery(
+                    "SELECT h FROM Historial h "
+                    + "JOIN FETCH h.estado "
+                    + // << carga el estado
+                    "WHERE h.ticket.id = :tid "
+                    + "ORDER BY h.fecha ASC",
+                    Historial.class
+            ).setParameter("tid", ticketId)
+                    .getResultList();
         } finally {
             em.close();
         }
@@ -204,6 +233,32 @@ public class TicketRepository extends BaseJpaRepository implements ITicketReposi
     }
 
     @Override
+    public Categoria findCategoriaById(int categoriaId) {
+        var em = em();
+        try {
+            return em.createQuery(
+                    "SELECT c FROM Categoria c WHERE c.id = :id", Categoria.class
+            )
+                    .setParameter("id", categoriaId)
+                    .getSingleResult();
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
+    public List<Categoria> findAllCategorias() {
+        var em = em();
+        try {
+            return em.createQuery(
+                    "SELECT c FROM Categoria c", Categoria.class
+            ).getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
     public void addHistorial(int ticketId, Estado estado, String comentario) {
         var em = em();
         try {
@@ -251,19 +306,20 @@ public class TicketRepository extends BaseJpaRepository implements ITicketReposi
     public Optional<Historial> findUltimoHistorial(int ticketId) {
         EntityManager em = em();
         try {
-            Historial ultimo = em.createQuery("""
-                SELECT h
-                FROM Historial h
-                WHERE h.ticket.id = :ticketId
-                ORDER BY h.id DESC
-            """, Historial.class)
-                    .setParameter("ticketId", ticketId)
+            Historial ultimo = em.createQuery(
+                    "SELECT h FROM Historial h "
+                    + "JOIN FETCH h.estado "
+                    + "WHERE h.ticket.id = :ticketId "
+                    + "ORDER BY h.id DESC",
+                    Historial.class
+            ).setParameter("ticketId", ticketId)
                     .setMaxResults(1)
                     .getSingleResult();
-
             return Optional.of(ultimo);
         } catch (NoResultException e) {
             return Optional.empty();
+        } finally {
+            em.close(); // <- faltaba cerrar
         }
     }
 

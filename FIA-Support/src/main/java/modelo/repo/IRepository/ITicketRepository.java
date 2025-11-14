@@ -23,6 +23,10 @@ public interface ITicketRepository {
     List<Ticket> findByUsuarioId(String usuarioId);
 
     List<Ticket> findByEstadoId(int estadoId);
+    
+     Categoria findCategoriaById(int categoriaId);
+    
+    List<Categoria> findAllCategorias();
 
     List<Ticket> findByRangoFechas(LocalDateTime desde, LocalDateTime hasta);
 

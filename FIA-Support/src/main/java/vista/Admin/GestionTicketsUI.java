@@ -36,10 +36,26 @@ public class GestionTicketsUI extends JFrame {
         this.userAdminController = c;
     }
 
-    private final TicketController ticketController;
-    private final AssignmentController assignmentController;
-    private final WorkflowController workflowController;
-    private final ReportingController reportingController;
+    private TicketController ticketController;
+    private AssignmentController assignmentController;
+    private WorkflowController workflowController;
+    private ReportingController reportingController;
+
+    public void setTicketController(TicketController ticketController) {
+        this.ticketController = ticketController;
+    }
+
+    public void setAssignmentController(AssignmentController assignmentController) {
+        this.assignmentController = assignmentController;
+    }
+
+    public void setWorkflowController(WorkflowController workflowController) {
+        this.workflowController = workflowController;
+    }
+
+    public void setReportingController(ReportingController reportingController) {
+        this.reportingController = reportingController;
+    }
 
     // tabla
     private JTable table;
@@ -75,6 +91,7 @@ public class GestionTicketsUI extends JFrame {
         setLayout(new BorderLayout());
         add(buildTopMenu(), BorderLayout.NORTH);
         add(buildMain(), BorderLayout.CENTER);
+        table.setDefaultRenderer(Object.class, cell());
 
         hoverTimer = new javax.swing.Timer(20, e -> {
             float target = (hoveredRow >= 0) ? 1f : 0f;
@@ -204,147 +221,117 @@ public class GestionTicketsUI extends JFrame {
                 ticketController::estadoActualNombre
         );
         table = new JTable(model) {
-                @Override
-                public boolean getScrollableTracksViewportWidth
-                
-                    () {
+            @Override
+            public boolean getScrollableTracksViewportWidth() {
                 return true;
-                }
-
-                @Override
-                public boolean isCellEditable
-                (int r, int c
-                
-                    ) {
-                return false;
-                }
             }
 
-            ;
-            table.setRowHeight (
+            @Override
+            public boolean isCellEditable(int r, int c
+            ) {
+                return false;
+            }
+        };
+        table.setFillsViewportHeight(true);
+        table.setRowHeight(36);
+        table.setShowGrid(false);
+        table.setIntercellSpacing(new Dimension(0, 4));
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        table.setIntercellSpacing(
+                new Dimension(0, 4));
 
-            36);
-            table.setShowGrid (
-
-            false);
-            table.setIntercellSpacing (
-
-            new Dimension(0, 4));
-            table.setSelectionMode (ListSelectionModel.SINGLE_SELECTION);
-
-            table.getTableHeader ()
-
-            .setReorderingAllowed(false);
-            table.getTableHeader ()
-
-            .setResizingAllowed(false);
+        table.getTableHeader()
+                .setReorderingAllowed(false);
+        table.getTableHeader()
+                .setResizingAllowed(false);
 
         // renderers
-            table.getColumnModel ()
+        table.getColumnModel()
+                .getColumn(COL_DEL).setPreferredWidth(30);
+        table.getColumnModel()
+                .getColumn(COL_DEL).setCellRenderer(new DeleteRenderer());
+        table.getColumnModel()
+                .getColumn(COL_SOL).setCellRenderer(cell());
+        table.getColumnModel()
+                .getColumn(COL_TIT).setCellRenderer(cell());
+        table.getColumnModel()
+                .getColumn(COL_ASIG).setCellRenderer(new PencilRenderer());
+        table.getColumnModel()
+                .getColumn(COL_EST).setCellRenderer(new StatusRenderer());
 
-            .getColumn(COL_DEL).setPreferredWidth(30);
-            table.getColumnModel ()
-
-            .getColumn(COL_DEL).setCellRenderer(new DeleteRenderer());
-            table.getColumnModel ()
-
-            .getColumn(COL_SOL).setCellRenderer(cell());
-            table.getColumnModel ()
-
-            .getColumn(COL_TIT).setCellRenderer(cell());
-            table.getColumnModel ()
-
-            .getColumn(COL_ASIG).setCellRenderer(new PencilRenderer());
-            table.getColumnModel ()
-
-            .getColumn(COL_EST).setCellRenderer(new StatusRenderer());
-
-            table.addMouseMotionListener ( 
+        table.addMouseMotionListener(
                 new MouseMotionAdapter() {
             @Override
-                public void mouseMoved
-                (MouseEvent e
-                
-                    ) {
+            public void mouseMoved(MouseEvent e
+            ) {
                 hoveredRow = table.rowAtPoint(e.getPoint());
-                    updateCursor(e);
-                    if (!hoverTimer.isRunning()) {
-                        hoverTimer.start();
-                    }
+                updateCursor(e);
+                if (!hoverTimer.isRunning()) {
+                    hoverTimer.start();
                 }
             }
-
-            );
-            table.addMouseListener ( 
+        }
+        );
+        table.addMouseListener(
                 new MouseAdapter() {
             @Override
-                public void mouseExited
-                (MouseEvent e
-                
-                    ) {
+            public void mouseExited(MouseEvent e
+            ) {
                 hoveredRow = -1;
-                    table.setCursor(Cursor.getDefaultCursor());
-                    if (!hoverTimer.isRunning()) {
-                        hoverTimer.start();
-                    }
-                }
-
-                @Override
-                public void mouseClicked
-                (MouseEvent e
-                
-                    ) {
-                handleClick(e);
+                table.setCursor(Cursor.getDefaultCursor());
+                if (!hoverTimer.isRunning()) {
+                    hoverTimer.start();
                 }
             }
-            );
+
+            @Override
+            public void mouseClicked(MouseEvent e
+            ) {
+                handleClick(e);
+            }
+        }
+        );
 
         // ---- header styling ----
         JTableHeader th = table.getTableHeader();
 
-            th.setPreferredSize (
-
-            new Dimension(th.getPreferredSize().width, 36));
-            th.setReorderingAllowed (
-
-            false);
-            th.setResizingAllowed (
-            false);
+        th.setPreferredSize(
+                new Dimension(th.getPreferredSize().width, 36));
+        th.setReorderingAllowed(
+                false);
+        th.setResizingAllowed(
+                false);
 
         DefaultTableCellRenderer headerRenderer = new DefaultTableCellRenderer() {
-                @Override
-                public Component getTableCellRendererComponent(JTable table, Object value,
-                        boolean isSelected, boolean hasFocus, int row, int column) {
-                    JLabel l = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                    l.setHorizontalAlignment(SwingConstants.LEFT);
-                    l.setOpaque(true);
-                    l.setBackground(ROJO_CLARO);      // mismo color que usabas
-                    l.setForeground(GRIS_TXT);
-                    l.setBorder(new EmptyBorder(8, 12, 8, 12));
-                    l.setFont(l.getFont().deriveFont(Font.BOLD));
-                    return l;
-                }
-            };
-            TableColumnModel cm = table.getColumnModel();
-            for (int c = 0;
-
-            c< cm.getColumnCount ();
-            c
-
-            
-                ++) {
-            cm.getColumn(c).setHeaderRenderer(headerRenderer);
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value,
+                    boolean isSelected, boolean hasFocus, int row, int column) {
+                JLabel l = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                l.setHorizontalAlignment(SwingConstants.LEFT);
+                l.setOpaque(true);
+                l.setBackground(ROJO_CLARO);      // mismo color que usabas
+                l.setForeground(GRIS_TXT);
+                l.setBorder(new EmptyBorder(8, 12, 8, 12));
+                l.setFont(l.getFont().deriveFont(Font.BOLD));
+                return l;
             }
-
-            JScrollPane sp = new JScrollPane(table);
-
-            sp.setBorder (
-
-            new EmptyBorder(6, 0, 0, 0));
-            panel.add (sp, BorderLayout.CENTER);
-
-            return panel ;
+        };
+        TableColumnModel cm = table.getColumnModel();
+        for (int c = 0;
+                c < cm.getColumnCount();
+                c++) {
+            cm.getColumn(c).setHeaderRenderer(headerRenderer);
         }
+
+        JScrollPane sp = new JScrollPane(table);
+        sp.getViewport().setBackground(Color.WHITE);
+
+        sp.setBorder(
+                new EmptyBorder(6, 0, 0, 0));
+        panel.add(sp, BorderLayout.CENTER);
+
+        return panel;
+    }
 
     private void mostrarResumenGlobal() {
         if (reportingController == null) {
@@ -360,33 +347,39 @@ public class GestionTicketsUI extends JFrame {
     }
 
     private DefaultTableCellRenderer cell() {
-        DefaultTableCellRenderer r = new DefaultTableCellRenderer();
-        r.setBackground(new Color(242, 242, 242));
-        r.setBorder(new EmptyBorder(0, 12, 0, 12));
-        return r;
+        return new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(
+                    JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+
+                JLabel l = (JLabel) super.getTableCellRendererComponent(
+                        table, value, isSelected, hasFocus, row, column);
+
+                l.setOpaque(true); // <- clave
+                l.setForeground(GRIS_TXT);
+                l.setBackground(isSelected ? table.getSelectionBackground()
+                        : new Color(242, 242, 242));
+                l.setBorder(new EmptyBorder(0, 12, 0, 12));
+                l.setHorizontalAlignment(SwingConstants.LEFT);
+                return l;
+            }
+        };
     }
 
     // ---- Renderers ----
     private class DeleteRenderer extends DefaultTableCellRenderer {
 
         @Override
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, (table.getRowHeight() - ICON_BTN) / 2)) {
-                @Override
-                protected void paintComponent(Graphics g) {
-                    Graphics2D g2 = (Graphics2D) g.create();
-                    if (row == hoveredRow && actionsAlpha > 0f) {
-                        g2.setComposite(AlphaComposite.SrcOver.derive(actionsAlpha));
-                    } else {
-                        g2.setComposite(AlphaComposite.SrcOver.derive(0f));
-                    }
-                    super.paintComponent(g2);
-                    g2.dispose();
-                }
-            };
-            p.setOpaque(false);
-            JLabel x = iconLabel("✕");
-            p.add(x);
+        public Component getTableCellRendererComponent(
+                JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+
+            JPanel p = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, (table.getRowHeight() - ICON_BTN) / 2));
+            p.setOpaque(true);
+            p.setBackground(isSelected ? table.getSelectionBackground() : table.getBackground());
+
+            if (row == hoveredRow) {
+                p.add(iconLabel("✕")); // sólo aparece en hover
+            }
             return p;
         }
     }
@@ -394,24 +387,21 @@ public class GestionTicketsUI extends JFrame {
     private class PencilRenderer extends DefaultTableCellRenderer {
 
         @Override
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+        public Component getTableCellRendererComponent(
+                JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+
             JPanel p = new JPanel(new BorderLayout());
-            JLabel text = new JLabel(String.valueOf(value));
-            text.setOpaque(true);
-            text.setBackground(new Color(242, 242, 242));
-            text.setBorder(new EmptyBorder(0, 12, 0, 12));
+            p.setOpaque(true);
+            p.setBackground(isSelected ? table.getSelectionBackground() : table.getBackground());
+
+            // Reusa el estilo base de celda
+            JLabel text = (JLabel) cell().getTableCellRendererComponent(
+                    table, String.valueOf(value), isSelected, hasFocus, row, column);
             p.add(text, BorderLayout.CENTER);
 
-            if (row == hoveredRow && actionsAlpha > 0f) {
-                JPanel right = new JPanel(new FlowLayout(FlowLayout.RIGHT, ICON_GAP, (table.getRowHeight() - ICON_BTN) / 2)) {
-                    @Override
-                    protected void paintComponent(Graphics g) {
-                        Graphics2D g2 = (Graphics2D) g.create();
-                        g2.setComposite(AlphaComposite.SrcOver.derive(actionsAlpha));
-                        super.paintComponent(g2);
-                        g2.dispose();
-                    }
-                };
+            if (row == hoveredRow) {
+                JPanel right = new JPanel(new FlowLayout(FlowLayout.RIGHT, ICON_GAP,
+                        (table.getRowHeight() - ICON_BTN) / 2));
                 right.setOpaque(false);
                 right.add(iconLabel("✎"));
                 p.add(right, BorderLayout.EAST);
@@ -914,11 +904,23 @@ public class GestionTicketsUI extends JFrame {
                 case COL_DEL:
                     return ""; // ícono/botón borrar si usas renderer/editor
                 case COL_SOL:
-                    return t.getSolicitante() == null ? "—" : safeString(t.getSolicitante().toString());
+                    var u = t.getSolicitante(); // ya inicializado
+                    if (u == null) {
+                        return "—";
+                    }
+                    String nom = ((u.getNombres() == null ? "" : u.getNombres()) + " "
+                            + (u.getApellidos() == null ? "" : u.getApellidos())).trim();
+                    return nom.isEmpty() ? u.getId() : nom + " (" + u.getId() + ")";
                 case COL_TIT:
                     return safeString(t.getTitulo());
                 case COL_ASIG:
-                    return t.getTecnicoAsignado() == null ? "Sin asignar" : safeString(t.getTecnicoAsignado().toString());
+                    var e = t.getTecnicoAsignado();
+                    if (e == null) {
+                        return "Sin asignar";
+                    }
+                    nom = ((e.getNombres() == null ? "" : e.getNombres()) + " "
+                            + (e.getApellidos() == null ? "" : e.getApellidos())).trim();
+                    return nom.isEmpty() ? "Asignado" : nom;
                 case COL_EST:
                     // Tomar del cache (precalculado con el provider)
                     return estadoCache.getOrDefault(t.getId(), "—");
@@ -975,6 +977,7 @@ public class GestionTicketsUI extends JFrame {
         // Precarga listas (si las expones en el controller)
         ui.setFacultades(userAdminController.getFacultades());
         ui.setUsuarios(userAdminController.listUsuarios());
+        dispose();
 
         ui.setLocationRelativeTo(this);
         ui.setVisible(true);

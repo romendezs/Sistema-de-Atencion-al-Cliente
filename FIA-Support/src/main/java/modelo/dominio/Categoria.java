@@ -11,7 +11,6 @@ import org.hibernate.annotations.Immutable;
  *
  * @author Méndez
  */
-
 @Entity
 @Table(name = "categoria")
 @Immutable // <- Hibernate: prohíbe UPDATE/DELETE
@@ -32,7 +31,8 @@ public class Categoria {
     private String nivelGravedad;
 
     // JPA necesita un ctor por defecto (puede ser protected)
-    protected Categoria() {}
+    protected Categoria() {
+    }
 
     // Si necesitas construir objetos para lectura (p.ej. en tests)
     public Categoria(Integer id, String nombre, String tipo, String nivelGravedad) {
@@ -43,17 +43,45 @@ public class Categoria {
     }
 
     // Solo getters (sin setters)
-    public Integer getId() { return id; }
-    public String getNombre() { return nombre; }
-    public String getTipo() { return tipo; }
-    public String getNivelGravedad() { return nivelGravedad; }
+    public Integer getId() {
+        return id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public String getNivelGravedad() {
+        return nivelGravedad;
+    }
 
     // equals/hashCode basados en id (opcional)
-    @Override public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Categoria)) return false;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Categoria)) {
+            return false;
+        }
         Categoria c = (Categoria) o;
         return id != null && id.equals(c.id);
     }
-    @Override public int hashCode() { return 31; }
+
+    @Override
+    public int hashCode() {
+        return 31;
+    }
+
+    // modelo/dominio/Categoria.java
+    @Override
+    public String toString() {
+        // Ajusta el campo si no se llama "nombre"
+        return nombre != null ? nombre : "(Sin nombre)";
+    }
+
 }

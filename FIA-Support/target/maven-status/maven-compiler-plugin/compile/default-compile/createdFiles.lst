@@ -21,7 +21,6 @@ modelo\servicios\UserAdminService.class
 Vista\Usuario\EstadisticasUsuarioUI$1.class
 Vista\Admin\GestionUsuariosUI$6.class
 modelo\repo\EstadisticasUsuarioRepository.class
-Vista\Admin\GestionTicketsUI$DeleteRenderer$1.class
 Vista\Usuario\SoporteFrame$2.class
 modelo\dominio\EstadisticaConteo.class
 Vista\Login\LoginUI.class
@@ -55,9 +54,9 @@ Vista\Usuario\EstadisticasUsuarioUI$2.class
 modelo\repo\CarreraRepository.class
 Vista\Admin\GestionUsuariosUI$8.class
 modelo\dominio\Carrera.class
+Vista\Usuario\SoporteFrame$CategoriaModel.class
 modelo\dominio\TicketMetricasDiarias$Builder.class
 Vista\Admin\GestionTicketsUI$DeleteTicketDialog.class
-Vista\Admin\GestionTicketsUI$PencilRenderer$1.class
 Vista\Admin\GestionUsuariosUI$RowActionRenderer.class
 modelo\repo\UsuarioRepository.class
 Vista\Admin\GestionUsuariosUI$EditDialog$2.class
@@ -65,10 +64,12 @@ Vista\Admin\GestionUsuariosUI$5.class
 Vista\Admin\GestionTicketsUI$PencilRenderer.class
 modelo\repo\IRepository\ICarreraRepository.class
 modelo\repo\IRepository\IEstadisticasUsuarioRepository.class
+Vista\Usuario\SoporteFrame$3.class
 modelo\servicios\WorkflowService.class
 Vista\Admin\GestionUsuariosUI$EditDialog.class
 controlador\TicketController.class
 modelo\repo\IRepository\IUsuarioRepository.class
+Vista\Admin\GestionTicketsUI$6.class
 Vista\Admin\GestionUsuariosUI$UsuariosTableModel.class
 modelo\dominio\Administrador.class
 Vista\Admin\GestionTicketsUI$3.class

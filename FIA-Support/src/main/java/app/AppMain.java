@@ -2,6 +2,7 @@ package app;
 
 import Vista.Admin.GestionUsuariosUI;
 import Vista.Login.LoginUI;
+import controlador.AssignmentController;
 import vista.Usuario.SoporteFrame;
 import controlador.LoginController;
 import controlador.ReportingController;
@@ -18,6 +19,7 @@ import modelo.repo.EstadisticasUsuarioRepository;
 import modelo.repo.FacultadRepository;
 import modelo.repo.TicketRepository;
 import modelo.repo.UsuarioRepository;
+import modelo.servicios.AssignmentService;
 import modelo.servicios.AuthService;
 import modelo.servicios.ReportingService;
 import modelo.servicios.TicketService;
@@ -61,6 +63,9 @@ public final class AppMain {
             GestionUsuariosUI adminView = new GestionUsuariosUI();
             adminView.setReportingController(reportingController);
             UserAdminController userAdminController = new UserAdminController(userAdminService, adminView);
+            
+            AssignmentService assignmentService = new AssignmentService(ticketRepository);
+            AssignmentController assignmentController = new AssignmentController(assignmentService);
 
             LoginUI loginUI = new LoginUI();
             LoginController loginController = new LoginController(
@@ -71,7 +76,8 @@ public final class AppMain {
                     SoporteFrame::new,
                     userAdminController,
                     adminView,
-                    reportingController
+                    reportingController,
+                    assignmentController
             );
             loginController.showLogin();
         });

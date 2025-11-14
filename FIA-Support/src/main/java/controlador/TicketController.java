@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import modelo.dominio.Categoria;
 
 import modelo.dominio.Estado;
 import modelo.dominio.Historial;
@@ -29,6 +30,10 @@ public class TicketController {
 
     public List<Ticket> listTickets() {
         return ticketService.listTickets(null);
+    }
+    
+    public List<Categoria> listCategorias(){
+        return ticketService.getAllCategorias();
     }
 
     private List<Ticket> listTicketsEagerIfAvailable() {
@@ -91,8 +96,12 @@ public class TicketController {
             .collect(Collectors.toList());
     }
 
-    public Ticket openTicket(String titulo, String descripcion, String carnetSolicitante, Estado estadoInicial) {
-        return ticketService.openTicket(titulo, descripcion, carnetSolicitante, estadoInicial);
+    public Ticket openTicket(String titulo, String descripcion, Categoria categoria, String carnetSolicitante, Estado estadoInicial) {
+        return ticketService.openTicket(titulo, descripcion, categoria, carnetSolicitante, estadoInicial);
+    }
+    
+    public Categoria listCategoria(int id){
+        return ticketService.getCategoria(id);
     }
 
     public Ticket updateTicket(int ticketId, String nuevoTitulo, String nuevaDescripcion) {

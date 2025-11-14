@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
+import modelo.dominio.Categoria;
 import modelo.dominio.Estado;
 import modelo.dominio.Historial;
 import modelo.dominio.Ticket;
@@ -26,7 +27,7 @@ public class TicketService {
         this.usuarioRepository = usuarioRepository;
     }
 
-    public Ticket openTicket(String titulo, String descripcion, String carnetSolicitante, Estado estadoInicial) {
+    public Ticket openTicket(String titulo, String descripcion, Categoria categoria, String carnetSolicitante, Estado estadoInicial) {
         if (titulo == null || titulo.trim().isEmpty()) {
             throw new IllegalArgumentException("El título es obligatorio.");
         }
@@ -46,6 +47,7 @@ public class TicketService {
         Ticket ticket = new Ticket();
         ticket.setTitulo(titulo.trim());
         ticket.setDescripcion(descripcion == null ? null : descripcion.trim());
+        ticket.setCategoria(categoria);
         ticket.setSolicitante(solicitante);
         ticket.setCreadoEn(LocalDateTime.now());
         ticket.setActualizadoEn(LocalDateTime.now());
@@ -89,6 +91,8 @@ public class TicketService {
         }
         ticketRepository.deleteById(ticketId);
     }
+    
+    
 
     private void changeStatus(int ticketId, Estado nuevoEstado, String comentario) {
         if (nuevoEstado == null || nuevoEstado.getId() == null) {
@@ -147,6 +151,16 @@ public class TicketService {
                         .map(h -> h.getEstado() != null ? h.getEstado().getId() : null)
                         .orElse(null)
         );
+    }
+    
+    public Categoria getCategoria(int categoriaId){
+        return ticketRepository.findCategoriaById(categoriaId);
+    }
+    
+    public List<Categoria> getAllCategorias(){
+        
+        return ticketRepository.findAllCategorias();
+        
     }
 
     // ------------------------------ Filtro ------------------------------

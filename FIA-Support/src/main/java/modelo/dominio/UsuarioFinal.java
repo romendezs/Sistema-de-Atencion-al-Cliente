@@ -78,4 +78,9 @@ public class UsuarioFinal extends Usuario {
         }
         return Objects.equals(getId(), ((UsuarioFinal) o).getId());
     }
+    
+    @Override
+    public String toString() {
+        return super.getNombres();
+    }
 }

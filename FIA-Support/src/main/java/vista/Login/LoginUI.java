@@ -5,6 +5,7 @@
 package Vista.Login;
 
 import Vista.Admin.GestionUsuariosUI;
+import controlador.AssignmentController;
 import controlador.LoginController;
 import controlador.ReportingController;
 import controlador.TicketController;
@@ -21,6 +22,7 @@ import modelo.repo.EstadisticasUsuarioRepository;
 import modelo.repo.FacultadRepository;
 import modelo.repo.TicketRepository;
 import modelo.repo.UsuarioRepository;
+import modelo.servicios.AssignmentService;
 import modelo.servicios.AuthService;
 import modelo.servicios.ReportingService;
 import modelo.servicios.TicketService;
@@ -375,7 +377,9 @@ public class LoginUI extends javax.swing.JFrame {
             GestionUsuariosUI adminView = new GestionUsuariosUI();
             adminView.setReportingController(reportingController);
             UserAdminController userAdminController = new UserAdminController(userAdminService, adminView);
-
+            AssignmentService assignmentService = new AssignmentService(ticketRepository);
+            AssignmentController assignmentController = new AssignmentController(assignmentService);
+            
             LoginUI loginUI = new LoginUI();
             LoginController loginController = new LoginController(
                     authService,
@@ -385,7 +389,8 @@ public class LoginUI extends javax.swing.JFrame {
                     SoporteFrame::new,
                     userAdminController,
                     adminView,
-                    reportingController
+                    reportingController,
+                    assignmentController
             );
             loginController.showLogin();
         });

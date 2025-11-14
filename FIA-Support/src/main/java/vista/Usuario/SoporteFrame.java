@@ -10,10 +10,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
+import modelo.dominio.Categoria;
 import modelo.dominio.Estado;
 import modelo.dominio.Ticket;
 import modelo.dominio.UsuarioFinal;
@@ -32,6 +34,8 @@ public class SoporteFrame extends javax.swing.JFrame {
     private UsuarioFinal usuarioActual;
     private Estado estadoInicial;
     private DefaultTableModel tableModel;
+    // give it *something* so initComponents() won't pass null
+    private javax.swing.DefaultComboBoxModel<Categoria> categoriaCModel = new DefaultComboBoxModel<>();
 
     public SoporteFrame() {
         initComponents();
@@ -49,6 +53,10 @@ public class SoporteFrame extends javax.swing.JFrame {
         if (usuario != null) {
             jLabel2.setText(usuario.getNombres() + " " + usuario.getApellidos());
         }
+
+        CategoriaModel realModel = new CategoriaModel(this.ticketController);
+        cmCategoria.setModel(realModel);         // swap it in
+        this.categoriaCModel = realModel;
         refrescarTickets();
     }
 
@@ -78,6 +86,26 @@ public class SoporteFrame extends javax.swing.JFrame {
         }
     }
 
+    public class CategoriaModel extends DefaultComboBoxModel<Categoria> {
+
+    private final TicketController ticketController;
+
+    public CategoriaModel(TicketController ticketController) {
+        this.ticketController = ticketController;
+        reload();
+    }
+
+    public final void reload() {
+        removeAllElements();
+        if (ticketController == null) return;
+        List<Categoria> categorias = ticketController.listCategorias();
+        if (categorias != null) {
+            for (Categoria c : categorias) addElement(c);
+        }
+    }
+}
+
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -95,10 +123,12 @@ public class SoporteFrame extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         textField1 = new java.awt.TextField();
-        textField2 = new java.awt.TextField();
+        txtAsunto = new java.awt.TextField();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jbtnCrear = new javax.swing.JButton();
+        jLabel7 = new javax.swing.JLabel();
+        cmCategoria = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jLabel6 = new javax.swing.JLabel();
@@ -115,11 +145,6 @@ public class SoporteFrame extends javax.swing.JFrame {
         jbtnReportes.setText("Ver Reportes y Estadisticas");
         jbtnReportes.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jbtnReportes.setBorderPainted(false);
-        jbtnReportes.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jbtnReportesActionPerformed(evt);
-            }
-        });
 
         jbtnCerrar.setBackground(new java.awt.Color(255, 51, 51));
         jbtnCerrar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -127,6 +152,11 @@ public class SoporteFrame extends javax.swing.JFrame {
         jbtnCerrar.setText("Cerrar Sesión");
         jbtnCerrar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jbtnCerrar.setBorderPainted(false);
+        jbtnCerrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbtnCerrarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -161,12 +191,12 @@ public class SoporteFrame extends javax.swing.JFrame {
         jLabel3.setForeground(new java.awt.Color(255, 0, 0));
         jLabel3.setText("NUEVO TICKET");
 
-        textField1.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        textField1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         textField1.setForeground(new java.awt.Color(204, 204, 204));
         textField1.setText("Escriba una descipción");
 
-        textField2.setForeground(new java.awt.Color(204, 204, 204));
-        textField2.setText("Escriba un asunto");
+        txtAsunto.setForeground(new java.awt.Color(204, 204, 204));
+        txtAsunto.setText("Escriba un asunto");
 
         jLabel4.setText("Asunto");
 
@@ -181,6 +211,15 @@ public class SoporteFrame extends javax.swing.JFrame {
             }
         });
 
+        jLabel7.setText("Categoría");
+
+        cmCategoria.setModel(categoriaCModel);
+        cmCategoria.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmCategoriaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -189,22 +228,25 @@ public class SoporteFrame extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(textField1, javax.swing.GroupLayout.PREFERRED_SIZE, 517, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(64, 64, 64)))
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(textField2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(textField1, javax.swing.GroupLayout.DEFAULT_SIZE, 517, Short.MAX_VALUE)))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(315, 315, 315)
-                        .addComponent(jbtnCrear, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtAsunto, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(11, 11, 11)
+                                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(cmCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(310, 310, 310)
+                        .addComponent(jbtnCrear, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -213,22 +255,20 @@ public class SoporteFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(21, 21, 21)
-                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 11, Short.MAX_VALUE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(textField2, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(21, 21, 21)
-                        .addComponent(textField1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(cmCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtAsunto, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(textField1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jbtnCrear)
-                .addGap(15, 15, 15))
+                .addContainerGap(27, Short.MAX_VALUE))
         );
-
-        jbtnCrear.getAccessibleContext().setAccessibleName("Crear");
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -279,14 +319,12 @@ public class SoporteFrame extends javax.swing.JFrame {
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(21, 21, 21))
+                .addGap(70, 70, 70))
         );
-
-        jLabel1.getAccessibleContext().setAccessibleName("BIENVENIDO");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -302,7 +340,7 @@ public class SoporteFrame extends javax.swing.JFrame {
 
         // Tu diálogo recibe Window, no Frame:
         java.awt.Window owner = SwingUtilities.getWindowAncestor(this);
-        EstadisticasUsuarioUI dialog= new EstadisticasUsuarioUI(owner, reportingController, usuarioActual);
+        EstadisticasUsuarioUI dialog = new EstadisticasUsuarioUI(owner, reportingController, usuarioActual);
         dialog.setLocationRelativeTo(this);
         dialog.setVisible(true);
     }//GEN-LAST:event_jbtnReportesActionPerformed
@@ -324,8 +362,9 @@ public class SoporteFrame extends javax.swing.JFrame {
             return;
         }
 
-        String asunto = textField2.getText().trim();
+        String asunto = txtAsunto.getText().trim();
         String descripcion = textField1.getText().trim();
+        Categoria categoria = (Categoria) cmCategoria.getSelectedItem();
 
         if (asunto.isEmpty()) {
             JOptionPane.showMessageDialog(this,
@@ -336,13 +375,13 @@ public class SoporteFrame extends javax.swing.JFrame {
         }
 
         try {
-            ticketController.openTicket(asunto, descripcion, usuarioActual.getId(), estadoInicial);
+            ticketController.openTicket(asunto, descripcion, categoria, usuarioActual.getId(), estadoInicial);
             JOptionPane.showMessageDialog(this,
                     "Ticket creado correctamente.",
                     "FIA Support",
                     JOptionPane.INFORMATION_MESSAGE);
             textField1.setText("");
-            textField2.setText("");
+            txtAsunto.setText("");
             refrescarTickets();
         } catch (IllegalArgumentException ex) {
             JOptionPane.showMessageDialog(this,
@@ -351,6 +390,14 @@ public class SoporteFrame extends javax.swing.JFrame {
                     JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_jbtnCrearActionPerformed
+
+    private void cmCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmCategoriaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmCategoriaActionPerformed
+
+    private void jbtnCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnCerrarActionPerformed
+        dispose();
+    }//GEN-LAST:event_jbtnCerrarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -388,12 +435,14 @@ public class SoporteFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<Categoria> cmCategoria;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
@@ -402,6 +451,6 @@ public class SoporteFrame extends javax.swing.JFrame {
     private javax.swing.JButton jbtnCrear;
     private javax.swing.JButton jbtnReportes;
     private java.awt.TextField textField1;
-    private java.awt.TextField textField2;
+    private java.awt.TextField txtAsunto;
     // End of variables declaration//GEN-END:variables
 }

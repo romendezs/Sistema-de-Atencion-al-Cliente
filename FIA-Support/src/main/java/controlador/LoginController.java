@@ -27,6 +27,7 @@ public class LoginController extends AuthController {
     private final UserAdminController userAdminController;
     private final GestionUsuariosUI adminView;
     private final ReportingController reportingController;
+    private final AssignmentController assignmentController;
 
     public LoginController(AuthService authService,
                            LoginUI view,
@@ -35,7 +36,8 @@ public class LoginController extends AuthController {
                            Supplier<SoporteFrame> soporteFrameSupplier,
                            UserAdminController userAdminController,
                            GestionUsuariosUI adminView,
-                           ReportingController reportingController) {
+                           ReportingController reportingController,
+                           AssignmentController assignment) {
         super(authService);
         this.view = Objects.requireNonNull(view, "view");
         this.ticketController = Objects.requireNonNull(ticketController, "ticketController");
@@ -44,6 +46,7 @@ public class LoginController extends AuthController {
         this.userAdminController = Objects.requireNonNull(userAdminController, "userAdminController");
         this.adminView = Objects.requireNonNull(adminView, "adminView");
         this.reportingController = Objects.requireNonNull(reportingController, "reportingController");
+        this.assignmentController = Objects.requireNonNull(assignment, "assignmentAdminController");
         this.view.setController(this);
     }
 
@@ -76,6 +79,10 @@ public class LoginController extends AuthController {
     private void openAdminFrame(Administrador admin) {
         userAdminController.init();
         adminView.setTitle("FIA Support - Administración");
+        adminView.setTicketsController(ticketController);
+        adminView.setAssignmentController(assignmentController);
+        adminView.setWorkflowController(new WorkflowController(workflowService));
+        adminView.setReportingController(reportingController);
         JOptionPane.showMessageDialog(view,
                 "¡Bienvenido " + admin.getNombres() + "!",
                 "FIA Support",
