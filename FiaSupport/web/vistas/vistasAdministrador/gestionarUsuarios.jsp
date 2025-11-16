@@ -4,7 +4,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Gestionar Usuarios</title>
+    <title>FIA Support</title>
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -15,35 +15,36 @@
             margin: 0;
             padding: 0;
         }
-        /* ---- HEADER ---- */
-        .header {
-            background-color: #c94e47;
-            color: white;
-            padding: 18px 25px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .header-left {
-          display: flex;
-          gap: 12px;
-        }
-        .header-left button,
-        
-        .header-right button {
-            background: transparent;
-            border: 1px solid #f8c4c0;
-            color: white;
-            padding: 10px 20px;
-            font-weight: bold;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .header-right .logout-btn {
-            border-color: #ffffff;
-        }
-
+         /*---HEADER---*/
+    .header{
+      background-color: #c94e47;
+      color: white;
+      padding: 18px 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .header-left{
+      display: flex;
+      gap: 12px;
+    }
+    .header-left button{
+      background: transparent;
+      border: 1px solid #f8c4c0;
+      color: white;
+      padding: 10px 20px;
+      font-weight: bold;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .header-left button:hover{
+      background-color: rgba(255,255,255,0.1);
+      transform: translateY(-2px);
+    }
+    .header-right .logout-btn{
+      border-color: #ffffff;
+    }
         .logout-link {
             background-color: #8b4a46;
             color: white;
@@ -151,6 +152,12 @@
             border-radius: 3px;
             border: 1px solid #ccc;
         }
+        
+        .search-box input:focus{
+            outline: none;
+            border-color: #c94e47;
+            box-shadow: 0 0 0 2px rgba(201, 78, 71, 0.2);
+        }
 
         .usuarios-table {
             margin-top: 15px;
@@ -183,7 +190,7 @@
     <!-- HEADER -->
     <div class="header">
         <div class="header-left">
-            <button onclick="location.href='TicketServlet'">Gestionar Tickets</button>
+            <button onclick="location.href='gestionarTickets.jsp'">Gestionar Tickets</button>
             <button onclick="location.href='reportes.jsp'">Ver Reportes y Estadísticas</button>
       </div>
         <div class="header-right">
@@ -288,7 +295,7 @@
         <h2>Listado</h2>
 
         <div class="search-box">
-            <input id="searchInput" type="text" placeholder="Buscar..." onkeyup="searchTable()">
+            <input id="searchInput" type="text" placeholder="Buscar por carnet..." onkeyup="searchTable()">
         </div>
 
         <div class="usuarios-table">
