@@ -244,11 +244,13 @@ public class LoginUI extends javax.swing.JFrame {
                 btnIniciarActionPerformed(evt);
             }
         });
-        jLabelProblemas.addMouseListener(new java.awt.event.MouseAdapter() {
+        jLabelProblemas.addMouseListener(new java.awt.event.MouseAdapter() 
+        {
             @Override
-            public void mouseClicked(java.awt.event.MouseEvent e) {
-                new ForgotDialog(LoginUI.this).setVisible(true);
-            }
+public void mouseClicked(java.awt.event.MouseEvent e) {
+    ForgotDialog fd = new ForgotDialog(LoginUI.this, controller);
+    fd.setVisible(true);
+}
 
             @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {

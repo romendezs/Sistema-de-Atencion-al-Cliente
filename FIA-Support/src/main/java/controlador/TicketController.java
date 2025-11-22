@@ -23,6 +23,11 @@ import modelo.servicios.TicketService;
 public class TicketController {
 
     private final TicketService ticketService;
+    
+    public void crearTicketRecuperacion(String solicitante, String tipoSolicitud) {
+    ticketService.crearTicketRecuperacion(solicitante, tipoSolicitud);
+}
+
 
     public TicketController(TicketService ticketService) {
         this.ticketService = ticketService;

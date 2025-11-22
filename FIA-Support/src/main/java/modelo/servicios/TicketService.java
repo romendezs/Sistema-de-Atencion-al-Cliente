@@ -63,6 +63,19 @@ public class TicketService {
         return creado;
     }
 
+    
+    public void crearTicketRecuperacion(String solicitante, String tipoSolicitud) {
+    Ticket ticket = new Ticket();
+    ticket.setSolicitante(solicitante);
+    ticket.setTipo("Recuperación de acceso");
+    ticket.setDescripcion(tipoSolicitud);
+    ticket.setEstado("Pendiente");
+    ticket.setAsignadoA(null);
+    ticket.setFechaCreacion(LocalDateTime.now());
+
+    ticketRepository.save(ticket);
+}
+
     public Ticket updateTicket(int ticketId, String nuevoTitulo, String nuevaDescripcion) {
         Ticket ticket = ticketRepository.findById(ticketId)
                 .orElseThrow(() -> new IllegalArgumentException("Ticket no encontrado."));

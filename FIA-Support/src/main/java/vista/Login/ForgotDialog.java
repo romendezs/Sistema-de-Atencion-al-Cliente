@@ -4,17 +4,49 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import controlador.LoginController;
 
 public class ForgotDialog extends JDialog {
 
     private JTextField txtCorreo;
     private JTextField txtCarnet;
+<<<<<<< Updated upstream
     private JCheckBox chkRobot;
     private JButton btnEnviar;
     private JButton btnCerrar;
 
     public ForgotDialog(Frame owner) {
+=======
+    private JLabel lblCaptchaImg;
+    private JTextField txtCaptchaInput;
+    private JButton btnRefreshCaptcha;
+    private JButton btnEnviar;
+    private JButton btnCerrar;
+    private String captchaActual;
+
+    private LoginController controller;  // <-- referencia al controlador
+
+    // Placeholders
+    private static final String PLACEHOLDER_CORREO = "Digite su correo electrónico personal";
+    private static final String PLACEHOLDER_CARNET = "Digite su Carnet. Ejemplo ZG06055";
+
+    // ✅ Constructor nuevo (EL BUENO) que recibe controller
+    public ForgotDialog(Frame owner, LoginController controller) {
+>>>>>>> Stashed changes
         super(owner, true); // modal
+        this.controller = controller; // <-- guardamos el controller
+        buildUI(owner);
+    }
+
+    // ✅ Constructor viejo para no romper si aún llamas new ForgotDialog(LoginUI.this)
+    public ForgotDialog(Frame owner) {
+        super(owner, true);
+        this.controller = null;
+        buildUI(owner);
+    }
+
+    // ---------------- UI (lo que ya tenías) ----------------
+    private void buildUI(Frame owner) {
         setTitle("Problemas con el carnet o la contraseña");
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setResizable(false);
@@ -113,6 +145,86 @@ public class ForgotDialog extends JDialog {
         setLocationRelativeTo(owner);
     }
 
+<<<<<<< Updated upstream
+=======
+    // ===================== PLACEHOLDER =====================
+    private void addPlaceholder(JTextField field, String placeholder) {
+        Color placeholderColor = new Color(120, 120, 120); // gris visible
+        Color normalColor = Color.BLACK;
+
+        field.setText(placeholder);
+        field.setForeground(placeholderColor);
+
+        field.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (field.getText().equals(placeholder)) {
+                    field.setText("");
+                    field.setForeground(normalColor);
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (field.getText().trim().isEmpty()) {
+                    field.setText(placeholder);
+                    field.setForeground(placeholderColor);
+                }
+            }
+        });
+    }
+
+    // ===================== CAPTCHA =====================
+    private void generarCaptcha() {
+        captchaActual = crearTextoCaptcha(6);
+        ImageIcon icon = crearImagenCaptcha(captchaActual);
+        lblCaptchaImg.setIcon(icon);
+    }
+
+    private String crearTextoCaptcha(int length) {
+        String chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // sin I,O,0,1
+        StringBuilder sb = new StringBuilder();
+        java.util.Random r = new java.util.Random();
+        for (int i = 0; i < length; i++) {
+            sb.append(chars.charAt(r.nextInt(chars.length())));
+        }
+        return sb.toString();
+    }
+
+    private ImageIcon crearImagenCaptcha(String text) {
+        int w = 160, h = 50;
+        BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g2 = img.createGraphics();
+
+        g2.setColor(Color.WHITE);
+        g2.fillRect(0, 0, w, h);
+
+        java.util.Random r = new java.util.Random();
+
+        for (int i = 0; i < 8; i++) {
+            g2.setColor(new Color(r.nextInt(150), r.nextInt(150), r.nextInt(150)));
+            int x1 = r.nextInt(w), y1 = r.nextInt(h);
+            int x2 = r.nextInt(w), y2 = r.nextInt(h);
+            g2.drawLine(x1, y1, x2, y2);
+        }
+
+        g2.setFont(new Font("Arial", Font.BOLD, 28));
+        int x = 15;
+        for (int i = 0; i < text.length(); i++) {
+            g2.setColor(new Color(r.nextInt(120), r.nextInt(120), r.nextInt(120)));
+            double angle = (r.nextDouble() - 0.5) * 0.5;
+            g2.rotate(angle, x, 30);
+            g2.drawString(String.valueOf(text.charAt(i)), x, 35);
+            g2.rotate(-angle, x, 30);
+            x += 22;
+        }
+
+        g2.dispose();
+        return new ImageIcon(img);
+    }
+
+    // ===================== ENVIAR =====================
+>>>>>>> Stashed changes
     private void onEnviar(ActionEvent e) {
         // Validaciones básicas (ajusta según tu backend)
         if (!chkRobot.isSelected()) {
@@ -127,7 +239,48 @@ public class ForgotDialog extends JDialog {
             return;
         }
 
+<<<<<<< Updated upstream
         // Aquí iría tu lógica real (enviar correo, generar token, etc.)
+=======
+        if (correoVacio && carnetVacio) {
+            JOptionPane.showMessageDialog(this,
+                    "Debe ingresar correo personal O carnet para continuar.",
+                    "Validación",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // 4) Crear ticket + mensaje según la opción usada
+        if (!correoVacio) {
+
+            // ✅ CREA TICKET EN BD (PENDIENTE)
+            if (controller != null) {
+                controller.crearTicketRecuperacion(
+                        correo,
+                        "Solicitud de carnet / corrección de acceso"
+                );
+            }
+
+            JOptionPane.showMessageDialog(this,
+                    "Se ha enviado un correo con las instrucciones para tramitar el carnet a:\n"
+                            + correo,
+                    "FIA Support",
+                    JOptionPane.INFORMATION_MESSAGE);
+            dispose();
+            return;
+        }
+
+        // Si llegó aquí, entonces carnet NO está vacío
+
+        // ✅ CREA TICKET EN BD (PENDIENTE)
+        if (controller != null) {
+            controller.crearTicketRecuperacion(
+                    carnet,
+                    "Solicitud de restablecimiento de contraseña"
+            );
+        }
+
+>>>>>>> Stashed changes
         JOptionPane.showMessageDialog(this,
             "Solicitud enviada.\nSi el correo/carnet existe, recibirá instrucciones.",
             "FIA Support",

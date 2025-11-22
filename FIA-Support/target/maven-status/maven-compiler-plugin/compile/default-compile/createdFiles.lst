@@ -1,5 +1,5 @@
-Vista\Admin\GestionUsuariosUI$1.class
 modelo\dominio\Empleado.class
+<<<<<<< Updated upstream
 modelo\servicios\AuthService$AuthenticationResult$Tipo.class
 Vista\Admin\GestionTicketsUI$StatusDialog.class
 modelo\utils\Validacion.class
@@ -107,3 +107,16 @@ modelo\repo\EstadisticasAdminRepository.class
 modelo\repo\IRepository\IFacultadRepository.class
 Vista\Login\ForgotDialog.class
 modelo\dominio\TicketCategoriaHistorial.class
+=======
+modelo\dominio\Facultad.class
+modelo\dominio\EstadisticaConteo.class
+controlador\TicketController.class
+modelo\dominio\Ticket.class
+modelo\dominio\Categoria.class
+modelo\dominio\UsuarioFinal.class
+modelo\dominio\Carrera.class
+modelo\dominio\Usuario.class
+modelo\dominio\Historial.class
+modelo\db\JPAUtil.class
+modelo\dominio\Estado.class
+>>>>>>> Stashed changes
