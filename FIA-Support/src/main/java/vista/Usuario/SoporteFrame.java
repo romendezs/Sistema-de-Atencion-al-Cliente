@@ -40,8 +40,38 @@ public class SoporteFrame extends javax.swing.JFrame {
     public SoporteFrame() {
         initComponents();
         tableModel = (DefaultTableModel) jTable1.getModel();
+        setupPlaceholders();
     }
 
+    private void setupPlaceholders() {
+    setPlaceholder(txtAsunto, "Escriba un asunto");
+    setPlaceholder(txtDescripcion, "Escriba una descripción");
+
+}
+
+private void setPlaceholder(javax.swing.JTextField field, String placeholder) {
+    field.setText(placeholder);
+    field.setForeground(java.awt.Color.GRAY);
+
+    field.addFocusListener(new java.awt.event.FocusAdapter() {
+        @Override
+        public void focusGained(java.awt.event.FocusEvent e) {
+            if (field.getText().equals(placeholder)) {
+                field.setText("");
+                field.setForeground(java.awt.Color.BLACK);
+            }
+        }
+
+        @Override
+        public void focusLost(java.awt.event.FocusEvent e) {
+            if (field.getText().trim().isEmpty()) {
+                field.setText(placeholder);
+                field.setForeground(java.awt.Color.GRAY);
+            }
+        }
+    });
+}
+    
     public void configurar(TicketController controller,
             ReportingController reportingController,
             UsuarioFinal usuario,
@@ -122,13 +152,13 @@ public class SoporteFrame extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
-        textField1 = new java.awt.TextField();
-        txtAsunto = new java.awt.TextField();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jbtnCrear = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
         cmCategoria = new javax.swing.JComboBox<>();
+        txtAsunto = new javax.swing.JTextField();
+        txtDescripcion = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jLabel6 = new javax.swing.JLabel();
@@ -191,13 +221,6 @@ public class SoporteFrame extends javax.swing.JFrame {
         jLabel3.setForeground(new java.awt.Color(255, 0, 0));
         jLabel3.setText("NUEVO TICKET");
 
-        textField1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        textField1.setForeground(new java.awt.Color(204, 204, 204));
-        textField1.setText("Escriba una descipción");
-
-        txtAsunto.setForeground(new java.awt.Color(204, 204, 204));
-        txtAsunto.setText("Escriba un asunto");
-
         jLabel4.setText("Asunto");
 
         jLabel5.setText("Descripción");
@@ -220,6 +243,12 @@ public class SoporteFrame extends javax.swing.JFrame {
             }
         });
 
+        txtDescripcion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtDescripcionActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -227,27 +256,27 @@ public class SoporteFrame extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(textField1, javax.swing.GroupLayout.PREFERRED_SIZE, 517, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtAsunto, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(11, 11, 11)
-                                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(cmCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(310, 310, 310)
-                        .addComponent(jbtnCrear, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jbtnCrear, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(txtAsunto)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(cmCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(txtDescripcion)))
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(70, 70, 70))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -256,17 +285,19 @@ public class SoporteFrame extends javax.swing.JFrame {
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtAsunto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(cmCategoria, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(txtAsunto, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(textField1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jbtnCrear)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(23, 23, 23)
+                        .addComponent(jbtnCrear))
+                    .addComponent(txtDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(27, Short.MAX_VALUE))
         );
 
@@ -303,8 +334,8 @@ public class SoporteFrame extends javax.swing.JFrame {
                                 .addGap(6, 6, 6)
                                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 8, Short.MAX_VALUE))
+                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 381, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 31, Short.MAX_VALUE))
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -347,48 +378,64 @@ public class SoporteFrame extends javax.swing.JFrame {
 
     private void jbtnCrearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnCrearActionPerformed
         if (ticketController == null || usuarioActual == null) {
-            JOptionPane.showMessageDialog(this,
-                    "No hay un usuario autenticado.",
-                    "FIA Support",
-                    JOptionPane.WARNING_MESSAGE);
-            return;
-        }
+        JOptionPane.showMessageDialog(this,
+                "No hay un usuario autenticado.",
+                "FIA Support",
+                JOptionPane.WARNING_MESSAGE);
+        return;
+    }
 
-        if (estadoInicial == null) {
-            JOptionPane.showMessageDialog(this,
-                    "No se ha configurado el estado inicial del ticket.",
-                    "FIA Support",
-                    JOptionPane.ERROR_MESSAGE);
-            return;
-        }
+    if (estadoInicial == null) {
+        JOptionPane.showMessageDialog(this,
+                "No se ha configurado el estado inicial del ticket.",
+                "FIA Support",
+                JOptionPane.ERROR_MESSAGE);
+        return;
+    }
 
-        String asunto = txtAsunto.getText().trim();
-        String descripcion = textField1.getText().trim();
-        Categoria categoria = (Categoria) cmCategoria.getSelectedItem();
+    // 1) Tomar valores de los campos
+    String asunto = txtAsunto.getText().trim();
+    String descripcion = txtDescripcion.getText().trim();
+    Categoria categoria = (Categoria) cmCategoria.getSelectedItem();
 
-        if (asunto.isEmpty()) {
-            JOptionPane.showMessageDialog(this,
-                    "Ingrese un asunto para el ticket.",
-                    "Validación",
-                    JOptionPane.WARNING_MESSAGE);
-            return;
-        }
+    // 2) VALIDACIÓN contra placeholders
+    if (asunto.isEmpty() || asunto.equals("Escriba un asunto")) {
+        JOptionPane.showMessageDialog(this,
+                "Ingrese un asunto válido.",
+                "Validación",
+                JOptionPane.WARNING_MESSAGE);
+        return;
+    }
 
-        try {
-            ticketController.openTicket(asunto, descripcion, categoria, usuarioActual.getId(), estadoInicial);
-            JOptionPane.showMessageDialog(this,
-                    "Ticket creado correctamente.",
-                    "FIA Support",
-                    JOptionPane.INFORMATION_MESSAGE);
-            textField1.setText("");
-            txtAsunto.setText("");
-            refrescarTickets();
-        } catch (IllegalArgumentException ex) {
-            JOptionPane.showMessageDialog(this,
-                    ex.getMessage(),
-                    "FIA Support",
-                    JOptionPane.ERROR_MESSAGE);
-        }
+    if (descripcion.isEmpty() || descripcion.equals("Escriba una descripción")) {
+        JOptionPane.showMessageDialog(this,
+                "Ingrese una descripción válida.",
+                "Validación",
+                JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    // 3) Si pasa validación, crear ticket
+    try {
+        ticketController.openTicket(asunto, descripcion, categoria, usuarioActual.getId(), estadoInicial);
+        JOptionPane.showMessageDialog(this,
+                "Ticket creado correctamente.",
+                "FIA Support",
+                JOptionPane.INFORMATION_MESSAGE);
+
+        // limpiar campos y restaurar placeholders
+        txtAsunto.setText("");
+        txtDescripcion.setText("");  // <-- AQUÍ el cambio
+        setupPlaceholders();
+
+        refrescarTickets();
+    } catch (IllegalArgumentException ex) {
+        JOptionPane.showMessageDialog(this,
+                ex.getMessage(),
+                "FIA Support",
+                JOptionPane.ERROR_MESSAGE);
+    }
+    
     }//GEN-LAST:event_jbtnCrearActionPerformed
 
     private void cmCategoriaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmCategoriaActionPerformed
@@ -398,6 +445,10 @@ public class SoporteFrame extends javax.swing.JFrame {
     private void jbtnCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbtnCerrarActionPerformed
         dispose();
     }//GEN-LAST:event_jbtnCerrarActionPerformed
+
+    private void txtDescripcionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDescripcionActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtDescripcionActionPerformed
 
     /**
      * @param args the command line arguments
@@ -450,7 +501,7 @@ public class SoporteFrame extends javax.swing.JFrame {
     private javax.swing.JButton jbtnCerrar;
     private javax.swing.JButton jbtnCrear;
     private javax.swing.JButton jbtnReportes;
-    private java.awt.TextField textField1;
-    private java.awt.TextField txtAsunto;
+    private javax.swing.JTextField txtAsunto;
+    private javax.swing.JTextField txtDescripcion;
     // End of variables declaration//GEN-END:variables
 }

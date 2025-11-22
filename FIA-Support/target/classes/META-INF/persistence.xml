@@ -26,7 +26,7 @@
       <property name="hibernate.show_sql" value="true"/>
       <property name="hibernate.format_sql" value="true"/>
       <!-- Valida el schema existente (recomendado con BD ya creada) -->
-      <property name="hibernate.hbm2ddl.auto" value="validate"/>
+      <property name="hibernate.hbm2ddl.auto" value="update"/>
       <!-- Si tus timestamps son con zona (OffsetDateTime), Hibernate 6 ya los maneja -->
       <!-- <property name="hibernate.jdbc.time_zone" value="UTC"/>  -->
       <!-- opcional -->

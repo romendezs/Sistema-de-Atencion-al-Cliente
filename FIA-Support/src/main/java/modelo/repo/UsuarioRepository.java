@@ -32,7 +32,7 @@ public class UsuarioRepository extends BaseJpaRepository implements IUsuarioRepo
                 UsuarioFinal.class
             );
             q.setParameter("id", idUpper);
-            // ¡no uses setMaxResults(1) por tu PG 9.3! (rompe con FETCH FIRST ?)
+            
             return q.getResultStream().findFirst();
         } finally {
             em.close();
@@ -87,7 +87,7 @@ public class UsuarioRepository extends BaseJpaRepository implements IUsuarioRepo
             tx.begin();
             UsuarioFinal uf = em.find(UsuarioFinal.class, idUpper);
             if (uf != null) {
-                em.remove(uf); // borra fila en usuariofinal; OJO: en tu DDL NO borra usuario
+                em.remove(uf); 
             }
             tx.commit();
         } catch (RuntimeException ex) {

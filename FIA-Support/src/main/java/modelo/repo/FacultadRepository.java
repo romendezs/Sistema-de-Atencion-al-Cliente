@@ -1,23 +1,11 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package modelo.repo;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
-
 import modelo.dominio.Facultad;
-
 import modelo.repo.IRepository.IFacultadRepository;
-
-/**
- *
- * @author Méndez
- */
-// db/repo/FacultadRepository.java
 
 public class FacultadRepository extends BaseJpaRepository implements IFacultadRepository {
 
@@ -26,7 +14,9 @@ public class FacultadRepository extends BaseJpaRepository implements IFacultadRe
         EntityManager em = em();
         try {
             TypedQuery<Facultad> q = em.createQuery(
-                    "SELECT f FROM Facultad f ORDER BY f.nombre", Facultad.class);
+                    "SELECT f FROM Facultad f ORDER BY f.nombre",
+                    Facultad.class
+            );
             return q.getResultList();
         } finally {
             em.close();
@@ -43,27 +33,40 @@ public class FacultadRepository extends BaseJpaRepository implements IFacultadRe
         }
     }
 
-    // CRUD opcional
-    public Facultad save(Facultad f) {
+    // ===== CRUD web =====
+
+    @Override
+    public void save(Facultad f) {
         EntityManager em = em();
         try {
             em.getTransaction().begin();
-            if (f.getId() == null) {
-                em.persist(f);
-            } else {
-                f = em.merge(f);
-            }
+            em.persist(f);
             em.getTransaction().commit();
-            return f;
         } catch (RuntimeException ex) {
-            em.getTransaction().rollback();
+            if (em.getTransaction().isActive()) em.getTransaction().rollback();
             throw ex;
         } finally {
             em.close();
         }
     }
 
-    public void deleteById(int id) {
+    @Override
+    public void update(Facultad f) {
+        EntityManager em = em();
+        try {
+            em.getTransaction().begin();
+            em.merge(f);
+            em.getTransaction().commit();
+        } catch (RuntimeException ex) {
+            if (em.getTransaction().isActive()) em.getTransaction().rollback();
+            throw ex;
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
+    public void delete(int id) {
         EntityManager em = em();
         try {
             em.getTransaction().begin();
@@ -73,7 +76,7 @@ public class FacultadRepository extends BaseJpaRepository implements IFacultadRe
             }
             em.getTransaction().commit();
         } catch (RuntimeException ex) {
-            em.getTransaction().rollback();
+            if (em.getTransaction().isActive()) em.getTransaction().rollback();
             throw ex;
         } finally {
             em.close();

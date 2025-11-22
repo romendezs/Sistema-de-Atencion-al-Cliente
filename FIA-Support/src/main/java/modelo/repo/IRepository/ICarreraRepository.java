@@ -14,8 +14,10 @@ import java.util.*;
 public interface ICarreraRepository {
 
     List<Carrera> findAll();
-
     List<Carrera> findByFacultadId(int idFacultad);
-
     Optional<Carrera> findById(int id);
+    
+    void save(Carrera carrera);
+    void update(Carrera carrera);
+    void delete(int id);
 }

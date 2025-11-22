@@ -4,6 +4,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import modelo.dominio.TicketMetricasDiarias;
+import modelo.dto.ConteoPorCategoriaDTO;
+import modelo.dto.ConteoPorEstadoDTO;
+import modelo.dto.ConteoPorTecnicoDTO;
 import modelo.repo.IRepository.IEstadisticasAdminRepository;
 import modelo.repo.IRepository.IEstadisticasUsuarioRepository;
 import modelo.utils.Validacion;
@@ -23,15 +26,17 @@ public class ReportingService {
         this.usuarioRepository = usuarioRepository;
     }
 
-    public List<Object[]> resumenPorEstadoGlobal() {
+    // ====== ADMIN (ahora con DTOs) ======
+
+    public List<ConteoPorEstadoDTO> resumenPorEstadoGlobal() {
         return adminRepository.conteoPorEstadoGlobal();
     }
 
-    public List<Object[]> resumenPorTecnico() {
+    public List<ConteoPorTecnicoDTO> resumenPorTecnico() {
         return adminRepository.conteoPorTecnico();
     }
 
-    public List<Object[]> resumenPorCategoria() {
+    public List<ConteoPorCategoriaDTO> resumenPorCategoria() {
         return adminRepository.conteoPorCategoria();
     }
 
@@ -44,6 +49,8 @@ public class ReportingService {
         validarRango(desde, hasta);
         return adminRepository.promedioResolucionMinGlobal(desde, hasta);
     }
+
+    // ====== USUARIO (se deja Object[] porque su repo aún devuelve eso) ======
 
     public List<Object[]> resumenUsuarioPorEstado(String carnet) {
         String id = Validacion.normalizarCarnet(carnet);

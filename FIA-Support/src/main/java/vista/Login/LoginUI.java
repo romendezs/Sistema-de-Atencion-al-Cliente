@@ -30,6 +30,10 @@ import modelo.servicios.UserAdminService;
 import modelo.servicios.UsuarioService;
 import modelo.servicios.WorkflowService;
 import vista.Usuario.SoporteFrame;
+import java.awt.Color;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import javax.swing.JTextField;
 
 /**
  *
@@ -47,12 +51,42 @@ public class LoginUI extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         setResizable(false);
         setTitle("FIA Support");
+        
+        addPlaceholder(txtCarnet, "Ejemplo: FQ19003");
+        
         ImageIcon frameIcon = loadIcon("/Vista/img/icon.png");
         if (frameIcon != null) {
             setIconImage(frameIcon.getImage());
         }
     }
 
+    private void addPlaceholder(JTextField field, String placeholder) {
+    Color placeholderColor = new Color(120, 120, 120); // gris
+    Color normalColor = Color.BLACK;
+
+    field.setText(placeholder);
+    field.setForeground(placeholderColor);
+
+    field.addFocusListener(new FocusAdapter() {
+        @Override
+        public void focusGained(FocusEvent e) {
+            if (field.getText().equals(placeholder)) {
+                field.setText("");
+                field.setForeground(normalColor);
+            }
+        }
+
+        @Override
+        public void focusLost(FocusEvent e) {
+            if (field.getText().trim().isEmpty()) {
+                field.setText(placeholder);
+                field.setForeground(placeholderColor);
+            }
+        }
+    });
+}
+
+    
     private ImageIcon loadIcon(String resourcePath) {
         URL resource = getClass().getResource(resourcePath);
         if (resource == null) {
@@ -264,8 +298,8 @@ public class LoginUI extends javax.swing.JFrame {
     }
 
     private void btnIniciarActionPerformed(java.awt.event.ActionEvent evt) {
-        // Placeholders opcionales (por si los usas)
-        final String PLACEHOLDER_CARNET = "Ingrese su carnet";
+        
+        final String PLACEHOLDER_CARNET = "Ejemplo: FQ19003";
         final String PLACEHOLDER_PASS = "Ingrese su contraseña";
 
         // Obtiene los textos

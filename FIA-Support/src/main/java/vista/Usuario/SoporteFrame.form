@@ -38,10 +38,10 @@
                               <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
                               <Component id="jLabel1" min="-2" pref="124" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jLabel2" min="-2" pref="115" max="-2" attributes="0"/>
+                              <Component id="jLabel2" min="-2" pref="381" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace min="0" pref="8" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="31" max="32767" attributes="0"/>
                   </Group>
                   <Component id="jPanel3" alignment="0" max="32767" attributes="0"/>
               </Group>
@@ -183,34 +183,35 @@
               <Group type="102" attributes="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <Component id="jLabel5" min="-2" pref="163" max="-2" attributes="0"/>
-                                  <EmptySpace max="32767" attributes="0"/>
-                                  <Component id="textField1" min="-2" pref="517" max="-2" attributes="0"/>
-                              </Group>
-                              <Group type="102" attributes="0">
-                                  <Component id="jLabel4" min="-2" pref="109" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="txtAsunto" min="-2" pref="284" max="-2" attributes="0"/>
-                                  <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
-                                  <Component id="jLabel7" min="-2" pref="79" max="-2" attributes="0"/>
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="cmCategoria" min="-2" pref="172" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="jLabel3" min="-2" pref="109" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" pref="310" max="-2" attributes="0"/>
                           <Component id="jbtnCrear" min="-2" pref="85" max="-2" attributes="0"/>
                       </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" attributes="0">
+                                  <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="jLabel4" min="-2" pref="69" max="-2" attributes="0"/>
+                                      <Component id="jLabel5" min="-2" pref="85" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="1" attributes="0">
+                                      <Group type="102" attributes="0">
+                                          <Component id="txtAsunto" max="32767" attributes="0"/>
+                                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                                          <Component id="jLabel7" min="-2" pref="79" max="-2" attributes="0"/>
+                                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                                          <Component id="cmCategoria" min="-2" pref="172" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Component id="txtDescripcion" max="32767" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <Component id="jLabel3" min="-2" pref="109" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
                   </Group>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace min="-2" pref="70" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -221,20 +222,24 @@
                   <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jLabel4" min="-2" pref="23" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jLabel4" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
+                          <Component id="txtAsunto" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                           <Component id="cmCategoria" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel7" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="txtAsunto" min="-2" pref="23" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="textField1" min="-2" pref="36" max="-2" attributes="0"/>
-                      <Component id="jLabel5" min="-2" pref="23" max="-2" attributes="0"/>
+                      <Group type="102" attributes="0">
+                          <Component id="jLabel5" min="-2" pref="23" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
+                          <Component id="jbtnCrear" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Component id="txtDescripcion" min="-2" pref="40" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jbtnCrear" min="-2" max="-2" attributes="0"/>
                   <EmptySpace pref="27" max="32767" attributes="0"/>
               </Group>
           </Group>
@@ -250,25 +255,6 @@
               <Color blue="0" green="0" red="ff" type="rgb"/>
             </Property>
             <Property name="text" type="java.lang.String" value="NUEVO TICKET"/>
-          </Properties>
-        </Component>
-        <Component class="java.awt.TextField" name="textField1">
-          <Properties>
-            <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-              <Color id="Default Cursor"/>
-            </Property>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="cc" green="cc" red="cc" type="rgb"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="Escriba una descipci&#xf3;n"/>
-          </Properties>
-        </Component>
-        <Component class="java.awt.TextField" name="txtAsunto">
-          <Properties>
-            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="cc" green="cc" red="cc" type="rgb"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="Escriba un asunto"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel4">
@@ -315,6 +301,13 @@
             <AuxValue name="JavaCodeGenerator_SerializeTo" type="java.lang.String" value="SoporteFrame_cmCategoria"/>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;Categoria&gt;"/>
           </AuxValues>
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtAsunto">
+        </Component>
+        <Component class="javax.swing.JTextField" name="txtDescripcion">
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtDescripcionActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

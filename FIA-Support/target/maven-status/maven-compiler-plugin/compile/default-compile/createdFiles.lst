@@ -9,6 +9,7 @@ Vista\Admin\GestionTicketsUI$4.class
 Vista\Admin\GestionTicketsUI$StatusRenderer.class
 controlador\UserAdminController.class
 controlador\AuthController.class
+modelo\dto\ConteoPorEstadoDTO.class
 Vista\Admin\GestionTicketsUI$TicketTableModel.class
 Vista\Login\LoginUI$2.class
 modelo\dominio\Categoria.class
@@ -42,6 +43,7 @@ modelo\dominio\Estado.class
 modelo\repo\IRepository\ITicketRepository.class
 controlador\ReportingController.class
 Vista\Usuario\SoporteFrame$1.class
+modelo\dto\ConteoPorTecnicoDTO.class
 Vista\Admin\GestionTicketsUI$1.class
 Vista\Admin\GestionTicketsUI$DeleteTicketDialog$1.class
 Vista\Admin\GestionUsuariosUI$4.class
@@ -54,6 +56,7 @@ Vista\Usuario\EstadisticasUsuarioUI$2.class
 modelo\repo\CarreraRepository.class
 Vista\Admin\GestionUsuariosUI$8.class
 modelo\dominio\Carrera.class
+Vista\Login\LoginUI$3.class
 Vista\Usuario\SoporteFrame$CategoriaModel.class
 modelo\dominio\TicketMetricasDiarias$Builder.class
 Vista\Admin\GestionTicketsUI$DeleteTicketDialog.class
@@ -71,6 +74,7 @@ controlador\TicketController.class
 modelo\repo\IRepository\IUsuarioRepository.class
 Vista\Admin\GestionTicketsUI$6.class
 Vista\Admin\GestionUsuariosUI$UsuariosTableModel.class
+modelo\dto\ConteoPorCategoriaDTO.class
 modelo\dominio\Administrador.class
 Vista\Admin\GestionTicketsUI$3.class
 Vista\Admin\GestionUsuariosUI$3.class
@@ -86,10 +90,10 @@ Vista\Admin\GestionTicketsUI$DeleteRenderer.class
 Vista\Admin\GestionTicketsUI$5.class
 Vista\Usuario\EstadisticasUsuarioUI.class
 Vista\Usuario\EstadisticasUsuarioUI$3.class
+Vista\Usuario\SoporteFrame$5.class
 modelo\dominio\Historial.class
 modelo\repo\IRepository\IEstadisticasAdminRepository.class
 modelo\repo\AdminRepository.class
-modelo\repo\IRepository\IRepository.class
 modelo\dominio\pk\TicketMetricasDiariasId.class
 modelo\servicios\AssignmentService.class
 Vista\Admin\GestionUsuariosUI$2.class
@@ -106,4 +110,5 @@ Vista\Admin\GestionTicketsUI$TicketInfoDialog.class
 modelo\repo\EstadisticasAdminRepository.class
 modelo\repo\IRepository\IFacultadRepository.class
 Vista\Login\ForgotDialog.class
+Vista\Usuario\SoporteFrame$4.class
 modelo\dominio\TicketCategoriaHistorial.class

@@ -1,49 +1,40 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
- */
 package modelo.repo.IRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import modelo.dominio.*;
+import modelo.dominio.Categoria;
+import modelo.dominio.Empleado;
+import modelo.dominio.Estado;
+import modelo.dominio.Historial;
+import modelo.dominio.Ticket;
+import modelo.dominio.TicketAsignacionHistorial;
 
-/**
- *
- * @author Méndez
- */
 public interface ITicketRepository {
 
-    // Lecturas
+    // Lecturas principales
     List<Ticket> findAll();
-
     Optional<Ticket> findById(int id);
-
     List<Ticket> findByUsuarioId(String usuarioId);
-
     List<Ticket> findByEstadoId(int estadoId);
-    
-     Categoria findCategoriaById(int categoriaId);
-    
-    List<Categoria> findAllCategorias();
-
     List<Ticket> findByRangoFechas(LocalDateTime desde, LocalDateTime hasta);
 
-    List<Empleado> findAllEmpleados();
+    // CRUD
+    Ticket save(Ticket t);
+    void deleteById(int id); // si querés este en interfaz (tu clase lo tiene)
 
-    Ticket save(Ticket ticket);
-
+    // Historial / estados
     List<Historial> findHistorialByTicket(int ticketId);
     Optional<Historial> findUltimoHistorial(int ticketId);
+    void addHistorial(int ticketId, Estado estado, String comentario);
     List<Estado> findAllEstados();
 
+    // Asignaciones
     List<TicketAsignacionHistorial> findAsignacionesByTicket(int ticketId);
-
-    // Escrituras
-    void deleteById(int ticketId);
-
+    List<Empleado> findAllEmpleados();
     void assignToEmpleado(int ticketId, int empleadoId);
 
-    void addHistorial(int ticketId, Estado estado, String comentario);
+    // Categorías
+    Categoria findCategoriaById(int categoriaId);
+    List<Categoria> findAllCategorias();
 }

@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package modelo.repo;
 
 import jakarta.persistence.EntityManager;
@@ -11,11 +7,6 @@ import java.util.Optional;
 import modelo.dominio.Carrera;
 import modelo.repo.IRepository.ICarreraRepository;
 
-/**
- *
- * @author Méndez
- */
-// db/repo/CarreraRepository.java
 public class CarreraRepository extends BaseJpaRepository implements ICarreraRepository {
 
     @Override
@@ -35,7 +26,8 @@ public class CarreraRepository extends BaseJpaRepository implements ICarreraRepo
         EntityManager em = em();
         try {
             TypedQuery<Carrera> q = em.createQuery(
-                    "SELECT c FROM Carrera c WHERE c.facultad.id = :id ORDER BY c.nombre", Carrera.class);
+                    "SELECT c FROM Carrera c WHERE c.facultad.id = :id ORDER BY c.nombre",
+                    Carrera.class);
             q.setParameter("id", idFacultad);
             return q.getResultList();
         } finally {
@@ -53,27 +45,40 @@ public class CarreraRepository extends BaseJpaRepository implements ICarreraRepo
         }
     }
 
-    // CRUD opcional
-    public Carrera save(Carrera c) {
+    // ===== CRUD para entorno web (implementa interfaz) =====
+
+    @Override
+    public void save(Carrera c) {
         EntityManager em = em();
         try {
             em.getTransaction().begin();
-            if (c.getId() == null) {
-                em.persist(c);
-            } else {
-                c = em.merge(c);
-            }
+            em.persist(c);              // solo crear
             em.getTransaction().commit();
-            return c;
         } catch (RuntimeException ex) {
-            em.getTransaction().rollback();
+            if (em.getTransaction().isActive()) em.getTransaction().rollback();
             throw ex;
         } finally {
             em.close();
         }
     }
 
-    public void deleteById(int id) {
+    @Override
+    public void update(Carrera c) {
+        EntityManager em = em();
+        try {
+            em.getTransaction().begin();
+            em.merge(c);               // solo actualizar
+            em.getTransaction().commit();
+        } catch (RuntimeException ex) {
+            if (em.getTransaction().isActive()) em.getTransaction().rollback();
+            throw ex;
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
+    public void delete(int id) {
         EntityManager em = em();
         try {
             em.getTransaction().begin();
@@ -83,7 +88,7 @@ public class CarreraRepository extends BaseJpaRepository implements ICarreraRepo
             }
             em.getTransaction().commit();
         } catch (RuntimeException ex) {
-            em.getTransaction().rollback();
+            if (em.getTransaction().isActive()) em.getTransaction().rollback();
             throw ex;
         } finally {
             em.close();

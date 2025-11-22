@@ -17,7 +17,7 @@ import java.util.*;
 
     Optional<UsuarioFinal> findById(String id);
 
-    UsuarioFinal save(UsuarioFinal u);      // upsert
+    UsuarioFinal save(UsuarioFinal u);     
 
     void deleteById(String id);
 }
