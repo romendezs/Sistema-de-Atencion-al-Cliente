@@ -4,6 +4,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/x-icon" href="../../imagenes/logo.png">
     <title>FIA Support</title>
 
     <style>

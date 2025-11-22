@@ -5,6 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="../../imagenes/logo.png">
     <title>FIA Support</title>
 
     <style>
@@ -359,7 +360,7 @@
     <!-- HEADER -->
     <div class="header">
         <div class="header-left">
-            Ver Reportes y Estadísticas
+            ${sessionScope.nombreUsuario}
         </div>
 
         <div class="header-right">
