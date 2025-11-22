@@ -7,6 +7,20 @@ import java.sql.*;
 
 public class UsuarioDAO {
 
+    public boolean esAdmin(String carnet) {
+    String sql = "SELECT 1 FROM administrador WHERE id_administrador = ?";
+    try (Connection con = Conexion.getConexion();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+
+        ps.setString(1, carnet);
+        try (ResultSet rs = ps.executeQuery()) {
+            return rs.next();
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+        return false;
+    }
+}
     public Usuario validarLogin(String carnet, String password) {
         String sql = "SELECT id_usuario, nombres, apellidos " +
                      "FROM usuario WHERE id_usuario=? AND password=?";

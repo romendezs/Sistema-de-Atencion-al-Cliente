@@ -91,18 +91,24 @@
         .submit-btn:hover {
             background-color: #6d3835;
         }
+
+        /* Link mejorado */
         .forgot-password {
             text-align: center;
             margin-top: 20px;
         }
         .forgot-password a {
-            color: #c94e47;
+            color: #ffffff;                 /* blanco */
             font-size: 13px;
-            text-decoration: none;
+            text-decoration: underline;
+            font-weight: 600;
+            opacity: 0.95;
         }
         .forgot-password a:hover {
-            text-decoration: underline;
+            opacity: 1;
+            text-shadow: 0 0 4px rgba(255,255,255,.7);
         }
+
         .error-message {
             background-color: #f8d7da;
             color: #721c24;
@@ -194,10 +200,12 @@
             cursor: pointer;
             font-size: 18px;
         }
+
         .mensaje-recuperar{
             margin-top: 10px;
             font-size: 14px;
             color: red;
+            font-weight: 600;
         }
     </style>
 </head>
@@ -233,7 +241,7 @@
                             type="text" 
                             id="carnet" 
                             name="carnet" 
-                            placeholder="Ejemplo de carnet valido: YQ05001"
+                            placeholder="Ejemplo de carnet válido: OL24002"
                             required
                         />
                     </div>
@@ -252,15 +260,16 @@
                     <button type="submit" class="submit-btn">Iniciar Sesión</button>
                 </form>
 
+                <!-- TEXTO MEJORADO -->
                 <div class="forgot-password">
                     <a href="#" onclick="mostrarRecuperar(); return false;">
-                        ¿Problemas con el carnet o la contraseña?
+                        ¿Olvidé mi contraseña / Resetear contraseña?
                     </a>
                 </div>
             </div>
 
-        </div> <!-- /content -->
-    </div> <!-- /login-container -->
+        </div>
+    </div>
 
 
     <!-- ===== MODAL Recuperar acceso ===== -->
@@ -268,15 +277,14 @@
         <div class="modal-card">
             <button class="modal-close" onclick="cerrarRecuperar()" aria-label="Cerrar">✕</button>
 
-            <h3 class="modal-title">Recuperar acceso</h3>
+            <h3 class="modal-title">Resetear contraseña</h3>
 
-            <!-- ANTES era correo, ahora es CARNET -->
             <input type="text" class="recuperar-input" id="correo"
-                   placeholder="Ingresa tu carnet (Ejemplo: AZ99011)">
+                   placeholder="Ingresa tu carnet (ej: OL24002)">
 
             <div class="captcha-row">
-                <canvas id="captcha-canvas" width="180" height="60"></canvas>
-                <button type="button" class="captcha-refresh" onclick="generarCaptcha()" title="Nuevo CAPTCHA">
+                <canvas id="captcha-canvas" width="260" height="90"></canvas>
+                <button type="button" class="captcha-refresh" onclick="refrescarCaptcha()" title="Nuevo CAPTCHA">
                     ↻
                 </button>
             </div>
@@ -285,7 +293,7 @@
                    placeholder="Escribe el texto que ves arriba">
 
             <button type="button" class="btn-recuperar" onclick="validarRecuperacion()">
-                Recuperar Cuenta
+                Enviar solicitud
             </button>
 
             <p id="mensaje-recuperar" class="mensaje-recuperar"></p>
@@ -301,9 +309,7 @@
             modal.style.display = "flex";
             modal.setAttribute("aria-hidden", "false");
             generarCaptcha();
-            document.getElementById("mensaje-recuperar").textContent = "";
-            document.getElementById("captcha-input").value = "";
-            document.getElementById("correo").value = "";
+            limpiarMensajes();
         }
 
         function cerrarRecuperar(){
@@ -311,6 +317,13 @@
             modal.style.display = "none";
             modal.setAttribute("aria-hidden", "true");
         }
+
+        function limpiarMensajes(){
+            document.getElementById("mensaje-recuperar").textContent = "";
+            document.getElementById("captcha-input").value = "";
+            document.getElementById("correo").value = "";
+        }
+
 
         function generarCaptcha() {
             const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789";
@@ -321,69 +334,114 @@
             dibujarCaptcha();
         }
 
-        function dibujarCaptcha(){
-            const canvas = document.getElementById("captcha-canvas");
-            const ctx = canvas.getContext("2d");
+function dibujarCaptcha(){
+    const canvas = document.getElementById("captcha-canvas");
+    const ctx = canvas.getContext("2d");
+    const w = canvas.width, h = canvas.height;
 
-            ctx.clearRect(0,0,canvas.width, canvas.height);
-            ctx.fillStyle = "#f2f2f2";
-            ctx.fillRect(0,0,canvas.width, canvas.height);
+    // Fondo claro
+    ctx.clearRect(0,0,w,h);
+    ctx.fillStyle = "#f3f3f3";
+    ctx.fillRect(0,0,w,h);
 
-            for(let i=0;i<5;i++){
-                ctx.strokeStyle = `rgba(0,0,0,${Math.random()*0.4})`;
-                ctx.beginPath();
-                ctx.moveTo(Math.random()*canvas.width, Math.random()*canvas.height);
-                ctx.lineTo(Math.random()*canvas.width, Math.random()*canvas.height);
-                ctx.stroke();
-            }
+    // Onda suave atrás
+    ctx.save();
+    ctx.globalAlpha = 0.22;
+    ctx.strokeStyle = "#000";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    let y0 = 18 + Math.random()*25;
+    ctx.moveTo(0, y0);
+    for(let x=0; x<=w; x+=14){
+        ctx.lineTo(x, y0 + Math.sin(x/20) * (5 + Math.random()*2));
+    }
+    ctx.stroke();
+    ctx.restore();
 
-            ctx.font = "24px Arial";
-            for(let i=0;i<captchaGenerado.length;i++){
-                const ch = captchaGenerado[i];
-                const x = 15 + i*25 + (Math.random()*4);
-                const y = 35 + (Math.random()*10);
+    // Pocas líneas
+    for(let i=0;i<4;i++){
+        ctx.strokeStyle = `rgba(0,0,0,${0.12 + Math.random()*0.18})`;
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.moveTo(Math.random()*w, Math.random()*h);
+        ctx.lineTo(Math.random()*w, Math.random()*h);
+        ctx.stroke();
+    }
 
-                ctx.save();
-                ctx.translate(x,y);
-                ctx.rotate((Math.random()-0.5)*0.6);
-                ctx.fillStyle = `rgb(${50+Math.random()*100},${50+Math.random()*100},${50+Math.random()*100})`;
-                ctx.fillText(ch,0,0);
-                ctx.restore();
-            }
+    // TEXTO BIEN GRANDE
+    for(let i=0;i<captchaGenerado.length;i++){
+        const ch = captchaGenerado[i];
 
-            for(let i=0;i<30;i++){
-                ctx.fillStyle = `rgba(0,0,0,${Math.random()*0.3})`;
-                ctx.beginPath();
-                ctx.arc(Math.random()*canvas.width, Math.random()*canvas.height, 1.2, 0, Math.PI*2);
-                ctx.fill();
-            }
-        }
+        const fontSize = 50 + Math.random()*6;  // 50–56px
+        ctx.font = `bold ${fontSize}px Arial`;
+
+        const x = 18 + i*38 + (Math.random()*4); // más separación
+        const y = 62 + (Math.random()*10);       // más abajo
+
+        ctx.save();
+        ctx.translate(x,y);
+        ctx.rotate((Math.random()-0.5)*0.25);    // rotación leve
+
+        ctx.shadowColor = "rgba(0,0,0,0.25)";
+        ctx.shadowBlur = 2;
+
+        ctx.fillStyle = `rgb(${30+Math.random()*70},${30+Math.random()*70},${30+Math.random()*70})`;
+        ctx.fillText(ch,0,0);
+        ctx.restore();
+    }
+
+    // Puntitos moderados
+    for(let i=0;i<35;i++){
+        ctx.fillStyle = `rgba(0,0,0,${Math.random()*0.18})`;
+        ctx.beginPath();
+        ctx.arc(Math.random()*w, Math.random()*h, 1.4, 0, Math.PI*2);
+        ctx.fill();
+    }
+}
+
+
+function refrescarCaptcha(){
+    generarCaptcha(); // nuevo captcha
+
+    // limpiar lo que el usuario escribió
+    document.getElementById("captcha-input").value = "";
+    document.getElementById("mensaje-recuperar").textContent = "";
+
+    // opcional: dejar el cursor listo en captcha
+    document.getElementById("captcha-input").focus();
+}
 
         async function validarRecuperacion() {
-            const carnet = document.getElementById("correo").value.trim(); // aquí es carnet
+            const carnet = document.getElementById("correo").value.trim().toUpperCase();
             const captchaIngresado = document.getElementById("captcha-input").value.trim();
             const mensaje = document.getElementById("mensaje-recuperar");
 
-            // Validar carnet (7 caracteres, letras/números)
-            if (carnet === "" || carnet.length !== 7) {
+            // ✅ Validación clara de formato:
+            const regexCarnet = /^[A-Z]{2}\d{5}$/;  // ej: OL24002
+            if (!regexCarnet.test(carnet)) {
                 mensaje.style.color = "red";
-                mensaje.textContent = "Ingresa un carnet válido de 7 caracteres.";
+                mensaje.textContent = "Formato de carnet inválido. Ejemplo: OL24002";
                 return;
             }
 
             if (captchaIngresado !== captchaGenerado) {
-                mensaje.style.color = "red";
-                mensaje.textContent = "CAPTCHA incorrecto. Inténtalo de nuevo.";
-                generarCaptcha();
-                return;
-            }
+    mensaje.style.color = "red";
+    mensaje.textContent = "CAPTCHA incorrecto. Inténtalo de nuevo.";
+
+    // ✅ borrar lo que escribió el usuario
+    const captchaInputEl = document.getElementById("captcha-input");
+    captchaInputEl.value = "";
+    captchaInputEl.focus();
+
+    generarCaptcha();
+    return;
+}
 
             try{
                 const resp = await fetch("${pageContext.request.contextPath}/recuperar", {
                     method: "POST",
                     headers: {"Content-Type": "application/x-www-form-urlencoded"},
-                    // 👇 seguimos mandando "correo" para no cambiar servlet
-                    body: new URLSearchParams({ correo: carnet })
+                    body: new URLSearchParams({ correo: carnet }) // carnet viaja aquí
                 });
 
                 const data = await resp.json();
@@ -391,7 +449,7 @@
                 if(data.ok){
                     mensaje.style.color = "green";
                     mensaje.textContent =
-                        "Tu solicitud ha sido ingresada. Un administrador reseteará tu contraseña pronto.";
+                        "Solicitud enviada correctamente. Un administrador reseteará tu contraseña pronto.";
                 }else{
                     mensaje.style.color = "red";
                     mensaje.textContent = data.msg || "No se pudo procesar tu solicitud.";

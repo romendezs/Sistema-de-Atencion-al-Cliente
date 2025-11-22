@@ -21,21 +21,23 @@ public class RecuperarServlet extends HttpServlet {
             throws ServletException, IOException {
 
         resp.setContentType("application/json;charset=UTF-8");
-        String correo = req.getParameter("correo");
+
+        // OJO: el front manda el carnet dentro del parámetro "correo"
+        String carnet = req.getParameter("correo");
 
         try (PrintWriter out = resp.getWriter()) {
 
-            if (correo == null || correo.trim().isEmpty()) {
-                out.print("{\"ok\":false,\"msg\":\"Correo vacío.\"}");
+            if (carnet == null || carnet.trim().isEmpty()) {
+                out.print("{\"ok\":false,\"msg\":\"Carnet vacío.\"}");
                 return;
             }
 
-            boolean ok = dao.crearTicketRecuperacion(correo.trim(), ID_CATEGORIA_RECUP);
+            boolean ok = dao.crearTicketRecuperacion(carnet.trim(), ID_CATEGORIA_RECUP);
 
             if (ok) {
                 out.print("{\"ok\":true}");
             } else {
-                out.print("{\"ok\":false,\"msg\":\"No se pudo crear el ticket.\"}");
+                out.print("{\"ok\":false,\"msg\":\"Carnet no registrado. Verifica e inténtalo de nuevo.\"}");
             }
         }
     }
