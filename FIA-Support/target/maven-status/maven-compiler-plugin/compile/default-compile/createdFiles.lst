@@ -75,6 +75,7 @@ modelo\repo\IRepository\IUsuarioRepository.class
 Vista\Admin\GestionTicketsUI$6.class
 Vista\Admin\GestionUsuariosUI$UsuariosTableModel.class
 modelo\dto\ConteoPorCategoriaDTO.class
+Vista\Login\ForgotDialog$1.class
 modelo\dominio\Administrador.class
 Vista\Admin\GestionTicketsUI$3.class
 Vista\Admin\GestionUsuariosUI$3.class
