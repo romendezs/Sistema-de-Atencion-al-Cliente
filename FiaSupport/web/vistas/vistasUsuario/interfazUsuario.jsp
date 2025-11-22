@@ -217,6 +217,140 @@
             visibility: visible;
             opacity: 1;
         }
+
+        /* ---- MODAL HISTORIAL ---- */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            background-color: #c94e47;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 18px;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .modal-body {
+            padding: 25px;
+        }
+
+        .ticket-info {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .ticket-info h3 {
+            color: #c94e47;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .info-row {
+            display: flex;
+            margin-bottom: 8px;
+        }
+
+        .info-label {
+            font-weight: bold;
+            width: 120px;
+            color: #555;
+        }
+
+        .info-value {
+            flex: 1;
+            color: #333;
+        }
+
+        .historial-section {
+            margin-top: 20px;
+        }
+
+        .historial-section h3 {
+            color: #c94e47;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .historial-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #f9f9f9;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .historial-table th {
+            background-color: #f2beb8;
+            padding: 12px;
+            text-align: left;
+            font-size: 14px;
+            color: #5a1e1e;
+        }
+
+        .historial-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 14px;
+        }
+
+        .historial-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .modal-footer {
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #eee;
+        }
+
+        .btn-cerrar {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .btn-cerrar:hover {
+            background-color: #5a6268;
+        }
+
+        .asunto-click {
+            cursor: pointer;
+            color: #c94e47;
+            text-decoration: underline;
+            transition: color 0.2s;
+        }
+
+        .asunto-click:hover {
+            color: #8b4a46;
+        }
     </style>
 </head>
 
@@ -278,8 +412,10 @@
                         <tr>
                             <td>
                                 <div class="tooltip">
-                                    ${ticket.asunto}
-                                    <span class="tooltiptext">Hacer clic para ver más</span>
+                                    <span class="asunto-click" onclick="showTicketHistorial(${ticket.id}, '${ticket.asunto}', '${ticket.descripcion}', '${ticket.estado}', '${ticket.fechaCreacion}', '${ticket.asignadoA}')">
+                                        ${ticket.asunto}
+                                    </span>
+                                    <span class="tooltiptext">Hacer clic para ver el historial</span>
                                 </div>
                             </td>
 
@@ -310,11 +446,148 @@
         </div>
     </div>
 
+    <!-- MODAL DE HISTORIAL DEL TICKET -->
+    <div class="modal-overlay" id="historialModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                Historial del Ticket
+            </div>
+            <div class="modal-body">
+                <!-- Información del Ticket -->
+                <div class="ticket-info">
+                    <h3>Información del Ticket</h3>
+                    <div class="info-row">
+                        <div class="info-label">Asunto:</div>
+                        <div class="info-value" id="modalAsunto"></div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Descripción:</div>
+                        <div class="info-value" id="modalDescripcion"></div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Estado:</div>
+                        <div class="info-value" id="modalEstado"></div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Asignado a:</div>
+                        <div class="info-value" id="modalAsignadoA"></div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Fecha creación:</div>
+                        <div class="info-value" id="modalFechaCreacion"></div>
+                    </div>
+                </div>
+
+                <!-- Historial de Modificaciones -->
+                <div class="historial-section">
+                    <h3>Historial de Ticket</h3>
+                    <table class="historial-table">
+                        <thead>
+                            <tr>
+                                <th>Modificación</th>
+                                <th>Fecha</th>
+                                <th>Responsable</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historialBody">
+                            <!-- El historial se llenará dinámicamente con JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cerrar" onclick="closeHistorialModal()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         function cerrarSesion() {
             if (confirm("¿Está seguro que desea cerrar sesión?")) {
                 window.location.href = "vistas/logout.jsp";
             }
+        }
+
+        function showTicketHistorial(ticketId, asunto, descripcion, estado, fechaCreacion, asignadoA) {
+            // Llenar información básica del ticket
+            document.getElementById('modalAsunto').textContent = asunto;
+            document.getElementById('modalDescripcion').textContent = descripcion;
+            document.getElementById('modalEstado').textContent = estado;
+            document.getElementById('modalAsignadoA').textContent = asignadoA || 'Sin asignar';
+            document.getElementById('modalFechaCreacion').textContent = fechaCreacion;
+
+            // Aquí deberías hacer una llamada AJAX para obtener el historial desde la base de datos
+            // Por ahora, usaré datos de ejemplo
+            cargarHistorialEjemplo(ticketId);
+
+            // Mostrar modal
+            document.getElementById('historialModal').style.display = 'flex';
+        }
+
+        function closeHistorialModal() {
+            document.getElementById('historialModal').style.display = 'none';
+        }
+
+        function cargarHistorialEjemplo(ticketId) {
+            // Esto es un ejemplo - en producción, deberías hacer una llamada AJAX a tu servlet
+            const historialBody = document.getElementById('historialBody');
+            historialBody.innerHTML = '';
+
+            // Datos de ejemplo (deberían venir de la base de datos)
+            const historialData = [
+                { modificacion: 'Asignado', fecha: '26/08/2025', responsable: 'Sistema' },
+                { modificacion: 'Respuesta del Programador', fecha: '27/08/2025', responsable: 'Juan Pérez' },
+                { modificacion: 'Reparación 1', fecha: '28/08/2025', responsable: 'Carlos Rodríguez' },
+                { modificacion: 'Reparación 2 y Finalización', fecha: '29/08/2025', responsable: 'Carlos Rodríguez' }
+            ];
+
+            historialData.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.modificacion}</td>
+                    <td>${item.fecha}</td>
+                    <td>${item.responsable}</td>
+                `;
+                historialBody.appendChild(row);
+            });
+        }
+
+        // Cerrar modal si se hace clic fuera del contenido
+        document.getElementById('historialModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeHistorialModal();
+            }
+        });
+
+        // Cerrar modal con tecla Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeHistorialModal();
+            }
+        });
+
+        // Función para cargar historial real desde la base de datos (implementar con AJAX)
+        function cargarHistorialReal(ticketId) {
+            // Ejemplo de implementación:
+            /*
+            fetch('TicketServlet?action=getHistorial&ticketId=' + ticketId)
+                .then(response => response.json())
+                .then(historial => {
+                    const historialBody = document.getElementById('historialBody');
+                    historialBody.innerHTML = '';
+                    
+                    historial.forEach(item => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${item.modificacion}</td>
+                            <td>${item.fecha}</td>
+                            <td>${item.responsable}</td>
+                        `;
+                        historialBody.appendChild(row);
+                    });
+                })
+                .catch(error => console.error('Error:', error));
+            */
         }
     </script>
 
