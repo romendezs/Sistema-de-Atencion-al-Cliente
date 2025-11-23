@@ -1,5 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@page import="modelo.Usuario"%>
+
+<%
+    Usuario u = (Usuario) session.getAttribute("usuario");
+    String nombreCompleto = (u != null) ? u.getNombreCompleto() : "";
+%>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -9,393 +16,110 @@
     <title>FIA Support</title>
 
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f7e9df;
-            margin: 0;
-            padding: 0;
-        }
+        body {font-family: Arial, sans-serif;background-color: #f7e9df;margin: 0;padding: 0;}
 
-        /* ---- HEADER ---- */
-        .header {
-            background-color: #c94e47;
-            color: white;
-            padding: 18px 25px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-        }
+        .header {background-color: #c94e47;color: white;padding: 18px 25px;display: flex;justify-content: space-between;align-items: center;box-shadow: 0 4px 12px rgba(0,0,0,0.25);}
+        .header-left {font-size: 17px;font-weight: bold;}
+        .logout-link {background-color:#8b4a46;color:white;padding:10px 18px;border-radius:6px;text-decoration:none;font-size:14px;font-weight:bold;transition:.3s;}
+        .logout-link:hover {background-color:#6d3835;transform:translateY(-2px);box-shadow:0 3px 8px rgba(0,0,0,0.25);}
 
-        .header-left {
-            font-size: 17px;
-            font-weight: bold;
-            letter-spacing: 0.5px;
-        }
+        .welcome {text-align: center;font-size: 26px;color: #c94e47;margin: 25px 0 15px 0;font-weight: bold;}
 
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+        .nuevo-ticket {background-color: white;width: 80%;max-width: 700px;margin: 0 auto 30px auto;padding: 25px;border-radius: 10px;box-shadow: 0 4px 20px rgba(0,0,0,0.2);}
+        .nuevo-ticket h3 {color: #c94e47;font-size: 20px;margin-bottom: 20px;font-weight: bold;}
 
-        .logout-link {
-            background-color: #8b4a46;
-            color: white;
-            padding: 10px 18px;
-            border-radius: 6px;
-            text-decoration: none;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.3s ease;
-            font-weight: bold;
-        }
+        .form-group {margin-bottom: 18px;}
+        .form-group label {font-weight: bold;margin-bottom: 5px;display: block;font-size: 14px;color: #333;}
+        .form-group input,.form-group textarea,.form-group select {width: 100%;padding: 12px;border-radius: 6px;border: 1px solid #ccc;font-size: 14px;}
+        .form-group textarea {resize: vertical;height: 100px;}
 
-        .logout-link:hover {
-            background-color: #6d3835;
-            transform: translateY(-2px);
-            box-shadow: 0 3px 8px rgba(0,0,0,0.25);
-        }
+        .mensaje-prioridad{margin-top:10px;font-weight:bold;font-size:14px;color:#8b4a46;padding:8px 10px;background:#fff3f2;border:1px solid #f2beb8;border-radius:6px;display:none;}
 
-        .logout-icon {
-            width: 18px;
-            height: 18px;
-            fill: white;
-        }
+        .btn-crear {background-color: #8b4a46;color: white;padding: 12px 35px;border: none;border-radius: 6px;font-size: 15px;cursor: pointer;display: block;margin: 0 auto;transition: 0.3s;}
+        .btn-crear:hover {background-color: #6d3835;}
 
-        /* ---- BIENVENIDA ---- */
-        .welcome {
-            text-align: center;
-            font-size: 26px;
-            color: #c94e47;
-            margin: 25px 0 15px 0;
-            font-weight: bold;
-        }
+        .tickets-section {width: 90%;max-width: 1000px;margin: auto;}
+        .tickets-section h2 {color: #c94e47;font-size: 22px;font-weight: bold;margin-bottom: 15px;}
 
-        /* ---- TARJETA DE NUEVO TICKET ---- */
-        .nuevo-ticket {
-            background-color: white;
-            width: 80%;
-            max-width: 700px;
-            margin: 0 auto 30px auto;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-        }
+        .tickets-table {background-color: white;border-radius: 10px;box-shadow: 0 4px 15px rgba(0,0,0,0.15);overflow: hidden;}
+        table {width: 100%;border-collapse: collapse;}
+        th {background-color: #f2beb8;padding: 14px;text-align: left;font-size: 15px;color: #5a1e1e;}
+        td {padding: 14px;border-bottom: 1px solid #eee;font-size: 14px;}
+        tr:hover {background-color: #fceeee;}
 
-        .nuevo-ticket h3 {
-            color: #c94e47;
-            font-size: 20px;
-            margin-bottom: 20px;
-            font-weight: bold;
-        }
-
-        .form-group {
-            margin-bottom: 18px;
-        }
-
-        .form-group label {
-            font-weight: bold;
-            margin-bottom: 5px;
-            display: block;
-            font-size: 14px;
-            color: #333;
-        }
-
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 12px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-            font-size: 14px;
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            height: 100px;
-        }
-
-        .btn-crear {
-            background-color: #8b4a46;
-            color: white;
-            padding: 12px 35px;
-            border: none;
-            border-radius: 6px;
-            font-size: 15px;
-            cursor: pointer;
-            display: block;
-            margin: 0 auto;
-            transition: 0.3s;
-        }
-
-        .btn-crear:hover {
-            background-color: #6d3835;
-        }
-
-        /* ---- TABLA DE TICKETS ---- */
-        .tickets-section {
-            width: 90%;
-            max-width: 1000px;
-            margin: auto;
-        }
-
-        .tickets-section h2 {
-            color: #c94e47;
-            font-size: 22px;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-
-        .tickets-table {
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-            overflow: hidden;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th {
-            background-color: #f2beb8;
-            padding: 14px;
-            text-align: left;
-            font-size: 15px;
-            color: #5a1e1e;
-        }
-
-        td {
-            padding: 14px;
-            border-bottom: 1px solid #eee;
-            font-size: 14px;
-        }
-
-        tr:hover {
-            background-color: #fceeee;
-        }
-
-        .estado {
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 13px;
-            font-weight: bold;
-            display: inline-block;
-        }
-
+        .estado {padding: 6px 12px;border-radius: 6px;font-size: 13px;font-weight: bold;display: inline-block;}
         .estado-pendiente { background-color: #ffb9b9; color: #7a1b1b; }
         .estado-cerrado   { background-color: #e8b5ad; color: #7a1b1b; }
         .estado-terminado { background-color: #93e99f; color: #0f551e; }
         .estado-asignado  { background-color: #ffd495; color: #7d4e00; }
 
-        /* Tooltip */
-        .tooltip {
-            position: relative;
-            cursor: pointer;
-        }
-
+        .tooltip { position: relative; cursor: pointer; }
         .tooltip .tooltiptext {
-            visibility: hidden;
-            opacity: 0;
-            width: 180px;
-            background-color: #333;
-            color: white;
-            padding: 6px;
-            border-radius: 6px;
-            transition: 0.3s;
-            text-align: center;
-            position: absolute;
-            bottom: 120%;
-            left: 50%;
-            transform: translateX(-50%);
+            visibility: hidden;opacity: 0;width: 180px;background-color: #333;color: white;padding: 6px;border-radius: 6px;
+            transition: 0.3s;text-align: center;position: absolute;bottom: 120%;left: 50%;transform: translateX(-50%);
         }
+        .tooltip:hover .tooltiptext { visibility: visible; opacity: 1; }
 
-        .tooltip:hover .tooltiptext {
-            visibility: visible;
-            opacity: 1;
-        }
-
-        /* ---- MODAL HISTORIAL ---- */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background-color: white;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 800px;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-        }
-
-        .modal-header {
-            background-color: #c94e47;
-            color: white;
-            padding: 20px;
-            text-align: center;
-            font-weight: bold;
-            font-size: 18px;
-            border-radius: 10px 10px 0 0;
-        }
-
-        .modal-body {
-            padding: 25px;
-        }
-
-        .ticket-info {
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #eee;
-        }
-
-        .ticket-info h3 {
-            color: #c94e47;
-            margin-bottom: 10px;
-            font-size: 18px;
-        }
-
-        .info-row {
-            display: flex;
-            margin-bottom: 8px;
-        }
-
-        .info-label {
-            font-weight: bold;
-            width: 120px;
-            color: #555;
-        }
-
-        .info-value {
-            flex: 1;
-            color: #333;
-        }
-
-        .historial-section {
-            margin-top: 20px;
-        }
-
-        .historial-section h3 {
-            color: #c94e47;
-            margin-bottom: 15px;
-            font-size: 18px;
-        }
-
-        .historial-table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: #f9f9f9;
-            border-radius: 6px;
-            overflow: hidden;
-        }
-
-        .historial-table th {
-            background-color: #f2beb8;
-            padding: 12px;
-            text-align: left;
-            font-size: 14px;
-            color: #5a1e1e;
-        }
-
-        .historial-table td {
-            padding: 12px;
-            border-bottom: 1px solid #e0e0e0;
-            font-size: 14px;
-        }
-
-        .historial-table tr:last-child td {
-            border-bottom: none;
-        }
-
-        .modal-footer {
-            padding: 20px;
-            text-align: center;
-            border-top: 1px solid #eee;
-        }
-
-        .btn-cerrar {
-            background-color: #6c757d;
-            color: white;
-            border: none;
-            padding: 10px 25px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-
-        .btn-cerrar:hover {
-            background-color: #5a6268;
-        }
-
-        .asunto-click {
-            cursor: pointer;
-            color: #c94e47;
-            text-decoration: underline;
-            transition: color 0.2s;
-        }
-
-        .asunto-click:hover {
-            color: #8b4a46;
-        }
+        .asunto-click {cursor: pointer;color: #c94e47;text-decoration: underline;transition: color 0.2s;}
+        .asunto-click:hover {color: #8b4a46;}
     </style>
 </head>
 
 <body>
 
-    <!-- HEADER -->
     <div class="header">
-        <div class="header-left">
-            ${sessionScope.nombreUsuario}
-        </div>
-
-        <div class="header-right">
-            <a href="../logout.jsp" class="logout-link">
-                <svg class="logout-icon" viewBox="0 0 24 24">
-                    <path d="M16 17l1.41-1.41L13.83 12l3.58-3.59L16 7l-5 5 5 5zm-9 4h6v-2H7V5h6V3H7c-1.1 
-                    0-2 .9-2 2v14c0 1.1.9 2 2 2z"/>
-                </svg>
-                Cerrar Sesión
-            </a>
-        </div>
+        <div class="header-left"><%= nombreCompleto %></div>
+        <a href="<%= request.getContextPath() %>/logout" class="logout-link">Cerrar Sesión</a>
     </div>
 
-    <h1 class="welcome">Bienvenido, ${sessionScope.nombreUsuario}</h1>
+    <h1 class="welcome">Bienvenido, <%= nombreCompleto %></h1>
 
-    <!-- NUEVO TICKET -->
     <div class="nuevo-ticket">
         <h3>+ Nuevo Ticket</h3>
 
-        <form action="TicketServlet?action=create" method="post">
+        <form action="<%= request.getContextPath() %>/TicketServlet?action=create" method="post">
+
             <div class="form-group">
-                <label>Asunto:</label>
-                <input type="text" name="asunto" required placeholder="Escribir un asunto">
+                <label>Categoría (ordenada por prioridad):</label>
+                <select name="categoria" id="categoria" required>
+                    <option value="">Seleccione una opción</option>
+                    <option value="1">Revisión de Notas en Parciales (Prioridad 1)</option>
+                    <option value="2">Revisión Tareas/Proyectos (Prioridad 2)</option>
+                    <option value="3">Consulta sobre Clases y Horarios (Prioridad 3)</option>
+                    <option value="4">Consultas varias (Prioridad 4)</option>
+                    <option value="5">Motivo de inasistencia (Prioridad 5)</option>
+                    <option value="6">Cambio de grupo (Lab/Discu/Teórico) (Prioridad 6)</option>
+                </select>
+                <div id="mensajePrioridad" class="mensaje-prioridad"></div>
+            </div>
+
+            <div class="form-group">
+                <label>Fecha del suceso:</label>
+                <input type="date" name="fechaSuceso" required>
             </div>
 
             <div class="form-group">
                 <label>Descripción:</label>
-                <textarea name="descripcion" required placeholder="Escribir una descripción"></textarea>
+                <textarea name="descripcion" required placeholder="Explique el motivo de la solicitud..."></textarea>
             </div>
 
             <button type="submit" class="btn-crear">Crear</button>
         </form>
+
+        <c:if test="${not empty sessionScope.msg}">
+            <div style="margin-top:12px;color:green;font-weight:bold;">
+                ${sessionScope.msg}
+            </div>
+            <c:remove var="msg" scope="session"/>
+        </c:if>
+        <c:if test="${not empty sessionScope.error}">
+            <div style="margin-top:12px;color:#c94e47;font-weight:bold;">
+                ${sessionScope.error}
+            </div>
+            <c:remove var="error" scope="session"/>
+        </c:if>
     </div>
 
-    <!-- LISTA DE TICKETS -->
     <div class="tickets-section">
         <h2>Tus Tickets</h2>
 
@@ -413,183 +137,58 @@
                         <tr>
                             <td>
                                 <div class="tooltip">
-                                    <span class="asunto-click" onclick="showTicketHistorial(${ticket.id}, '${ticket.asunto}', '${ticket.descripcion}', '${ticket.estado}', '${ticket.fechaCreacion}', '${ticket.asignadoA}')">
-                                        ${ticket.asunto}
+                                    <span class="asunto-click"
+                                          onclick="alert('Descripción: ${ticket.descripcion}')">
+                                        ${ticket.titulo}
                                     </span>
-                                    <span class="tooltiptext">Hacer clic para ver el historial</span>
+                                    <span class="tooltiptext">Click para ver detalle rápido</span>
                                 </div>
                             </td>
-
                             <td>
                                 <c:choose>
                                     <c:when test="${ticket.estado == 'Pendiente'}">
                                         <span class="estado estado-pendiente">${ticket.estado}</span>
                                     </c:when>
-
-                                    <c:when test="${ticket.estado == 'Cerrado'}">
-                                        <span class="estado estado-cerrado">${ticket.estado}</span>
-                                    </c:when>
-
-                                    <c:when test="${ticket.estado == 'Terminado'}">
-                                        <span class="estado estado-terminado">${ticket.estado}</span>
-                                    </c:when>
-
                                     <c:otherwise>
-                                        <span class="estado estado-asignado">${ticket.estado}</span>
+                                        <span class="estado estado-cerrado">${ticket.estado}</span>
                                     </c:otherwise>
                                 </c:choose>
                             </td>
                         </tr>
                     </c:forEach>
-                </tbody>
 
+                    <c:if test="${empty listTickets}">
+                        <tr><td colspan="2" style="padding:18px;color:#666;font-style:italic;">No tienes tickets aún.</td></tr>
+                    </c:if>
+                </tbody>
             </table>
         </div>
     </div>
 
-    <!-- MODAL DE HISTORIAL DEL TICKET -->
-    <div class="modal-overlay" id="historialModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                Historial del Ticket
-            </div>
-            <div class="modal-body">
-                <!-- Información del Ticket -->
-                <div class="ticket-info">
-                    <h3>Información del Ticket</h3>
-                    <div class="info-row">
-                        <div class="info-label">Asunto:</div>
-                        <div class="info-value" id="modalAsunto"></div>
-                    </div>
-                    <div class="info-row">
-                        <div class="info-label">Descripción:</div>
-                        <div class="info-value" id="modalDescripcion"></div>
-                    </div>
-                    <div class="info-row">
-                        <div class="info-label">Estado:</div>
-                        <div class="info-value" id="modalEstado"></div>
-                    </div>
-                    <div class="info-row">
-                        <div class="info-label">Asignado a:</div>
-                        <div class="info-value" id="modalAsignadoA"></div>
-                    </div>
-                    <div class="info-row">
-                        <div class="info-label">Fecha creación:</div>
-                        <div class="info-value" id="modalFechaCreacion"></div>
-                    </div>
-                </div>
-
-                <!-- Historial de Modificaciones -->
-                <div class="historial-section">
-                    <h3>Historial de Ticket</h3>
-                    <table class="historial-table">
-                        <thead>
-                            <tr>
-                                <th>Modificación</th>
-                                <th>Fecha</th>
-                                <th>Responsable</th>
-                            </tr>
-                        </thead>
-                        <tbody id="historialBody">
-                            <!-- El historial se llenará dinámicamente con JavaScript -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-cerrar" onclick="closeHistorialModal()">Cerrar</button>
-            </div>
-        </div>
-    </div>
-
     <script>
-        function cerrarSesion() {
-            if (confirm("¿Está seguro que desea cerrar sesión?")) {
-                window.location.href = "vistas/logout.jsp";
+        const categoriaSel = document.getElementById("categoria");
+        const msgPrioridad = document.getElementById("mensajePrioridad");
+
+        categoriaSel.addEventListener("change", function() {
+            const prioridad = parseInt(this.value);
+            let msg = "";
+
+            if (prioridad === 1 || prioridad === 2) {
+                msg = "⚠️ Prioridad Alta: atención en 1 a 2 días hábiles.";
+            } else if (prioridad === 3 || prioridad === 4) {
+                msg = "⏳ Prioridad Media: resolución en 3 a 5 días hábiles.";
+            } else if (prioridad === 5 || prioridad === 6) {
+                msg = "📅 Prioridad Baja: resolución en 6 a 7 días hábiles.";
             }
-        }
 
-        function showTicketHistorial(ticketId, asunto, descripcion, estado, fechaCreacion, asignadoA) {
-            // Llenar información básica del ticket
-            document.getElementById('modalAsunto').textContent = asunto;
-            document.getElementById('modalDescripcion').textContent = descripcion;
-            document.getElementById('modalEstado').textContent = estado;
-            document.getElementById('modalAsignadoA').textContent = asignadoA || 'Sin asignar';
-            document.getElementById('modalFechaCreacion').textContent = fechaCreacion;
-
-            // Aquí deberías hacer una llamada AJAX para obtener el historial desde la base de datos
-            // Por ahora, usaré datos de ejemplo
-            cargarHistorialEjemplo(ticketId);
-
-            // Mostrar modal
-            document.getElementById('historialModal').style.display = 'flex';
-        }
-
-        function closeHistorialModal() {
-            document.getElementById('historialModal').style.display = 'none';
-        }
-
-        function cargarHistorialEjemplo(ticketId) {
-            // Esto es un ejemplo - en producción, deberías hacer una llamada AJAX a tu servlet
-            const historialBody = document.getElementById('historialBody');
-            historialBody.innerHTML = '';
-
-            // Datos de ejemplo (deberían venir de la base de datos)
-            const historialData = [
-                { modificacion: 'Asignado', fecha: '26/08/2025', responsable: 'Sistema' },
-                { modificacion: 'Respuesta del Programador', fecha: '27/08/2025', responsable: 'Juan Pérez' },
-                { modificacion: 'Reparación 1', fecha: '28/08/2025', responsable: 'Carlos Rodríguez' },
-                { modificacion: 'Reparación 2 y Finalización', fecha: '29/08/2025', responsable: 'Carlos Rodríguez' }
-            ];
-
-            historialData.forEach(item => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${item.modificacion}</td>
-                    <td>${item.fecha}</td>
-                    <td>${item.responsable}</td>
-                `;
-                historialBody.appendChild(row);
-            });
-        }
-
-        // Cerrar modal si se hace clic fuera del contenido
-        document.getElementById('historialModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeHistorialModal();
+            if (msg) {
+                msgPrioridad.style.display = "block";
+                msgPrioridad.textContent = msg;
+            } else {
+                msgPrioridad.style.display = "none";
+                msgPrioridad.textContent = "";
             }
         });
-
-        // Cerrar modal con tecla Escape
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeHistorialModal();
-            }
-        });
-
-        // Función para cargar historial real desde la base de datos (implementar con AJAX)
-        function cargarHistorialReal(ticketId) {
-            // Ejemplo de implementación:
-            /*
-            fetch('TicketServlet?action=getHistorial&ticketId=' + ticketId)
-                .then(response => response.json())
-                .then(historial => {
-                    const historialBody = document.getElementById('historialBody');
-                    historialBody.innerHTML = '';
-                    
-                    historial.forEach(item => {
-                        const row = document.createElement('tr');
-                        row.innerHTML = `
-                            <td>${item.modificacion}</td>
-                            <td>${item.fecha}</td>
-                            <td>${item.responsable}</td>
-                        `;
-                        historialBody.appendChild(row);
-                    });
-                })
-                .catch(error => console.error('Error:', error));
-            */
-        }
     </script>
 
 </body>

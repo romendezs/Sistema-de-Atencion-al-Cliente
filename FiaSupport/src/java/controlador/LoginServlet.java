@@ -28,7 +28,6 @@ public class LoginServlet extends HttpServlet {
             return;
         }
 
-        // ✅ TU validarLogin devuelve Usuario
         Usuario u = udao.validarLogin(carnet, password);
 
         if (u == null) {
@@ -37,17 +36,16 @@ public class LoginServlet extends HttpServlet {
             return;
         }
 
-        // ✅ sesión con el usuario completo
         HttpSession sesion = req.getSession(true);
         sesion.setAttribute("usuario", u);
+        sesion.setAttribute("nombreUsuario", u.getNombreCompleto()); // ✅ full name
 
-        // ✅ redirección por rol admin
         if (udao.esAdmin(carnet)) {
-            u.setRol("ADMIN"); // opcional, por si luego lo usas
+            u.setRol("ADMIN");
             resp.sendRedirect(req.getContextPath() + "/vistas/vistasAdministrador/reportes.jsp");
         } else {
             u.setRol("USUARIO");
-            resp.sendRedirect(req.getContextPath() + "/vistas/vistasUsuario/interfazUsuario.jsp");
+            resp.sendRedirect(req.getContextPath() + "/TicketServlet?action=list");
         }
     }
 }

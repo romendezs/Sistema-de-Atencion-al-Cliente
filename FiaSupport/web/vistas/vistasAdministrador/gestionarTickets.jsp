@@ -1,5 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="java.util.List"%>
+<%@page import="dao.TicketDAO"%>
+<%@page import="modelo.Ticket"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -215,36 +217,45 @@
                         </tr>
                     </thead>
 
+                    <%
+                        TicketDAO dao = new TicketDAO();
+                        List<Ticket> tickets = dao.listarTodos();
+                    %>
+
                     <tbody id="ticketsBody">
-
-                        <%/*
-                          //Base de datos de tickets
-                        %>
-
+                    <% if (tickets == null || tickets.isEmpty()) { %>
                         <tr>
                             <td colspan="5" class="no-resultados">No hay tickets registrados</td>
                         </tr>
+                    <% } else {
+                           for (Ticket t : tickets) {
 
-                        <%
-                          //Base de datos
-                        %>
+                               // --- Asignación (usa id_empleado)
+                               String asignacionTxt = "Sin asignar";
+                               String asignacionClass = "asignacion-sin-asignar";
+
+                               if (t.getIdEmpleado() > 0) {
+                                   asignacionTxt = "Técnico ID: " + t.getIdEmpleado();
+                                   asignacionClass = "";
+                               }
+
+                               // --- Estado (según fecha_cierre)
+                               boolean cerrado = (t.getFechaCierre() != null);
+                               String estadoTxt = cerrado ? "Cerrado" : "En Proceso";
+                               String estadoClass = cerrado ? "estado-cerrado" : "estado-en-proceso";
+                    %>
 
                         <tr>
                             <td class="solicitante"><%= t.getSolicitante() %></td>
                             <td class="titulo"><%= t.getTitulo() %></td>
 
-                            <td class="asignacion <%= (t.getAsignadoA() == null || t.getAsignadoA().isEmpty()) ? "asignacion-sin-asignar" : "" %>">
-                                <%= (t.getAsignadoA() == null || t.getAsignadoA().isEmpty()) ? "Sin asignar" : t.getAsignadoA() %>
+                            <td class="asignacion <%= asignacionClass %>">
+                                <%= asignacionTxt %>
                             </td>
 
                             <td>
-                                <span class="estado 
-                                      <%= (t.getEstado().equals("Sin Asignar")) ? "estado-sin-asignar" :
-                                          (t.getEstado().equals("En Proceso")) ? "estado-en-proceso" :
-                                          (t.getEstado().equals("Completado")) ? "estado-completado" :
-                                                                                  "estado-cerrado" %>">
-                                    <%= t.getEstado() %>
-                                    <span class="tiempo-estado"><%= t.getTiempoTranscurrido() %></span>
+                                <span class="estado <%= estadoClass %>">
+                                    <%= estadoTxt %>
                                 </span>
                             </td>
 
@@ -256,11 +267,8 @@
                             </td>
                         </tr>
 
-                        <%
-                            }
-                          }*/
-                        %>
-
+                    <%   } // fin for
+                       } // fin else %>
                     </tbody>
                 </table>
             </div>

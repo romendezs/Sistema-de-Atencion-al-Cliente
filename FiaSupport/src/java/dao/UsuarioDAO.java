@@ -2,57 +2,48 @@ package dao;
 
 import bd.Conexion;
 import modelo.Usuario;
-
 import java.sql.*;
 
 public class UsuarioDAO {
 
     public boolean esAdmin(String carnet) {
-    String sql = "SELECT 1 FROM administrador WHERE id_administrador = ?";
-    try (Connection con = Conexion.getConexion();
-         PreparedStatement ps = con.prepareStatement(sql)) {
-
-        ps.setString(1, carnet);
-        try (ResultSet rs = ps.executeQuery()) {
-            return rs.next();
-        }
-    } catch (Exception e) {
-        e.printStackTrace();
-        return false;
-    }
-}
-    public Usuario validarLogin(String carnet, String password) {
-        String sql = "SELECT id_usuario, nombres, apellidos " +
-                     "FROM usuario WHERE id_usuario=? AND password=?";
-
-        System.out.println("DAO validarLogin() carnet=" + carnet + ", pass=" + password);
-
-        try (Connection cn = Conexion.getConexion();
-             PreparedStatement ps = cn.prepareStatement(sql)) {
+        String sql = "SELECT 1 FROM administrador WHERE id_administrador = ?";
+        try (Connection con = Conexion.getConexion();
+             PreparedStatement ps = con.prepareStatement(sql)) {
 
             ps.setString(1, carnet);
-            ps.setString(2, password);
-
-            System.out.println("Ejecutando SQL: " + sql);
-
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    System.out.println("✅ Usuario encontrado en BD");
-
-                    Usuario u = new Usuario();
-                    u.setCarnet(rs.getString("id_usuario"));
-                    u.setNombre(rs.getString("nombres") + " " + rs.getString("apellidos"));
-                    u.setRol("USUARIO");
-                    return u;
-                } else {
-                    System.out.println("❌ No encontró fila con esos datos");
-                }
+                return rs.next();
             }
-
-        } catch (SQLException e) {
-            System.out.println("🔥 ERROR SQL: " + e.getMessage());
+        } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
-        return null;
+    }
+
+    public Usuario validarLogin(String carnet, String password) {
+    String sql = "SELECT id_usuario, nombres, apellidos " +
+                 "FROM usuario WHERE id_usuario=? AND password=?";
+
+    try (Connection cn = Conexion.getConexion();
+         PreparedStatement ps = cn.prepareStatement(sql)) {
+
+        ps.setString(1, carnet);
+        ps.setString(2, password);
+
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                Usuario u = new Usuario();
+                u.setCarnet(rs.getString("id_usuario"));
+                u.setNombres(rs.getString("nombres"));
+                u.setApellidos(rs.getString("apellidos"));
+                return u;
+            }
+        }
+        } 
+    catch (Exception e) {
+        e.printStackTrace();
+        }
+    return null;
     }
 }

@@ -3,8 +3,16 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/ceol7/OneDrive/Escritorio/UES%20folder/2025/Programacion%203/Github/Sistema-de-Atencion-al-Cliente/FiaSupport/web/vistas/logout.jsp</file>
-            <file>file:/C:/Users/ceol7/OneDrive/Escritorio/UES%20folder/2025/Programacion%203/Github/Sistema-de-Atencion-al-Cliente/FiaSupport/src/java/bd/Conexion.java</file>
+            <file>file:/C:/Users/ceol7/OneDrive/Escritorio/UES%20folder/2025/Programacion%203/Github/Sistema-de-Atencion-al-Cliente/FiaSupport/src/java/dao/TicketDAO.java</file>
+            <file>file:/C:/Users/ceol7/OneDrive/Escritorio/UES%20folder/2025/Programacion%203/Github/Sistema-de-Atencion-al-Cliente/FiaSupport/src/java/modelo/Ticket.java</file>
+            <file>file:/C:/Users/ceol7/OneDrive/Escritorio/UES%20folder/2025/Programacion%203/Github/Sistema-de-Atencion-al-Cliente/FiaSupport/web/vistas/vistasAdministrador/gestionarTickets.jsp</file>
+            <file>file:/C:/Users/ceol7/OneDrive/Escritorio/UES%20folder/2025/Programacion%203/Github/Sistema-de-Atencion-al-Cliente/FiaSupport/web/vistas/vistasAdministrador/reportes.jsp</file>
+            <file>file:/C:/Users/ceol7/OneDrive/Escritorio/UES%20folder/2025/Programacion%203/Github/Sistema-de-Atencion-al-Cliente/FiaSupport/src/java/controlador/LogoutServlet.java</file>
+            <file>file:/C:/Users/ceol7/OneDrive/Escritorio/UES%20folder/2025/Programacion%203/Github/Sistema-de-Atencion-al-Cliente/FiaSupport/src/java/controlador/LoginServlet.java</file>
+            <file>file:/C:/Users/ceol7/OneDrive/Escritorio/UES%20folder/2025/Programacion%203/Github/Sistema-de-Atencion-al-Cliente/FiaSupport/web/vistas/vistasUsuario/interfazUsuario.jsp</file>
+            <file>file:/C:/Users/ceol7/OneDrive/Escritorio/UES%20folder/2025/Programacion%203/Github/Sistema-de-Atencion-al-Cliente/FiaSupport/src/java/controlador/TicketServlet.java</file>
+            <file>file:/C:/Users/ceol7/OneDrive/Escritorio/UES%20folder/2025/Programacion%203/Github/Sistema-de-Atencion-al-Cliente/FiaSupport/src/java/modelo/Usuario.java</file>
+            <file>file:/C:/Users/ceol7/OneDrive/Escritorio/UES%20folder/2025/Programacion%203/Github/Sistema-de-Atencion-al-Cliente/FiaSupport/web/vistas/login.jsp</file>
         </group>
     </open-files>
 </project-private>
